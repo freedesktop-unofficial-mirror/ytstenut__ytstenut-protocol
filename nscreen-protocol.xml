@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <article xmlns="http://docbook.org/ns/docbook" version="5.0"
 	 xmlns:xi="http://www.w3.org/2001/XInclude"
-	 xml:id="nscreen-protocol" lang="en" class="specification">
+	 xmlns:xlink="http://www.w3.org/1999/xlink"
+	 xml:id="nscreen-protocol" xml:lang="en" class="specification">
   <info>
 
     <title>nScreen Protocol Specification</title>
@@ -10,12 +11,14 @@
 	<orgname>Intel Corporation</orgname>
 
     <author>
-      <firstname>Tomas</firstname> <surname>Frydrych</surname>
+      <personname>
+	<firstname>Tomas</firstname> <surname>Frydrych</surname>
 <!--
       <affiliation>
         <orgname>Intel Corporation</orgname>
       </affiliation>
 -->
+      </personname>
       <email>tf@linux.intel.com</email>
     </author>
 
@@ -129,7 +132,7 @@
 
     </section>
 
-    <section id="intro-mesh">
+    <section xml:id="intro-mesh">
       <title>The nScreen Mesh</title>
 	  <para>
 	    Structurally, the nScreen mesh consists of for tiers, as per the
@@ -366,42 +369,79 @@
 	Identity Verification
 	</title>
 
-	<para>
-	  In server-based context, identity verification is provided implicitly
-	  through the authentication mechanism by the service operator ensuring
-	  1:1 mapping between users and their authentication credentials.
-	</para>
+	<section xml:id="comm-protocols-identity-server">
+	  <title>Identity Verification in Server-Based Context</title>
 
-	<para>
-	  In server-less context of a home cloud, the 1:1 mapping between
-	  nScreen users and authentication credentials cannot be guaranteed; a
-	  simple home cloud set up might rely on a shared secret to allow
-	  applications across the cloud to authenticate, which in turn allows an
-	  authenticated application to spoof another application. nScreen
-	  applications that do not implement additional identity verification
-	  mechanisms beyond SASL authentication, therefore:
+	  <para>
+	    Standard XMPP does not provide a formal mechanism for identity
+	    verification. Because the authentication of two communicating users
+	    A and B is typically done separately and independently by two
+	    different servers, A's trust in B's identity implies A's trust in
+	    the authentication procedures of B's service provider, which cannot
+	    be automatically granted.  Therefore, this generic scenario is only
+	    acceptable if data exchanged between A and B contains no sensitive
+	    information, i.e., for what essentially amounts to an anonymous
+	    nScreen service.
+	  </para>
 
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		Must not make assumptions about identity of other nScreen
-		participants in the cloud context,
-	      </para>
-	    </listitem>
+	  <para>
+	    An nScreen service that requires reliable identity verification must
+	    be implemented using a dedicated nScreen server that requires direct
+	    login, and does not permit server hops (i.e., both A and B are
+	    logging into the same server in order to talk to each other). In
+	    this situation the service provider is fully in control of the
+	    authentication procedure, and, assuming 1:1 mapping between users
+	    and their authentication credentials is in place, successful
+	    authentication provides also identity verification.
+	</para>
+	</section>
 
-	    <listitem>
-	      <para>
-		Applications running both in server-based and server-less
-		contexts must not inject data from server-based streams into the
-		cloud.
-	      </para>
-	    </listitem>
-	  </itemizedlist>
-	</para>
-	<para>
-	  Additional identity verification mechanism addressing the current
-	  limitations will be defined in future versions of the protocol.
-	</para>
+	<section xml:id="comm-protocols-identity-cloud">
+	  <title>Identity Verification in Server-Less Context</title>
+
+	  <para>
+	    In server-less context of a home cloud, the 1:1 mapping between
+	    nScreen users and authentication credentials cannot be guaranteed; a
+	    simple home cloud set up might rely on a shared secret to allow
+	    applications across the cloud to authenticate, which in turn allows
+	    an authenticated application to spoof another application.
+	  </para>
+
+	  <para>
+	    Although identity spoofing carries with it lesser risks in the
+	    context of the home cloud, the following messures are required to be
+	    taken by compliant nScreen implementations to improve security:
+
+	    <itemizedlist>
+	      <listitem>
+		<para>
+		  Applications must not make assumptions about identity of other
+		  nScreen participants in the cloud context, unless they
+		  implement additional identity verification procedures not
+		  specifiend by the current version of the nScreen protocol,
+		</para>
+	      </listitem>
+
+	      <listitem>
+		<para>
+		  Applications running both in server-based and server-less
+		  contexts must not inject data from server-based streams into
+		  the cloud.
+		</para>
+	      </listitem>
+	    </itemizedlist>
+	  </para>
+	</section>
+
+	<section xml:id="comm-protocols-identity-future">
+	  <title>Future Expectations</title>
+
+	  <para>
+	    Additional identity verification mechanism addressing the current
+	    limitations, using more robust mechanisms (such as PKI) will be
+	    defined in future versions of the protocol.
+	  </para>
+	</section>
       </section>
 
       <section xml:id="comm-protocols-subscription">
@@ -993,9 +1033,17 @@
       (For full XML definition see <xref linkend="appendix-dtd"/>.)
     </para>
 
-    <section id="messaging-app-info">
+    <section xml:id="messaging-app-info">
       <title>Descriptive Application Information</title>
 
+<annotation role='todo'>
+  <info>
+    <authorinitials>tf</authorinitials>
+  </info>
+  <para>
+    Rework this using xep-0030.
+  </para>
+</annotation>
       <para>
 	nScreen applications need to provide localised descriptive information
 	about themselves that can be presented to the user. Specifically, they
@@ -1639,43 +1687,63 @@
     <title>External Resources</title>
 
     <biblioentry xml:id="rfc3920">
-      <link href="http://tools.ietf.org/html/rfc3920">RFC 3920</link>
+      <bibliomisc>
+      <link xlink:href="http://tools.ietf.org/html/rfc3920">RFC 3920</link>
+      </bibliomisc>
     </biblioentry>
 
     <biblioentry xml:id="rfc3923">
-      <link href="http://tools.ietf.org/html/rfc3923">RFC 3923</link>
+      <bibliomisc>
+      <link xlink:href="http://tools.ietf.org/html/rfc3923">RFC 3923</link>
+      </bibliomisc>
     </biblioentry>
 
     <biblioentry xml:id="xep0050">
-      <link href="http://xmpp.org/extensions/xep-0050.html">XEP-0050</link>
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0050.html">XEP-0050</link>
+      </bibliomisc>
     </biblioentry>
 
     <biblioentry xml:id="xep0054">
-      <link href="http://xmpp.org/extensions/xep-0054.html">XEP-0054</link>
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0054.html">XEP-0054</link>
+      </bibliomisc>
     </biblioentry>
 
     <biblioentry xml:id="xep0060">
-      <link href="http://xmpp.org/extensions/xep-0060.html">XEP-0060</link>
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0060.html">XEP-0060</link>
+      </bibliomisc>
     </biblioentry>
 
     <biblioentry xml:id="xep0084">
-      <link href="http://xmpp.org/extensions/xep-0084.html">XEP-0084</link>
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0084.html">XEP-0084</link>
+      </bibliomisc>
     </biblioentry>
 
     <biblioentry xml:id="xep0096">
-      <link href="http://xmpp.org/extensions/xep-0096.html">XEP-0096</link>
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0096.html">XEP-0096</link>
+      </bibliomisc>
     </biblioentry>
 
     <biblioentry xml:id="xep0166">
-      <link href="http://xmpp.org/extensions/xep-0166.html">XEP-0166</link>
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0166.html">XEP-0166</link>
+      </bibliomisc>
     </biblioentry>
 
     <biblioentry xml:id="xep0174">
-      <link href="http://xmpp.org/extensions/xep-0174.html">XEP-0174</link>
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0174.html">XEP-0174</link>
+      </bibliomisc>
     </biblioentry>
 
     <biblioentry xml:id="xep0234">
-      <link href="http://xmpp.org/extensions/xep-0234.html">XEP-0234</link>
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0234.html">XEP-0234</link>
+      </bibliomisc>
     </biblioentry>
 
   </bibliography>
