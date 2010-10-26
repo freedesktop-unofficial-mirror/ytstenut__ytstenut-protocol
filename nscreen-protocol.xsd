@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema
+   xmlns:xs='http://www.w3.org/2001/XMLSchema'
+   targetNamespace='nscreen'
+   xmlns='nscreen'
+   elementFormDefault='qualified'>
+
+  <xs:import namespace='jabber:client'/>
+
+  <!-- - - - - - - - - - - - - - -->
+  <!-- nScreen Message elements  -->
+  <!-- - - - - - - - - - - - - - -->
+  <xs:element name='command'>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base='xs:string'>
+	  <xs:attribute name='version'
+			type='xs:string'
+			use='required'/>
+	  <xs:attribute name='time'
+			type='xs:dateTime'
+			use='required'/>
+          <xs:attribute name='capability'
+             		type='xs:NMTOKEN'
+                        use='required'/>
+          <xs:attribute name='activity'
+                        type='xs:NMTOKEN'
+                        use='required'/>
+          <xs:attribute name='uri'
+                        type='xs:anyURI'
+                        use='optional'/>
+          <xs:attribute name='uid'
+                        type='xs:string'
+                        use='optional'/>
+          <xs:attribute name='progress'
+                        type='xs:double'
+                        use='optional'>
+	    <simpleType>
+  	      <restriction base='double'>
+	        <minInclusive value='0.0'/>
+    	        <maxInclusive value='1.0'/>
+  	      </restriction>
+	    </simpleType>
+	  </xs:attribute>
+
+          <xs:attribute name='position'
+                        type='xs:double'
+                        use='optional'/>
+          <xs:attribute name='jid'
+                        type='xs:string'
+                        use='optional'/>
+          <xs:attribute name='device'
+                        type='xs:string'
+                        use='optional'/>
+	  <xs:anyAttribute namespace='##other'/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name='transfer'>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base='xs:string'>
+	  <xs:attribute name='version'
+			type='xs:string'
+			use='required'/>
+          <xs:attribute name='capability'
+             		type='xs:NMTOKEN'
+                        use='required'/>
+          <xs:attribute name='to'
+             		type='xs:string'
+                        use='required'/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name='find'>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base='xs:string'>
+	  <xs:attribute name='version'
+			type='xs:string'
+			use='required'/>
+          <xs:attribute name='capability'
+             		type='xs:NMTOKEN'
+                        use='required'/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name='find-result'>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base='xs:string'>
+	  <xs:attribute name='version'
+			type='xs:string'
+			use='required'/>
+          <xs:attribute name='capability'
+             		type='xs:NMTOKEN'
+                        use='required'/>
+          <xs:attribute name='jid'
+                        type='xs:string'
+                        use='required'/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- - - - - - - - - - - - - - -->
+  <!-- nScreen Status elements  -->
+  <!-- - - - - - - - - - - - - - -->
+
+  <!-- included inside <presence></> -->
+  <xs:element name='status'>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice minOccurs='1' maxOccurs='1'>
+          <xs:element ref='encrypted-content'/>
+        </xs:choice>
+      </xs:sequence>
+
+      <xs:attribute name='version'
+                    type='xs:string'
+                    use='required'/>
+      <xs:attribute name='primary-capability'
+                    type='string'
+                    use='required'/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name='capability'>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base='xs:string'>
+          <xs:attribute name='type'
+                        type='xs:NMTOKEN'
+                        use='required'/>
+          <xs:attribute name='activity'
+                        type='xs:NMTOKEN'
+                        use='optional'
+		        default='ns-activity-idle'/>
+          <xs:attribute name='uri'
+                        type='xs:anyURI'
+                        use='optional'/>
+          <xs:attribute name='uid'
+                        type='xs:string'
+                        use='optional'/>
+          <xs:attribute name='volume'
+                        type='xs:double'
+                        use='optional'>
+	    <simpleType>
+  	      <restriction base='double'>
+	        <minInclusive value='0.0'/>
+    	        <maxInclusive value='1.0'/>
+  	      </restriction>
+	    </simpleType>
+	  </xs:attribute>
+	  <xs:anyAttribute namespace='##other'/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
