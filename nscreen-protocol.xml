@@ -31,7 +31,9 @@
       <revision>
          <revnumber>0.2</revnumber>
          <date>22 October 2010</date>
-         <revremark>...</revremark>
+         <revremark>
+	   revised based on preliminary comments from Collabora
+	 </revremark>
       </revision>
     </revhistory>
   </info>
@@ -132,23 +134,6 @@
 
     </section>
 
-    <section xml:id="intro-mesh">
-      <title>The nScreen Mesh</title>
-	  <para>
-	    Structurally, the nScreen mesh consists of for tiers, as per the
-	    following figure:
-
-	    <annotation role="todo">
-	      <info>
-		<authorinitials>tf</authorinitials>
-	      </info>
-	      <para>
-		Diagram
-	      </para>
-	    </annotation>
-	  </para>
-    </section>
-
     <section xml:id="intro-application-classes">
       <title>Application Classes</title>
 
@@ -159,7 +144,7 @@
 	  <listitem>
 	    <para>
 	      Task-oriented applications: these are the principal participants
-	      in the nScreen mesh. They are user-facing applications such as
+	      in the nScreen mesh. They are user-facing applications, such as
 	      media players, that have been enriched by adding the nScreen
 	      capabilities.
 	    </para>
@@ -261,15 +246,9 @@
       </para>
 
       <para>
-	The nScreen framework defines three sets of extensions to XMPP:
+	The nScreen framework defines two extensions to XMPP:
 
 	<itemizedlist>
-	  <listitem>
-	    <para>
-	      Enhanced subscription mechanism,
-	    </para>
-	  </listitem>
-
 	  <listitem>
 	    <para>
 	      Protocols for encoding of nScreen meta-data,
@@ -351,7 +330,30 @@
     </section>
 
     <section xml:id="comm-protocols-sub-and-authentication">
-      <title>nScreen Subscription and Authentication</title>
+      <title>Authentication, identity verification, subscription</title>
+
+      <section xml:id="comm-protocols-jid">
+	<title>nScreen JID</title>
+
+	<para>
+	  All nScreen applications, regardless whether running in server-based
+	  or server-less context, are identified using a bare XMPP
+	  JID<citation><xref linkend="rfc3920"/></citation>. A single
+	  application connection to the nScreen mesh is identified by a fully
+	  qualified JID, consisting of a bare JID identifying the application
+	  and a resource identifier; multiple simultaneous connections by single
+	  application are permitted and differentiated by the resource part of
+	  the fully qualified JID (an example of a bare JID would be
+	  <code>application@somewhere.com</code> while a fully qualified JID
+	  would be <code>application@somewhere.com/myresource</code>.
+	</para>
+
+	<para>
+	  In the remainder of this document, the term 'JID' is used to refer
+	  to bare JIDs; if a fully qualified jabber id is meant, this will
+	  always be explicitly stated.
+	</para>
+      </section>
 
       <section xml:id="comm-protocols-authentication">
 	<title>Authentication</title>
@@ -365,7 +367,7 @@
       </section>
 
       <section xml:id="comm-protocols-identity">
-	<title xml:id="comm-protocols-identity-title">
+	<title>
 	Identity Verification
 	</title>
 
@@ -374,8 +376,8 @@
 
 	  <para>
 	    Standard XMPP does not provide a formal mechanism for identity
-	    verification. Because the authentication of two communicating users
-	    A and B is typically done separately and independently by two
+	    verification. Because the authentication of two communicating users,
+	    A and B, is typically done separately and independently by two
 	    different servers, A's trust in B's identity implies A's trust in
 	    the authentication procedures of B's service provider, which cannot
 	    be automatically granted.  Therefore, this generic scenario is only
@@ -386,13 +388,15 @@
 
 	  <para>
 	    An nScreen service that requires reliable identity verification must
-	    be implemented using a dedicated nScreen server that requires direct
+	    either implement additional identity verfication measures beyond
+	    what is specified by the current version of the protocol, or be
+	    implemented using a dedicated nScreen server that requires direct
 	    login, and does not permit server hops (i.e., both A and B are
 	    logging into the same server in order to talk to each other). In
 	    this situation the service provider is fully in control of the
 	    authentication procedure, and, assuming 1:1 mapping between users
 	    and their authentication credentials is in place, successful
-	    authentication provides also identity verification.
+	    authentication provides also for identity verification.
 	</para>
 	</section>
 
@@ -448,422 +452,41 @@
 	<title>Subscription</title>
 
 	<para>
-	  The nScreen framework, requires subscription mechanism that will (a)
-	  work both for server-driven and server-less connections, and (b)
-	  ensure that the end-user, rather than the server owner, maintains
-	  access control to their own local resources. Since standard XMPP
-	  provides only a server-centric subscription mechanism; this
-	  specification defines an additional, local, subscription, protocol.
+	  The nScreen framework uses a subscription mechanism to provide access
+	  control between nScreen applications; the details of the subscription
+	  mechanism vary between the server-based and server-less modes of
+	  operation.
 	</para>
-
-	<para>
-	  The extended subscription protocol, described further on, is closely
-	  tied to a format of application JID, which is described first.
-	</para>
-
-	<section xml:id="comm-protocols-jid">
-	  <title>nScreen JID form</title>
-
-	  <para>
-	    A fully qualified JID (jabber id) identifies a single participant in
-	    the nScreen mesh. As in standard XMPP, a fully qualified JID
-	    consists of a bare JID and a resource identifier; the bare JID
-	    identifies a user, while a fully qualified JID identifies a single
-	    connection by that user to the nScreen mesh (multiple simultaneous
-	    connections by single bare JID are allowed for obvious reasons). An
-	    example of a bare JID would be 'someone@somewhere.com' while a fully
-	    qualified JID would be 'someone@somewhere.com/myresource'
-	  </para>
-
-	  <para>
-	    In the remainder of this document, the term 'JID' is used to refer
-	    to bare JIDs; if a fully qualified jabber id is meant, this will
-	    always be explicitly stated.
-	  </para>
-
-	  <para>
-	    nScreen JIDs fall into three broad categories: JIDs for outward
-	    (customer) facing services offered by service providers, inward
-	    facing JIDs used to identify customers to service providers, and
-	    JIDs used for server-less connections in a home cloud.
-	  </para>
-
-	  <section xml:id="comm-protocols-jid-outward">
-	    <title>Outward-facing JIDs</title>
-
-	    <para>
-	      <itemizedlist>
-		<listitem>
-		  <para>
-		    The canonical form of an outward-facing JID is
-		    'application.subdomain.domain@service-provider', and
-		    reflects the notional structuring of the nScreen mesh. This
-		    form of JID must be used for all outward facing connections.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    The principal reason for this structuring is to facilitate a
-		    uniform feel for customer facing UIs regardless of
-		    application or service provider: client side implementations
-		    of the nScreen specification are expected to organise their
-		    connection rosters using this 4 tier scheme.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    As with normal XMPP JIDs, the service-provider part of the
-		    JID (the part after the @ symbol) must be an Internet domain
-		    name that can be resolved through a DNS service,
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    Service providers are free do define the domains and
-		    sub-domains in a way that fulfils their specific needs, for
-		    example, an 'easymart.com' provider could define per-store
-		    domains and per-department sub-domains:
-		  </para>
-
-		  <para>
-		    .menswear.broadway-store@easymart.com
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    The leftmost part of the JID must identify the individual
-		    application that is providing the service in question,
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    Multiple connection by single application are differentiated
-		    by the resource id of the fully qualified JID.
-		  </para>
-		</listitem>
-	      </itemizedlist>
-	    </para>
-	  </section>
-
-	  <section xml:id="comm-protocols-jid-inward">
-	    <title>Inward-facing JIDs</title>
-
-	    <para>
-	      Inward facing JIDs are used to identify customer connections to a
-	      service provider; no special restrictions beyond those specified
-	      by the core XMPP protocol are placed on these by the nScreen
-	      specification.
-	    </para>
-	  </section>
-
-
-	  <section xml:id="comm-protocols-jid-serverless">
-	    <title>Server-less JIDs</title>
-
-	    <para>
-	      <itemizedlist>
-		<listitem>
-		  <para>
-		    Server-less JIDs are used for server-less connections inside
-		    home cloud (i.e., running over the local-nscreen protocol
-		    specified later in this document).
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    Server-less JIDs are outward-facing JIDs without the
-		    service-provider part, i.e., they have the form
-		    'application.device.domain'.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    The device part of the JID should be obtained automatically
-		    using a suitable mechanism (such as the host name); this is
-		    to ensure that all applications running on the same physical
-		    device use the same 'device' id.
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    The domain part of the JID should identify the home
-		    cloud. (Though the present version of the specification does
-		    not provide for server-less connections that cross the cloud
-		    boundary, such mechanism might be added in future versions.)
-		  </para>
-		</listitem>
-
-		<listitem>
-		  <para>
-		    Multiple connections by the same application are
-		    differentiated by the resource id.
-		  </para>
-		</listitem>
-	      </itemizedlist>
-	    </para>
-	  </section>
-	</section>
 
 	<section xml:id="comm-protocols-server-subscription">
 	  <title>Server-end subscription</title>
 
 	  <para>
-	    nScreen subscription services operated through an nScreen XMPP
-	    server are built around normal XMPP subscription mechanisms as
-	    specified by the core XMPP protocol <citation><xref
-	    linkend="rfc3920"/></citation>, and nScreen servers should comply
-	    with the subscription policies this specification sets out.
+	    Server-based nScreen services must implement standard subscription
+	    mechanism as set out by the core XMPP protocol<citation><xref
+	    linkend="rfc3920"/></citation> and must comply with the subscription
+	    policies the core specification sets out.
 	  </para>
 
 	  <para>
-	    Available outward facing application should be advertised by the
-	    server via XMPP pubsub mechanism <citation><xref
-	    linkend="xep0060"/></citation>.
+	    Available outward facing services to which users can subscribe
+	    should be advertised by the server via XMPP Service Discovery
+	    mechanism <citation><xref linkend="xep0030"/></citation>.
 	  </para>
 	</section>
 
-	<section xml:id="comm-protocols-local-subscrition">
-	  <title>Local Subscription</title>
-
-	  <annotation role="comment">
-	    <info>
-	      <authorinitials>tf</authorinitials>
-	    </info>
-	    <para>
-	      I suspect this is the biggest departure from the normal workings
-	      of XMPP.
-	    </para>
-	  </annotation>
+	<section xml:id="comm-protocols-local-subscription">
+	  <title>Subscription in server-less context</title>
 
 	  <para>
-	    Server-end subscription cannot be relied upon to provide adequate
-	    access control to resources owned by a given user, since the
-	    enforcement of the subscription policies is controlled by the
-	    service provider, not the user; in order to avoid situations such as
-	    users' rosters flooded by unwanted applications that they do not
-	    wish to interact with (even if from well-meaning vendors),
-	    additional local subscription mechanism is used to control incoming
-	    traffic.
+	    The standard, server-centric, XMPP subscription mechanism is not
+	    applicable for the link-local set up; in order to circumvent this
+	    limitation, the local-nscreen protocol specification defined later
+	    in this document (see <xref linkend="local-nscreen"/>), defines a
+	    separate subscription mechanism to use in its place.
 	  </para>
-
-	  <para>
-	    Similarly, there is a need for access control mechanism when
-	    operating within a server-less cloud, so as to avoid equating
-	    connection to the cloud with blank access to all nScreen
-	    services. This local subscription mechanism facilitates such finer
-	    grained access control in server-less setup.
-	  </para>
-
-	  <para>
-	    The local subscriptions only control incoming traffic, and
-	    consequently there are only three subscription states:
-
-	    <itemizedlist>
-	      <listitem>
-		<para>
-		 'Yes'  : communication enabled,
-		</para>
-	      </listitem>
-
-	      <listitem>
-		<para>
-		  'No' : remote client barred from communicating with local
-		  client,
-		</para>
-	      </listitem>
-
-	      <listitem>
-		<para>
-		  'Unset': initial value
-		</para>
-	      </listitem>
-	    </itemizedlist>
-	  </para>
-
-	  <para>
-	    The meaning of the 'Unset' value is controlled by local policy; the
-	    user might choose 'Unset' to mean 'No', or she might choose 'Unset'
-	    to mean 'allow remote initiation of new subscriptions'.
-	  </para>
-
-	  <para>
-	  The local subscription mechanism facilitates not only per-application
-	  subscriptions, but also subscriptions per sub-domain, domain and
-	  service-provider, i.e., the user can subscribe to (or block) all
-	  applications by particular service provider, or all applications in a
-	  particular domain of a specific service provider.
-	  </para>
-
-	  <para>
-	    The subscription database is queried from more complete
-	    subscriptions toward broader subscription classes. An example
-	    subscription database for online store application on a phone of a
-	    specific user could look like:
-	  </para>
-
-	  <programlisting>
-        mens-wear.easymart.com      | Yes
-        ties.mens-wear@easymart.com | No
-	  </programlisting>
-
-	  <para>
-	    Meaning, the local user is happy to interact with applications in
-	    the mens-wear domain of easymart.com, except applications in the
-	    ties sub-domain. Depending on the local policy, the user might
-	    either want all subscriptions requests from easymart.com rejected
-	    (implicit 'No') or presented for examination.
-	  </para>
-
-	  <section xml:id="comm-protocols-local-subscription-algorithm">
-	    <title>Local subscription algorithm</title>
-
-	    <para>
-	      In the following P is an nScreen application on a user end device
-	      (e.g., a mobile phone), M is an external shop checkout
-	      application, provided by easymart.com, with JID
-	      'checkoutapp.checkout1.old-inns-service-station@easymart.com'.
-	      When M is offered for addition into the roster of P by the
-	      connection manager, the following subscription check is carried
-	      out before user is made aware of M:
-	    </para>
-
-	    <para>
-
-	      <orderedlist numeration="arabic">
-		<listitem>
-		  <para>
-		    Subscription check
-
-		    <orderedlist numeration="upperalpha">
-		      <listitem>
-			<para>
-			  P checks subscription database for M's complete (but bare) JID:
-			  <itemizedlist>
-			    <listitem>
-			      <para>
-				Yes: P proceeds to <xref
-				linkend="comm-protocols-local-subscription-algorithm-id"/>,
-			      </para>
-			    </listitem>
-			    <listitem>
-			      <para>
-				No: P removes M from roster and ignores any
-				further messages from M,
-			      </para>
-			    </listitem>
-
-			    <listitem>
-			      <para>
-				Unset: P proceeds to next step,
-			      </para>
-			    </listitem>
-			  </itemizedlist>
-			</para>
-		      </listitem>
-
-		      <listitem>
-			<para>
-			  P continues to check the subscription database for
-			  partial JIDs by removing progressively more JID
-			  elements (e.g.,
-			  checkout1.old-inns-service-station@easymart.com,
-			  old-inns-service-station@easymart.com, easymart.com)
-			  using the algorithm described in (A) until the final
-			  test on service-provider:
-
-			  <itemizedlist>
-			    <listitem>
-			      <para>
-				Yes: P proceeds to <xref
-				linkend="comm-protocols-local-subscription-algorithm-id"/>,
-			      </para>
-			    </listitem>
-
-			    <listitem>
-			      <para>
-				No: P removes M from roster and ignores any
-				further messages from M,
-			      </para>
-			    </listitem>
-
-			    <listitem>
-			      <para>
-				Unset: P checks whether local policy allows
-				automatic subscription initiation:
-
-				<itemizedlist>
-				  <listitem>
-				    <para>
-				      Yes: proceeds to <xref
-				      linkend="comm-protocols-local-subscription-algorithm-new"/>,
-				    </para>
-				  </listitem>
-				  <listitem>
-				    <para>
-				      No : P removes M from roster and stops
-				      processing; any further advances by M will
-				      be silently ignored.
-				    </para>
-				  </listitem>
-				</itemizedlist>
-			      </para>
-			    </listitem>
-			  </itemizedlist>
-			</para>
-		      </listitem>
-		    </orderedlist>
-		  </para>
-		</listitem>
-
-		<listitem xml:id="comm-protocols-local-subscription-algorithm-id">
-		  <para>
-		    Identity verification: See <xref
-		    linkend="comm-protocols-identity"/>
-		  </para>
-		</listitem>
-
-		<listitem xml:id="comm-protocols-local-subscription-algorithm-new">
-		  <para>
-		    New subscription
-
-		    <orderedlist numeration="upperalpha">
-		      <listitem>
-			<para>
-			  P asks user if she wishes to allow M to cooperate with
-			  P
-
-			  <itemizedlist>
-			    <listitem>
-			      <para>
-				No : P sets the P 2 M subscription in local
-				database to 'No' P removes M from P's roster and
-				stops processing,
-			      </para>
-			    </listitem>
-			    <listitem>
-			      <para>
-				Yes: P proceeds to <xref
-				linkend="comm-protocols-local-subscription-algorithm-id"/>,
-			      </para>
-			    </listitem>
-			  </itemizedlist>
-			</para>
-		      </listitem>
-		    </orderedlist>
-		  </para>
-		</listitem>
-	      </orderedlist>
-	    </para>
-	  </section>
 	</section>
+
       </section>
     </section>
 
@@ -950,29 +573,17 @@
 
 	  <listitem>
 	    <para>
-	      Connection is done by JID and resource as with regular XMPP, the
-	      machine part (after @) is worked out automatically,
+	      Connection is done by JID and resource as with regular XMPP; the
+	      JID part before the '@' symbol is provided explicitely to the
+	      connection manager, the server part after '@' is worked out
+	      automatically by the connection manager.
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para>
-	      The TXT record contains an extra entry 'nstat' that holds the
-	      <code>&lt;nscreen:status&gt;</code> output as a single line.
-
-	      <annotation role="todo">
-		<info>
-		  <authorinitials>tf</authorinitials>
-		</info>
-		<para>
-		  this has to be suitably encoded to ensure we comply with the
-		  DNS-SD size limits -- for the whole TXT record 200 is
-		  recommended maximum, 400 is acceptable, and 1300 is the
-		  absolute maximum allowed); we should aim here not to exceed
-		  the 400 limit
-		</para>
-	      </annotation>
-
+	      The connection manager implements a subscription
+	      mechanism described below (<xref linkend="local-nscreen-subscription"/>,
 	    </para>
 	  </listitem>
 
@@ -983,6 +594,59 @@
 	  </listitem>
 	</itemizedlist>
       </para>
+
+      <section xml:id="local-nscreen-subscription">
+	<title>Subscription mechanism</title>
+
+	<para>
+	  Standard XMPP subscription is implemented exchanging
+	  <code>&lt;presence&gt;</code> stanzas. However, the link-local version
+	  of XMPP<citation><xref linkend="xep0174"/></citation> uses mdns
+	  broadcast to distribute presence information, which makes it
+	  unsuitable for exchanging client-specific
+	  <code>&lt;presence&gt;</code> stanzas, so a different mechanism for
+	  establishing subscription is needed.
+	</para>
+
+	<para>
+	  At the same time, it is desirable that the alternative subscription
+	  mechanism would be functionally equivalent to standard XMPP
+	  subscription so that any user-level APIs could be identical for both
+	  the server-based and server-less scenarios. To this end, the
+	  local-nscreen protocol defines a thin layer allowing the relevant
+	  <code>&lt;presence&gt;</code> stanzas to be delivered independently of
+	  the mdns presence broadcasts.
+	</para>
+
+	<para>
+	  The local-nscreen subscription hanshake is carried out by exchanging
+	  <code>&lt;iq&gt;</code> <code>set</code> and
+	  <code>result</code>stanzas using
+	  <code>nscreen::local-subscription</code> namespace. These
+	  <code>&lt;iq&gt;</code> stanzas provide a wrapper around appropriate
+	  <code>&lt;presence&gt;</code> stanzas as used by the standard XMPP
+	  subscription mechanims, so that a local-nscreen subscription exchange
+	  can be converted into a standard XMPP subscription exchange by simply
+	  stripping out the external <code>&lt;iq&gt;</code> layer.
+	</para>
+
+	<para>
+	  Complient local-nscreen connection managers are required to implement
+	  this mechanism.
+	</para>
+
+<annotation role='comment'>
+  <info>
+    <authorinitials>tf</authorinitials>
+  </info>
+  <para>
+    The initial Telepathy implementation of this protocol might not implement
+    this functionality, deferring it to a second iteration; based on the
+    experiences with the initial implementation, this, and other, parts of this
+    specification might need to be tuned.
+  </para>
+</annotation>
+      </section>
   </section>
 
   <?hard-pagebreak?>
@@ -1036,62 +700,45 @@
     <section xml:id="messaging-app-info">
       <title>Descriptive Application Information</title>
 
-<annotation role='todo'>
+      <para>
+	nScreen applications need to provide descriptive information about
+	themselves that can be presented to the user. At the bare minimum, this
+	information includes a suitable, localised, application name.
+      </para>
+<annotation role='comment'>
   <info>
     <authorinitials>tf</authorinitials>
   </info>
   <para>
-    Rework this using xep-0030.
+    Hm, how will this work in server-less context, are the XEP-0030 iqs forwared
+    to the application to reply to ?
   </para>
 </annotation>
       <para>
-	nScreen applications need to provide localised descriptive information
-	about themselves that can be presented to the user. Specifically, they
-	have to provide localised, user-formated, strings corresponding to the
-	application, sub-domain, domain and service provider components of the
-	nScreen JID.
+	The mechanism for obtaining descriptive application information is XMPP
+	Service Discovery extension<citation><xref
+	linkend="xep0030"/></citation>; the descriptive information is contained
+	in a <code>&lt;identity&gt;</code> element of <code>category</code>
+	'client'. Two new types are defined for use with this category:
+	<code>'nscreen-application'</code> and
+	<code>'nscreen-controller'</code>, corresponding to task-oriented and
+	control applications respectively (see <xref
+	linkend="intro-application-classes"/>).
       </para>
 
       <para>
-	In regular XMPP similar functionality is accomplished using the vCard
-	mechanism<citation><xref linkend="xep0054"/></citation>. This is not
-	suitable for nScreen use, firstly because the vCard specification is a
-	poor fit as it was designed to describe humans, and secondly, because
-	the vCard information is transmitted through the XMPP presence
-	mechanism, which in the server-less context suffers from size
-	constraints that make it impossible to handle fully localised vCard
-	information.
-      </para>
-
-      <para>
-	To address this, the nScreen specification sets out a mechanism that
-	allows one application to request localised descriptive information from
-	another, using XMPP iq mechanism:
-
-	<itemizedlist>
-	  <listitem>
-	    <para>
-	      In order to obtain descriptive information about application B,
-	      application A dispatches <code>&lt;iq</code> stanza of type 'get'
-	      with xmlns attribute 'nscreen::appinfo' and xml:lang attribute
-	      indicating the required locale,
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para>
-	      Application B responds with <code>&lt;iq</code> stanza of type
-	      'result', xmlns attribute 'nscreen::appinfo', holding elements
-	      <code>&lt;nscreen:app-name</code>,
-	      <code>&lt;nscreen:app-subdomain</code>,
-	      <code>&lt;nscreen:app-domain</code>, and
-	      <code>&lt;nscreen:app-provider</code> holding the localised
-	      strings. Each of these elements must have the xml:lang attribute
-	      set to the actual language of it's content (which might, or might
-	      not match the xml:lang of the request).
-	    </para>
-	  </listitem>
-	</itemizedlist>
+	The <code>name</code> attribute of the <code>&lt;identity&gt;</code>
+	element holds application name, while the <code>xml:lang</code>
+	attribute identifies the locale used by the <code>name</code>
+	attribute. As per XMPP Service Discovery extension<citation><xref
+	linkend="xep0030"/></citation>, the query reply may include multiple
+	<code>&lt;identity&gt;</code> elements of the same category and type,
+	but with different <code>xml:lang</code> attribute. However, if the
+	<code>&lt;query&gt;</code> of the original request has an explicit
+	<code>xml:lang</code> attribute, the reply contents should be filtered
+	by that attribute. If the <code>xml:lang</code> attribute of the
+	<code>&lt;query&gt;</code> cannot be matched the repsondent may return
+	either a suitable fallback, or all available translations.
       </para>
 
       <para>
@@ -1104,74 +751,64 @@
 
 	<programlisting language="xml">
 	  <![CDATA[
-<iq to="colormaker.colorsforall.shop@paint.com/resource"
+<iq to="icecream-maker@custom-foods.com/resource"
     type="get"
-    id="appinfo1"
-    xmlns="nscreen::appinfo"
-    xml:lang="en-GB"/>
+    id="appinfo1">
+
+  <query xmlns='http://jabber.org/protocol/disco#info'/
+         xml:lang="en-GB"/>
+
+</iq>
 
  ...
 
-<iq to="a.customer@paint.com/resource"
+<iq to="a.customer@custom-foods.com/resource"
     type="result"
-    id="appinfo1"
-    xmlns="nscreen::appinfo"
-    xml:lang="en-GB">
+    id="appinfo1">
 
-  <nscreen:app-name xml:lang="en-GB">
-    Colour Maker
-  </nscreen:app-name>
+  <identity category='client'
+            type='nscreen-application'
+            name='Magic Icecream Maker'
+	    xml:lang='en-GB'/>
 
-  <nscreen:app-subdomain xml:lang="en-GB">
-    Colours for All
-  </nscreen:app-subdomain>
-
-  <nscreen:app-domain xml:lang="en-GB">
-    Colour Shop
-  </nscreen:app-domain>
-
-  <nscreen:app-provider xml:lang="en-US">
-    Paint Inc.
-  </nscreen:app-provider>
 </iq>]]>
 	</programlisting>
-
-	<para>
-	  Note that in the above example, the final string was not available in
-	  the en-GB locale, and a fallback string in en-US locale is supplied
-	  instead.
-	</para>
       </section>
 
+    </section>
+
+    <section xml:id="messaging-app-caps">
+      <title>Application Capabilities</title>
+
+      <para>
+	nScreen applications advertise their capabilites using XMPP Entity
+	Capabilites protocol<citation><xref linkend="xep0115"/></citation>,
+
+<annotation role='todo'>
+  <info>
+    <authorinitials>tf</authorinitials>
+  </info>
+  <para>
+    Flesh this out with the uri scheme that allows arbitrary nscreen caps to
+    be defined on the fly.
+  </para>
+</annotation>
+      </para>
     </section>
 
     <section xml:id="messaging-status">
       <title>Extended Status</title>
 
       <para>
-	Extended status information is encapsulated in
-	<code>&lt;nscreen:status</code> element embedded inside XMPP
-	<code>&lt;presence</code> stanza. The status element holds an
-	unspecified number of <code>&lt;nscreen:capability</code> elements that
-	describe status for each capability the client supports.
-
-	<annotation role="comment">
-	  <info>
-	    <authorinitials>tf</authorinitials>
-	  </info>
-	  <para>
-	    TP API will be needed to access this; does not have to be too
-	    complex, even being able to retrieve the
-	    <code>&lt;nscreen:status</code> xml snipped for local processing
-	    would be sufficient, e.g., something like GetPresenceStanzaPart
-	    (const char *name) that would be called as GetPresenceStanzaPart
-	    ("nscreen:status").
-	  </para>
-	</annotation>
+	Extended status information is advertised using XMPP Personal Eventing
+	Protocol<citation><xref linkend="xep0163"/></citation>.  The status
+	payload is help by an <code>&lt;nscreen:status&gt;</code> element,
+	holding an unspecified number of <code>&lt;nscreen:capability&gt;</code>
+	elements that describe status for each capability the client supports.
       </para>
 
       <para>
-	The <code>&lt;nscreen:capability</code> element can be extended with
+	The <code>&lt;nscreen:capability&gt;</code> element can be extended with
 	custom attributes; however, no frequently changing information (such as
 	current playback position) is permitted as part of status to avoid
 	flooding of the network.
@@ -1207,99 +844,53 @@
       <title>Instruction Messages</title>
 
       <para>
-	Instruction messages are used to send nScreen commands. The protocol
-	defines a set of generic xml elements that are used to encapsulate
-	nScreen messages, with parameters transmitted via xml attributes.
+	Instruction messages are used to send nScreen commands and information
+	queries. The protocol defines a set of generic xml elements that are
+	used to encapsulate nScreen messages, with parameters transmitted via
+	xml attributes.
       </para>
 
-      <section xml:id="messaging-commands-transport">
-	<title>Message Transport</title>
+      <para>
+	The messages per se are exchanged using XMPP <code>&lt;iq&gt;</code>
+	stanzas, with xmlns of 'nscreen::message'. Commands are dispatched using
+	<code>&lt;iq&gt;</code> stanza of type <code>set</code>, while
+	information requests are sent using type <code>get</code>. All
+	<code>get</code> / <code>set</code> requests are acknowledged by the
+	recepient using <code>&lt;iq&gt;</code> stanzas of type
+	<code>result</code> or <code>error</code>.
+      </para>
 
-	<annotation role="todo">
-	  <info>
-	    <authorinitials>tf</authorinitials>
-	  </info>
-	  <para>
-	  The are multiple options here, including: (a) use <code>&lt;iq</code>
-	  stanzas with suitable nScreen name-space; (b) insert
-	  <code>&lt;nscreen:message</code> into <code>&lt;message</code> stanza
-	  on the same level as <code>&lt;body</code>; (c) use XMPP ad-hoc
-	  commands<citation><xref linkend="xep0050"/></citation>, (NB:
-	  jabber-rpc is not suitable, because the RPC arguments for each call
-	  are fixed in number and position.)
-	</para>
+      <section xml:id="messaging-commands-iq-set">
+	<title>Commands</title>
 
 	<para>
-	  (a) is probably the least efficient way of doing this, I can see no
-	  obvious advantages, and would need a whole API/interface for these
-	  IQs.
-	</para>
-
-	<para>
-	  (b) would really just need API to retrieve the
-	  <code>&lt;nscreen:message</code> xml snipped out of the message as per
-	  the extended status information.
-	</para>
-
-	<para>
-	  (c) has the advantage of predefined capability discovery mechanism
-	  (though this could easily be added alongside (b)), the multi-stage
-	  processing it facilitates might add extra flexibility making
-	  everything bit more future proof, and bulk of the mechanism would be
-	  nScreen-agnostic, with the extension being limited to defining the
-	  payload. BUT, there seems to be no API in telepathy for this at the
-	  moment, so that would require implementing this whole stack (also, how
-	  well is xep-0050 supported outside of telepathy, i.e., we are looking
-	  for non-telepathy deployment, and excessive work required could slow
-	  this down).
-	</para>
-
-	<para>
-	  So, (c) seems like the ideal solution, the big question is how much
-	  effort is needed; I don't think Telepathy currently supports this.
-	</para>
-	</annotation>
-      </section>
-
-      <section xml:id="messaging-commands-format">
-	<title>Message Format</title>
-
-	<para>
-	  The top level message element is <code>&lt;nscreen:message</code> with
-	  the following required attributes:
+	  Commands use <code>set</code> type stanzas; the command payload is
+	  carried by one of the following xml elements:
 
 	  <variablelist>
 	    <varlistentry>
 	      <term>
-		version
+		<code>&lt;nscreen:command&gt;</code>
 	      </term>
 	      <listitem>
 		<para>
-		  The nscreen protocol version,
+		  A command sent from app A to app B to executed directly by app
+		  B. <code>&lt;nscreen:command&gt;</code> elements have a
+		  required <code>time</code> attribute (see <xref
+		  linkend="messaging-commands-attributes"/>).
 		</para>
 	      </listitem>
 	    </varlistentry>
 
 	    <varlistentry>
 	      <term>
-		type
+		<code>&lt;nscreen:transfer&gt;</code>
 	      </term>
-	      <listitem>
-		<para>
-		  Tthe message type (see below and <xref
-		  linkend="appendix-dtd"/>),
-		</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term>
-		time
-	      </term>
-	      <listitem>
-		<para>
-		  Time of message dispatch, expressed according to ISO 8601,
-		  with at least millisecond precision.
+	    <listitem>
+	      <para>
+		A request by application A to application B to transfer B's
+		activity to application C; the identity of C is specified by a
+		required <code>jid</code> attribute.
 	      </para>
 	    </listitem>
 	    </varlistentry>
@@ -1307,83 +898,132 @@
 	</para>
       </section>
 
-      <section xml:id="messaging-command-types">
-	<title>Message types</title>
+      <section xml:id="messaging-commands-iq-get">
+	<title>Information requests</title>
 
 	<para>
-	  The following types of messages are defined:
+	  Information requests use <code>get</code> type stanzas; the command
+	  payload is carried by one of the following xml elements:
 
 	  <variablelist>
 	    <varlistentry>
 	      <term>
-		command
-	      </term>
-	      <listitem>
-		<para>
-		  A command sent from app A to app B to executed directly by app
-		  B; the message payload is held by a
-		  <code>&lt;nscreen:command</code> element.
-		</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term>
-		transfer
-	      </term>
-	    <listitem>
-	      <para>
-		A request by application A to application B to transfer
-		B's activity to application C; the message payload is held by
-		<code>&lt;nscreen:transfer</code> element.
-	      </para>
-	    </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term>
-		find
+		<code>&lt;nscreen:find&gt;</code>
 	      </term>
 	      <listitem>
 		<para>
 		  A request by app A to a control app C to identify suitable app
-		  B to dispatch a command to. The message payload uses
-		  <code>&lt;nscreen:transfer</code> element.  Rationale: because
-		  of the need to facilitate e2e encryption, commands cannot be
-		  proxied through control applications; the Find request allows
+		  B to dispatch a command to. The criteria for the search is
+		  given by the supplied attributes, e.g., application capability
+		  would be specified using the <code>capability</code>
+		  attribute.
+		</para>
+
+		<para>
+		  If no suitable application matching the criteria is running
+		  can be identified, the expectation is that the control
+		  application C will attempt to start a suitable application.
+		</para>
+
+		<para>
+		  Rationale: because of the need to
+		  facilitate e2e encryption, commands cannot be proxied through
+		  control applications; the <code>find</code> request allows
 		  clients to initiate a transfer to an application that might
 		  not yet be running on the target device (i.e., C will take
 		  care of spawning a suitable client if one is not available).
 		</para>
 	      </listitem>
 	    </varlistentry>
-
-	    <varlistentry>
-	      <term>
-		found
-	      </term>
-	      <listitem>
-		<para>
-		  A reply by control application C to application B in response
-		  to earlier find request. This is similar to a Transfer
-		  request, but is only generated in response to previous Find
-		  request; the <code>&lt;transfer</code> element is used for the
-		  payload of this reply.
-	      </para>
-	    </listitem>
-	    </varlistentry>
 	  </variablelist>
 	</para>
       </section>
 
-      <section xml:id="messaging-commands-time">
-	<title>Message time</title>
+      <section xml:id="messaging-commands-iq-result">
+	<title>Replies</title>
 
 	<para>
-	  The message dispatch time must have at least millisecond precision;
-	  consequently all nScreen capable devices are required to keep local
-	  clock accurate to a degree necessary to generate time stamps with the
-	  required accuracy.
+	  All received <code>set</code> and <code>get</code> nScreen messages
+	  queries must be explicitely acknowledged by the recipient. Success is
+	  indicated using an <code>&lt;iq&gt;</code> stanza of type
+	  <code>result</code>, while stanzas of type <code>error</code> are used
+	  to indicate failure.
+	</para>
+
+	<para>
+	  Depending on the nature of the original <code>&lt;iq&gt;</code>
+	  <code>get</code> / <code>set</code> stanza, returned stanza of type
+	  <code>result</code> might, or might not hold additional information
+	  using one of the following xml elements:
+
+	  <variablelist>
+	    <varlistentry>
+	      <term>
+		<code>&lt;nscreen:find-result&gt;</code>
+	      </term>
+	      <listitem>
+		<para>
+		  Reply to a previous <code>find</code> query that was
+		  successfully resolved. The identified application jid is
+		  stored in the <code>jid</code> attribute.
+		</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+	</para>
+
+	<para>
+	  Returned stanzas of type <code>error</code> should include additional
+	  information as to the nature of the error, using the XMPP
+	  <code>&lt;error&gt;</code> container with the standard
+	  <code>urn:ietf:params:xml:ns:xmpp-stanzas</code> namespace.
+
+<annotation role='todo'>
+  <info>
+    <authorinitials>tf</authorinitials>
+  </info>
+  <para>
+    Define some common error conditions here and types.
+
+    Can we manage with not defining our own error condition namespace ?
+  </para>
+</annotation>
+	</para>
+      </section>
+
+      <section xml:id="messaging-commands-attributes">
+	<title>Common Attributes for nScreen message elements</title>
+
+
+	<para>
+	  The following attributes are used by the nScreen messages:
+
+	  <variablelist>
+	    <varlistentry>
+	      <term>
+		<code>version</code>
+	      </term>
+	      <listitem>
+		<para>
+		  The nscreen protocol version, this attribute is required on
+		  all top-level nScreen elements.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<code>time</code>
+	      </term>
+	      <listitem>
+		<para>
+		  Time of message dispatch, in standard XMPP
+		  format<citation><xref linkend="xep0082"/></citation>, with at
+		  least millisecond precision.
+	      </para>
+	    </listitem>
+	    </varlistentry>
+	  </variablelist>
 	</para>
       </section>
 
@@ -1396,20 +1036,33 @@
 	</para>
 
 	<programlisting><![CDATA[
-<nscreen:message type='command'
-                 version='1.0'
-                 time='1970-01-01T00:00:00.000Z'>
+<iq type='set'
+    id='command1'
+    to='magic-video-player@blackbox.local'
+    xmlns='nscreen::message'>
 
-  <nscreen:command capability='ns-caps-video'
+  <nscreen:command version='1.0'
+                   time='1970-01-01T00:00:00.000Z'
+                   capability='ns-caps-video'
                    activity='ns-activity-play'
                    uri='some random youtube url'
                    progress='0.75'>
         [Optional command data; binary data base64 encoded]
   </nscreen:command>
-</nscreen:message>]]>
+</iq>
+
+ ...
+
+<iq type='result'
+    id='command1'
+    to='the-other-player@bluebox.local'
+    from='magic-video-player@blackbox.local'
+    xmlns='nscreen::message'>
+
+  <success/>
+</iq>]]>
 	</programlisting>
       </section>
-
     </section>
 
     <section xml:id="messaging-metadata">
@@ -1698,6 +1351,12 @@
       </bibliomisc>
     </biblioentry>
 
+    <biblioentry xml:id="xep0030">
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0030.html">XEP-0060</link>
+      </bibliomisc>
+    </biblioentry>
+
     <biblioentry xml:id="xep0050">
       <bibliomisc>
       <link xlink:href="http://xmpp.org/extensions/xep-0050.html">XEP-0050</link>
@@ -1716,6 +1375,12 @@
       </bibliomisc>
     </biblioentry>
 
+    <biblioentry xml:id="xep0082">
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0084.html">XEP-0082</link>
+      </bibliomisc>
+    </biblioentry>
+
     <biblioentry xml:id="xep0084">
       <bibliomisc>
       <link xlink:href="http://xmpp.org/extensions/xep-0084.html">XEP-0084</link>
@@ -1725,6 +1390,18 @@
     <biblioentry xml:id="xep0096">
       <bibliomisc>
       <link xlink:href="http://xmpp.org/extensions/xep-0096.html">XEP-0096</link>
+      </bibliomisc>
+    </biblioentry>
+
+    <biblioentry xml:id="xep0115">
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0115.html">XEP-0115</link>
+      </bibliomisc>
+    </biblioentry>
+
+    <biblioentry xml:id="xep0163">
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0163.html">XEP-0163</link>
       </bibliomisc>
     </biblioentry>
 

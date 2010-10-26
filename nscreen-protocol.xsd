@@ -112,8 +112,6 @@
   <!-- - - - - - - - - - - - - - -->
   <!-- nScreen Status elements  -->
   <!-- - - - - - - - - - - - - - -->
-
-  <!-- included inside <presence></> -->
   <xs:element name='status'>
     <xs:complexType>
       <xs:sequence>
