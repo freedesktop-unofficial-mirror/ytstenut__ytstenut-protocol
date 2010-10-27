@@ -115,50 +115,54 @@
   <xs:element name='status'>
     <xs:complexType>
       <xs:sequence>
-        <xs:choice minOccurs='1' maxOccurs='1'>
-          <xs:element ref='encrypted-content'/>
+        <xs:choice minOccurs='1' maxOccurs='unbouned'>
+          <xs:element ref='description'/>
         </xs:choice>
       </xs:sequence>
 
       <xs:attribute name='version'
-                    type='xs:string'
-                    use='required'/>
+		    type='xs:string'
+		    use='required'/>
+      <xs:attribute name='capability'
+		    type='xs:NMTOKEN'
+		    use='required'/>
+      <xs:attribute name='activity'
+		    type='xs:NMTOKEN'
+		    use='optional'
+		    default='ns-activity-idle'/>
       <xs:attribute name='primary-capability'
-                    type='string'
-                    use='required'/>
+		    type='boolean'
+		    use='optional'
+		    default='false'/>
+      <xs:attribute name='uri'
+		    type='xs:anyURI'
+		    use='optional'/>
+      <xs:attribute name='uid'
+		    type='xs:string'
+		    use='optional'/>
+      <xs:attribute name='volume'
+		    type='xs:double'
+		    use='optional'>
+	<simpleType>
+	  <restriction base='double'>
+	    <minInclusive value='0.0'/>
+	    <maxInclusive value='1.0'/>
+	  </restriction>
+	</simpleType>
+      </xs:attribute>
+      <xs:anyAttribute namespace='##other'/>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name='capability'>
+  <xs:element name='description'>
     <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base='xs:string'>
-          <xs:attribute name='type'
-                        type='xs:NMTOKEN'
-                        use='required'/>
-          <xs:attribute name='activity'
-                        type='xs:NMTOKEN'
-                        use='optional'
-		        default='ns-activity-idle'/>
-          <xs:attribute name='uri'
-                        type='xs:anyURI'
-                        use='optional'/>
-          <xs:attribute name='uid'
-                        type='xs:string'
-                        use='optional'/>
-          <xs:attribute name='volume'
-                        type='xs:double'
-                        use='optional'>
-	    <simpleType>
-  	      <restriction base='double'>
-	        <minInclusive value='0.0'/>
-    	        <maxInclusive value='1.0'/>
-  	      </restriction>
-	    </simpleType>
-	  </xs:attribute>
-	  <xs:anyAttribute namespace='##other'/>
-        </xs:extension>
-      </xs:simpleContent>
+       <xs:simpleContent>
+         <xs:extension base='xs:string'>
+	   <xs:attribute name='xml:lang'
+			 type='xs:string'
+			 use='required'/>
+	 </xs:extension>
+       </xs:simpleContent>
     </xs:complexType>
   </xs:element>
 </xs:schema>

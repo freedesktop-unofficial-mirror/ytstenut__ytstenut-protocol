@@ -117,13 +117,15 @@
     <revision space-before="2.0em"
 	      start-indent="0pt"
 	      end-indent="0pt"
+	      font-size="&hsize0;"
 	      />
+
     <!-- the space after is an uggly hack to force the generated toc
     onto a new page -->
     <revhistory space-before="5in"
 		start-indent="0pt"
 		end-indent="0pt"
-		/>
+		font-size="&hsize0space;"/>
   </t:titlepage-content>
 
   <t:titlepage-content t:side="verso">

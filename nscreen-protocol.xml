@@ -30,9 +30,9 @@
       </revision>
       <revision>
          <revnumber>0.2</revnumber>
-         <date>22 October 2010</date>
+         <date>27 October 2010</date>
          <revremark>
-	   revised based on preliminary comments from Collabora
+	   responding to first batch of comments from Will Thompson (Collabora)
 	 </revremark>
       </revision>
     </revhistory>
@@ -82,27 +82,20 @@
 	  wide spectrum of user-facing applications,
 	</para>
       </listitem>
+
       <listitem>
 	<para>
-	  To provide means for transmitting meta-data describing user-oriented
-	  activities, and doing so in secure manner protecting user privacy,
-	</para>
-      </listitem>
-      <listitem>
-	<para>
-	  To provide standard meta-data definitions for most common user-facing
-	  activities, so as to allow common classes of applications to
-	  inter-operate without having to know anything about the implementation
-	  details of their nScreen partners.
+	  To provide standard meta-data model to facilitate efficient
+	  inter-application communication.
 	</para>
       </listitem>
     </itemizedlist>
 
     <section xml:id="intro-usecases">
-      <title>Basic Use cases</title>
+      <title>Service Models</title>
 
       <para>
-	nScreen use cases fall into two broad categories:
+	nScreen services fall into two broad categories:
       </para>
 
       <para>
@@ -112,7 +105,7 @@
 	      Subscription-based services: these are provided by discrete
 	      entities, each operating their own nScreen server. nScreen users
 	      connect to this server using credentials agreed with the service
-	      provider, and interact with applications provided by the service
+	      provider, and interact with applications offered by the service
 	      provider through their server.
 	    </para>
 	  </listitem>
@@ -152,7 +145,7 @@
 	  <listitem>
 	    <para>
 	      Control Applications: these provide background nScreen services on
-	      an nScreen-enabled devices. their principal purpose is to allow
+	      an nScreen-enabled devices. Their principal purpose is to allow
 	      task-oriented applications to direct their communications at a
 	      device, rather than a specific task-oriented application on that
 	      device, and to ensure that appropriate task-oriented application
@@ -170,27 +163,76 @@
       </para>
     </section>
 
-    <section xml:id="intro-document-structure">
-      <title>Document Structure</title>
+    <section xml:id="intro-metadata">
+      <title>Meta-data model</title>
 
       <para>
-	The remainder of this document is divided into three parts: <xref
-	linkend="comm-protocols"/>, describes the protocols that define the
-	nScreen communication backbone, <xref linkend="local-nscreen"/>,
-	specifies link-local nScreen protocol used for server-less nScreen
-	communication, and <xref linkend="messaging"/>, describes the nScreen
-	messaging protocols and metadata model.
+	One of the key components of the nScreen framework is the meta-data
+	model. The purpose of the nScreen protocols is to allow applications to
+	exchange meta-data describing their activities in a way that would allow
+	them to coordinate these across multiple devices and
+	platforms. Consequently, the meta-data model must be:
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Flexible and extensible, to allow use with new, innovative
+	      applications,
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Sufficiently standardised to allow common classes
+	      of applications to talk to each other transparently.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	It is worth noting that the protocol does not aim to provide mechanisms
+	for actual data transfers, though in some common and specific cases it
+	mandates which other standard protocols should be used (see <xref
+	linkend="messaging-data-transfer"/>).
+      </para>
+
+      <para>
+	The nScreen meta-data is modelled as a pairing of a capability subject
+	(representing a single application feature that is of interest to a
+	user) and an activity predicate (a way in which the user can manipulate
+	content tied to a specific capability). Both the capability and the
+	activity in each specific pair can be further qualified by attributes;
+	the resulting <code>{capability, activity, attributes}</code> tuple
+	constitutes the elementary meta-data unit.
+      </para>
+
+      <para>
+	The above described tuple is used in two distinct ways: to indicate
+	present application state, and to encapsulate instructions about future
+	desired state.
+      </para>
+
+      <para>
+	In order to facilitate communication between common application classes,
+	the protocol defines the subjects, verbs and attributes for common types
+	of user activities. At the same time, new subjects, verbs and attributes
+	can be defined and used by specialised applications.
+      </para>
+
+      <para>
+	In addition to the meta-data describing application activities, the
+	protocol also specifies means through which application describe
+	themselves to the user.
+      </para>
+
+      <para>
+	(For full XML definition see <xref linkend="appendix-dtd"/>.)
       </para>
     </section>
-  </section>
 
-<?hard-pagebreak?>
-
-  <section xml:id="comm-protocols">
-    <title>Communication Backbone Protocols</title>
-
-    <section xml:id="comm-protocols-intro">
-      <title>Overview</title>
+    <section xml:id="intro-xmpp">
+      <title>XMPP backbone</title>
 
       <para>
 	The nScreen communication protocols are built on the existing XMPP (aka
@@ -246,7 +288,8 @@
       </para>
 
       <para>
-	The nScreen framework defines two extensions to XMPP:
+	As far as possible, the nScreen framework aims to reusing existing XMPP
+	capabilities and features; these are augmented by two extensions:
 
 	<itemizedlist>
 	  <listitem>
@@ -269,68 +312,84 @@
 	the use of standard, but optional, XMPP features, particularly so, where
 	this is desirable to improve security and privacy.
       </para>
-
-      <section xml:id="comm-protocols-security">
-	<title>Security and Privacy Considerations</title>
-
-	<para>
-	  The flexible and extensible nature of the nScreen framework means that
-	  it is not possible to predict what kind of data my be transmitted via
-	  the protocol in its real-world deployment. Furthermore, the
-	  expectation of deployment on variety of platforms, ranging from
-	  desktop computers to mobile phones, means that multiple
-	  implementations of the protocol will be in use. It is, therefore,
-	  paramount that security and privacy of user data is a key factor in
-	  the design of the protocol itself. More specifically:
-
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		The protocol must facilitate privacy of data in transit,
-	      </para>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		Reliable identity verification mechanism must be available,
-	      </para>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		The protocol must provide structured access control to user's
-		local resources.
-	      </para>
-	    </listitem>
-	  </itemizedlist>
-	</para>
-
-	<para>
-	  With regards to the above, the following should be noted:
-
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		XMPP on its on only provides client-to-server privacy, and as
-		such is susceptible to server eavesdropping,
-	      </para>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		Normal XMPP presence information is broadcast across all
-		subscribed contacts, which might not be appropriate for certain
-		types of data that might be included in nScreen extended status
-		message.
-	      </para>
-	    </listitem>
-	  </itemizedlist>
-	</para>
-      </section>
     </section>
+  </section>
 
-    <section xml:id="comm-protocols-sub-and-authentication">
-      <title>Authentication, identity verification, subscription</title>
+  <?hard-pagebreak?>
+
+  <section xml:id="security">
+    <title>Security and Privacy Considerations</title>
+
+    <para>
+      The flexible and extensible nature of the nScreen framework means that it
+      is not possible to predict what kind of data may be transmitted via the
+      protocol in its real-world deployment. Furthermore, the expectation of
+      deployment on a variety of platforms, ranging from desktop computers to
+      mobile phones, means that multiple implementations of the protocol will be
+      in use. It is, therefore, important that security and privacy of user data
+      is a key factor in the design of the protocol itself. More specifically:
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    The protocol must facilitate privacy of data in transit where that
+	    is appropriate or required,
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Reliable identity verification mechanism must be available,
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    The protocol must provide structured access control to user's
+	    local resources.
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+
+    <para>
+      With regards to the above, the following should be noted in particular:
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    XMPP on its on only provides client-to-server privacy. As such XMPP
+	    exchanges that span multiple servers are susceptible to server
+	    eavesdropping; the practical implications of this are addressed in
+	    <xref linkend="comm-protocols-privacy"/>,
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Normal XMPP presence information is broadcast across all subscribed
+	    contacts, and, in the case of link-local XMPP protocol, advertised
+	    entirely openly via m-DNS broadcasts; consequently the protocol
+	    avoids using the presence mechanism for meta-data exchanges,
+	    including the extended status information (see <xref
+	    linkend="messaging-status"/>).
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+
+    <para>
+      The nScreen protocol specifies two sets of features aiming to ensure
+      privacy of user data: the use of TLS (see <xref
+      linkend="comm-protocols-privacy-tls"/>), and the use of end-to-end
+      encryption (see <xref linkend="comm-protocols-privacy-e2e"/>).
+    </para>
+
+  </section>
+
+<?hard-pagebreak?>
+  <section xml:id="comm-protocols">
+    <title>Communication Backbone Protocols</title>
 
       <section xml:id="comm-protocols-jid">
 	<title>nScreen JID</title>
@@ -349,9 +408,9 @@
 	</para>
 
 	<para>
-	  In the remainder of this document, the term 'JID' is used to refer
+	  (In the remainder of this document, the term 'JID' is used to refer
 	  to bare JIDs; if a fully qualified jabber id is meant, this will
-	  always be explicitly stated.
+	  always be explicitly stated.)
 	</para>
       </section>
 
@@ -360,15 +419,16 @@
 
 	<para>
 	  Authentication is accomplished via SASL per core XMPP
-	  protocol<citation><xref linkend="rfc3920"/></citation>. SASL
-	  authentication must be implemented both for both server-based and
-	  server-less contexts.
+	  protocol (<citation><xref linkend="rfc3920"/></citation>,
+	  <citation><xref linkend="rfc2222"/></citation>). SASL authentication
+	  must be implemented both for both server-based and server-less
+	  contexts.
 	</para>
       </section>
 
       <section xml:id="comm-protocols-identity">
 	<title>
-	Identity Verification
+	  Identity Verification
 	</title>
 
 	<section xml:id="comm-protocols-identity-server">
@@ -387,17 +447,19 @@
 	  </para>
 
 	  <para>
-	    An nScreen service that requires reliable identity verification must
-	    either implement additional identity verfication measures beyond
-	    what is specified by the current version of the protocol, or be
-	    implemented using a dedicated nScreen server that requires direct
-	    login, and does not permit server hops (i.e., both A and B are
-	    logging into the same server in order to talk to each other). In
-	    this situation the service provider is fully in control of the
-	    authentication procedure, and, assuming 1:1 mapping between users
-	    and their authentication credentials is in place, successful
-	    authentication provides also for identity verification.
-	</para>
+	    Though there might be numerous nScreen applications for which an
+	    anonymous service is entirely appropriate, an nScreen service that
+	    requires reliable identity verification must either implement
+	    additional identity verification measures beyond what is specified
+	    by the current version of the protocol, or be implemented using a
+	    dedicated nScreen server that requires direct login, and does not
+	    permit server hops (i.e., both A and B are logging into the same
+	    server in order to talk to each other). In this situation the
+	    service provider is fully in control of the authentication
+	    procedure, and, assuming 1:1 mapping between users and their
+	    authentication credentials is in place, successful authentication
+	    provides also for identity verification.
+	  </para>
 	</section>
 
 	<section xml:id="comm-protocols-identity-cloud">
@@ -413,7 +475,7 @@
 
 	  <para>
 	    Although identity spoofing carries with it lesser risks in the
-	    context of the home cloud, the following messures are required to be
+	    context of the home cloud, the following measures are required to be
 	    taken by compliant nScreen implementations to improve security:
 
 	    <itemizedlist>
@@ -422,7 +484,7 @@
 		  Applications must not make assumptions about identity of other
 		  nScreen participants in the cloud context, unless they
 		  implement additional identity verification procedures not
-		  specifiend by the current version of the nScreen protocol,
+		  specified by the current version of the nScreen protocol,
 		</para>
 	      </listitem>
 
@@ -430,7 +492,7 @@
 		<para>
 		  Applications running both in server-based and server-less
 		  contexts must not inject data from server-based streams into
-		  the cloud.
+		  the cloud and vice versa.
 		</para>
 	      </listitem>
 	    </itemizedlist>
@@ -442,8 +504,8 @@
 
 	  <para>
 	    Additional identity verification mechanism addressing the current
-	    limitations, using more robust mechanisms (such as PKI) will be
-	    defined in future versions of the protocol.
+	    limitations, using technologies such as PKI, will be defined in
+	    future versions of the protocol.
 	  </para>
 	</section>
       </section>
@@ -487,24 +549,10 @@
 	  </para>
 	</section>
 
-      </section>
     </section>
 
     <section xml:id="comm-protocols-privacy">
       <title>Privacy Protocols</title>
-
-      <para>
-	The nScreen protocol specifies two sets of features aiming to ensure
-	privacy of user data: the use of TLS and the use of end-to-end
-	encryption. TLS layer facilitates private client-to-server and
-	server-to-server data exchange. It does not, however, prevent
-	eavesdropping by a server involved in data transmission. As such, TLS
-	provides sufficient protection only for low risk data. Services wishing
-	to transmit high risk data (e.g., banking details and such) must
-	either secure the server (i.e., ensure no server hops are involved and
-	no sensitive data is leaked in the presence information), or,
-	preferably make use of end-to-end encryption in addition to TLS.
-      </para>
 
       <section xml:id="comm-protocols-privacy-tls">
 	<title>TLS</title>
@@ -517,6 +565,16 @@
 	  server-to-server connections; both compliant servers and clients are
 	  required to refuse connections that do not use TLS.
 	</para>
+
+	<para>
+	  It should be noted here again that the use of TLS on its own does not
+	  prevent server eavesdropping when the XMPP conversation spans multiple
+	  servers. nScreen applications needing to transmit highly sensitive
+	  data should either use single-server XMPP exchanges along the lines
+	  described in <xref linkend="comm-protocols-identity-server"/>, or
+	  otherwise will have to make use of end-to-end encryption.
+	</para>
+
       </section>
 
       <section xml:id="comm-protocols-privacy-e2e">
@@ -532,10 +590,15 @@
 	      <authorinitials>tf</authorinitials>
 	    </info>
 	    <para>
-	      Ideally, some form of e2e TLS channel for exchange of presence
-	      and messages would be preferable, but the xep-e2e will do in
-	      principle; we are unlikely to be implementing this initially
-	      anyway.
+	      Ideally, some form of e2e TLS channel for exchange of presence and
+	      messages would be preferable, the support for which the XMPP group
+	      is looking into<citation><xref
+	      linkend="jng-xtls"/></citation>. The xep-e2e will do in principle;
+	      it is worth noting that it is unlikely to be used because entities
+	      requiring this level of privacy will have to use a dedicated
+	      nScreen server for identity verification, in which case the TLS
+	      provides complete privacy of data in transit, rendering e2e
+	      superfluous.
 	    </para>
 	  </annotation>
 
@@ -551,15 +614,14 @@
       <para>
 	The local-nscreen protocol allows for automatic connection between
 	nScreen clients running on the same LAN. It is derived from the
-	local-xmpp protocol, but with some important changes:
+	local-xmpp protocol, but with some differences:
 
 	<annotation role="comment">
 	  <info>
-	    <authorinitials>tf</authorinitials>
+	    <authorinitials>wt</authorinitials>
 	  </info>
 	  <para>
-	    I think it should be possible to implement these difference as an
-	    --nscreen command line option to salut, really.
+	    Should be possible to support in salut using a connection parameter.
 	  </para>
 	</annotation>
 
@@ -574,7 +636,7 @@
 	  <listitem>
 	    <para>
 	      Connection is done by JID and resource as with regular XMPP; the
-	      JID part before the '@' symbol is provided explicitely to the
+	      JID part before the '@' symbol is provided explicitly to the
 	      connection manager, the server part after '@' is worked out
 	      automatically by the connection manager.
 	    </para>
@@ -582,8 +644,8 @@
 
 	  <listitem>
 	    <para>
-	      The connection manager implements a subscription
-	      mechanism described below (<xref linkend="local-nscreen-subscription"/>,
+	      The connection manager implements a subscription mechanism
+	      described below (<xref linkend="local-nscreen-subscription"/>,
 	    </para>
 	  </listitem>
 
@@ -601,7 +663,7 @@
 	<para>
 	  Standard XMPP subscription is implemented exchanging
 	  <code>&lt;presence&gt;</code> stanzas. However, the link-local version
-	  of XMPP<citation><xref linkend="xep0174"/></citation> uses mdns
+	  of XMPP<citation><xref linkend="xep0174"/></citation> uses m-DNS
 	  broadcast to distribute presence information, which makes it
 	  unsuitable for exchanging client-specific
 	  <code>&lt;presence&gt;</code> stanzas, so a different mechanism for
@@ -615,23 +677,22 @@
 	  the server-based and server-less scenarios. To this end, the
 	  local-nscreen protocol defines a thin layer allowing the relevant
 	  <code>&lt;presence&gt;</code> stanzas to be delivered independently of
-	  the mdns presence broadcasts.
+	  the m-DNS presence broadcasts.
 	</para>
 
 	<para>
-	  The local-nscreen subscription hanshake is carried out by exchanging
-	  <code>&lt;iq&gt;</code> <code>set</code> and
-	  <code>result</code>stanzas using
-	  <code>nscreen::local-subscription</code> namespace. These
+	  The local-nscreen subscription handshake is carried out by exchanging
+	  <code>&lt;iq&gt;</code> <code>set</code> stanzas using
+	  <code>urn:nscreen:local-subscription</code> namespace. These
 	  <code>&lt;iq&gt;</code> stanzas provide a wrapper around appropriate
 	  <code>&lt;presence&gt;</code> stanzas as used by the standard XMPP
-	  subscription mechanims, so that a local-nscreen subscription exchange
+	  subscription mechanism, so that a local-nscreen subscription exchange
 	  can be converted into a standard XMPP subscription exchange by simply
 	  stripping out the external <code>&lt;iq&gt;</code> layer.
 	</para>
 
 	<para>
-	  Complient local-nscreen connection managers are required to implement
+	  Compliant local-nscreen connection managers are required to implement
 	  this mechanism.
 	</para>
 
@@ -653,50 +714,6 @@
   <section xml:id="messaging">
     <title>Messaging Protocols</title>
 
-    <annotation role="comment">
-      <info>
-	<authorinitials>tf</authorinitials>
-      </info>
-      <para>
-	This is the upper layer of the nScreen protocols; this is the one bit we
-	have a fairly good idea what we want to do -- we already have a working
-	proof-of-concept implementation of libnscreen on the top of telepathy
-	working along these lines; except we do not use XML for the messages but
-	use specially crafted strings inside normal presence and IM messages.
-      </para>
-    </annotation>
-
-    <para>
-      The purpose of the nScreen protocols is to allow applications to exchange
-      meta-data that would allow them to coordinate their activity across
-      multiple devices; the protocol does not aim to provide mechanisms for
-      actual data transfers, though in some common and specific cases it
-      mandates which other standard protocols should be used, see <xref
-      linkend="messaging-data-transfer"/>.
-    </para>
-
-    <para>
-      The messaging consists of three basic building blocks: application
-      description information, extended status information, and instruction
-      messages. Message of one the latter two types is conceptually a data tuple
-      describing an activity in terms of a subject (capability in use), verb
-      (the activity itself) and set of attributes (what and how). The primary
-      difference between the two types of messages is in the tense: status
-      message describe a present state, while instruction messages refer to a
-      desired future state.
-    </para>
-
-    <para>
-      In order to facilitate communication between common application classes,
-      the protocol defines the subjects, verbs and attributes for common user
-      activities. At the same time, new subjects, verbs and attributes can be
-      defined and used by specialised applications.
-    </para>
-
-    <para>
-      (For full XML definition see <xref linkend="appendix-dtd"/>.)
-    </para>
-
     <section xml:id="messaging-app-info">
       <title>Descriptive Application Information</title>
 
@@ -705,15 +722,6 @@
 	themselves that can be presented to the user. At the bare minimum, this
 	information includes a suitable, localised, application name.
       </para>
-<annotation role='comment'>
-  <info>
-    <authorinitials>tf</authorinitials>
-  </info>
-  <para>
-    Hm, how will this work in server-less context, are the XEP-0030 iqs forwared
-    to the application to reply to ?
-  </para>
-</annotation>
       <para>
 	The mechanism for obtaining descriptive application information is XMPP
 	Service Discovery extension<citation><xref
@@ -726,6 +734,15 @@
 	linkend="intro-application-classes"/>).
       </para>
 
+<annotation role='comment'>
+  <info>
+    <authorinitials>tf</authorinitials>
+  </info>
+  <para>
+    I assume this will work in server-less context?
+  </para>
+</annotation>
+
       <para>
 	The <code>name</code> attribute of the <code>&lt;identity&gt;</code>
 	element holds application name, while the <code>xml:lang</code>
@@ -737,8 +754,8 @@
 	<code>&lt;query&gt;</code> of the original request has an explicit
 	<code>xml:lang</code> attribute, the reply contents should be filtered
 	by that attribute. If the <code>xml:lang</code> attribute of the
-	<code>&lt;query&gt;</code> cannot be matched the repsondent may return
-	either a suitable fallback, or all available translations.
+	<code>&lt;query&gt;</code> cannot be matched the respondent may return
+	either a suitable fall-back, or all available translations.
       </para>
 
       <para>
@@ -749,8 +766,7 @@
       <section xml:id="messaging-app-info-example">
 	<title>Application Information XML example</title>
 
-	<programlisting language="xml">
-	  <![CDATA[
+	<programlisting language="xml"><![CDATA[
 <iq to="icecream-maker@custom-foods.com/resource"
     type="get"
     id="appinfo1">
@@ -781,19 +797,26 @@
       <title>Application Capabilities</title>
 
       <para>
-	nScreen applications advertise their capabilites using XMPP Entity
-	Capabilites protocol<citation><xref linkend="xep0115"/></citation>,
-
-<annotation role='todo'>
-  <info>
-    <authorinitials>tf</authorinitials>
-  </info>
-  <para>
-    Flesh this out with the uri scheme that allows arbitrary nscreen caps to
-    be defined on the fly.
-  </para>
-</annotation>
+	nScreen applications advertise their capabilities via XMPP Entity
+	Capabilities protocol<citation><xref linkend="xep0115"/></citation>,
+	using <code>urn:nscreen:capabilities</code> as the value of the
+	<code>node</code> attribute of the <code>&lt;c&gt;</code> element.
       </para>
+
+      <para>
+	Each individual capability is represented by the
+	<code>&lt;feature&gt;</code> element; the <code>var</code> attribute is
+	constructed by concatenating an <code>'urn:nscreen:capabilies:'</code>
+	prefix and the canonical name of the capabality (i.e., for standard
+	capabilities, as defined in <xref
+	linkend="messaging-metadata-caps"/>). For example, a video playback
+	capability would be represented as:
+      </para>
+
+      <programlisting><![CDATA[
+<feature var='urn:nscreen:capabilities:ns-caps-video' />
+
+]]></programlisting>
     </section>
 
     <section xml:id="messaging-status">
@@ -801,40 +824,109 @@
 
       <para>
 	Extended status information is advertised using XMPP Personal Eventing
-	Protocol<citation><xref linkend="xep0163"/></citation>.  The status
-	payload is help by an <code>&lt;nscreen:status&gt;</code> element,
-	holding an unspecified number of <code>&lt;nscreen:capability&gt;</code>
-	elements that describe status for each capability the client supports.
+	Protocol<citation><xref linkend="xep0163"/></citation>. The status
+	payload is held by an <code>&lt;nscreen:status&gt;</code> element and
+	its attributes; applications with multiple capabilites must include
+	an <code>&lt;nscreen:status&gt;</code> element for each capability.
       </para>
 
       <para>
-	The <code>&lt;nscreen:capability&gt;</code> element can be extended with
-	custom attributes; however, no frequently changing information (such as
-	current playback position) is permitted as part of status to avoid
-	flooding of the network.
+	The following attributes, in addition to those defined in <xref
+	linkend="messaging-metadata-attributes"/>, are used with the
+	<code>&lt;nscreen:status&gt;</code> element:
+
+	<variablelist>
+	  <varlistentry>
+	    <term><code>version</code></term>
+
+	    <listitem>
+	      <para>
+		nScreen protocol version; required,
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term><code>capability</code></term>
+
+	    <listitem>
+	      <para>
+		The capability this status applies to; required. The value
+		should be preferably one of those defined in <xref
+		linkend="messaging-metadata-caps"/>,
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term><code>activity</code></term>
+
+	    <listitem>
+	      <para>
+		The activity this status represents; optional, if not present
+		<code>ns-activity-idle</code> is implied. The value should be
+		preferably one of those defined in <xref
+		linkend="messaging-metadata-activity"/>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term><code>primary-capability</code></term>
+
+	    <listitem>
+	      <para>
+		boolean indicating whether capability this status applies to is
+		the primary capability of the application; optional, if absent
+		<code>false</code> is implied.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	</variablelist>
       </para>
 
       <para>
-	In addition to the extended status mechanism described above, it is
-	recommended that all nScreen implementations support the XMPP User
-	Avatar specification<citation><xref linkend="xep0084"/></citation>.
+	While the <code>&lt;nscreen:status&gt;</code> element can be extended
+	with custom attributes, no frequently changing information
+	(such as current playback position) is permitted as part of status to
+	avoid flooding of the network.
       </para>
+
+      <para>
+	Human readable description is provided using one or more
+	<code>&lt;nscreen:description&gt;</code> elements inside the
+	<code>&lt;nscreen:status&gt;</code> element; each
+	<code>&lt;nscreen:description&gt;</code> element must have an
+	<code>xml:lang</code> attribute, and multiple
+	<code>&lt;nscreen:description&gt;</code> elements must have a different
+	<code>xml:lang</code> attribute each.
+      </para>
+
+      <section xml:id="messaging-status-avatars">
+	<title>Support for Avatars</title>
+
+	<para>
+	  In addition to the extended status mechanism described above, it is
+	  recommended that all nScreen implementations support the XMPP User
+	  Avatar specification<citation><xref linkend="xep0084"/></citation>.
+	</para>
+      </section>
 
       <section xml:id="messaging-status-example">
 	<title>Status XML example</title>
 
 	<programlisting><![CDATA[
 <nscreen:status version='1.0'
-                primary-capability='ns-caps-video'>
+                capability='ns-caps-video'
+                activity='ns-activity-play'
+                uri='some random youtube url'
+                volume='0.75'>
 
-  <nscreen:capability type='ns-caps-video'
-                      activity='ns-activity-play'
-                      uri='some random youtube url'
-                      volume='0.75'>
+  <nscreen:description xml:lang='en-GB'>
+    Playing a video about colour-based optical illusions.
+  </nscreen:description>
 
-    [Description]
-
-  </nscreen:capability>
 </nscreen:status>]]>
 	</programlisting>
       </section>
@@ -845,18 +937,18 @@
 
       <para>
 	Instruction messages are used to send nScreen commands and information
-	queries. The protocol defines a set of generic xml elements that are
+	queries. The protocol defines a set of generic XML elements that are
 	used to encapsulate nScreen messages, with parameters transmitted via
-	xml attributes.
+	XML attributes.
       </para>
 
       <para>
 	The messages per se are exchanged using XMPP <code>&lt;iq&gt;</code>
-	stanzas, with xmlns of 'nscreen::message'. Commands are dispatched using
-	<code>&lt;iq&gt;</code> stanza of type <code>set</code>, while
+	stanzas, with xmlns of 'urn:nscreen:message'. Commands are dispatched
+	using <code>&lt;iq&gt;</code> stanza of type <code>set</code>, while
 	information requests are sent using type <code>get</code>. All
 	<code>get</code> / <code>set</code> requests are acknowledged by the
-	recepient using <code>&lt;iq&gt;</code> stanzas of type
+	recipient using <code>&lt;iq&gt;</code> stanzas of type
 	<code>result</code> or <code>error</code>.
       </para>
 
@@ -864,79 +956,181 @@
 	<title>Commands</title>
 
 	<para>
-	  Commands use <code>set</code> type stanzas; the command payload is
-	  carried by one of the following xml elements:
-
-	  <variablelist>
-	    <varlistentry>
-	      <term>
-		<code>&lt;nscreen:command&gt;</code>
-	      </term>
-	      <listitem>
-		<para>
-		  A command sent from app A to app B to executed directly by app
-		  B. <code>&lt;nscreen:command&gt;</code> elements have a
-		  required <code>time</code> attribute (see <xref
-		  linkend="messaging-commands-attributes"/>).
-		</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term>
-		<code>&lt;nscreen:transfer&gt;</code>
-	      </term>
-	    <listitem>
-	      <para>
-		A request by application A to application B to transfer B's
-		activity to application C; the identity of C is specified by a
-		required <code>jid</code> attribute.
-	      </para>
-	    </listitem>
-	    </varlistentry>
-	  </variablelist>
+	  Commands use <code>set</code> type <code>&lt;iq&gt;</code> stanzas;
+	  the command payload is carried by one of the following XML elements.
 	</para>
+
+	<section xml:id="messaging-commands-command">
+	  <title><code>&lt;nscreen:command&gt;</code></title>
+
+	  <para>
+	    A command sent from application A to application B to executed
+	    directly by application B.
+	  </para>
+	  <para>
+	    Required attributes:
+
+	    <variablelist>
+	      <varlistentry>
+		<term>
+		  <code>version</code>
+		</term>
+		<listitem>
+		  <para>
+		    The nscreen protocol version.
+		  </para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>
+		  <code>capability</code>
+		</term>
+		<listitem>
+		  <para>
+		    Capability on which the command is to operate, preferably
+		    using one of the values defined in <xref
+		    linkend="messaging-metadata-caps"/>.
+		  </para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>
+		  <code>activity</code>
+		</term>
+		<listitem>
+		  <para>
+		    Activity to carry out, preferably using one of the values
+		    defined in <xref linkend="messaging-metadata-activity"/>.
+		  </para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>
+		  <code>time</code>
+		</term>
+		<listitem>
+		  <para>
+		    Time of command dispatch in standard XMPP
+		    format<citation><xref linkend="xep0082"/></citation>, with
+		    at least millisecond precision.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+	  </para>
+
+	  <para>
+	    Additional attributes, preferably using those defined in <xref
+	    linkend="messaging-metadata-attributes"/>, are used to further
+	    qualify the capability and activity specified.
+	  </para>
+	</section>
+
+	<section xml:id="messaging-commands-transfer">
+	  <title><code>&lt;nscreen:transfer&gt;</code></title>
+
+	  <para>
+	    A request by application A to application B to transfer B's activity
+	    to application C.
+	  </para>
+
+	  <para>
+	    Required attributes:
+
+	    <variablelist>
+	      <varlistentry>
+		<term>
+		  <code>version</code>
+		</term>
+		<listitem>
+		  <para>
+		    The nscreen protocol version.
+		  </para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>
+		  <code>capability</code>
+		</term>
+		<listitem>
+		  <para>
+		    Capability that is subject of the transfer.
+		  </para>
+		</listitem>
+	      </varlistentry>
+
+	      <varlistentry>
+		<term>
+		  <code>jid</code>
+		</term>
+		<listitem>
+		  <para>
+		    JID of the application to transfer to.
+		  </para>
+		</listitem>
+	      </varlistentry>
+	    </variablelist>
+	  </para>
+
+	  <para>
+	    Additional attributes, preferably using those defined in <xref
+	    linkend="messaging-metadata-attributes"/>, may be used to further
+	    qualify the capability specified.
+	  </para>
+
+	</section>
+
       </section>
 
       <section xml:id="messaging-commands-iq-get">
 	<title>Information requests</title>
 
 	<para>
-	  Information requests use <code>get</code> type stanzas; the command
-	  payload is carried by one of the following xml elements:
-
-	  <variablelist>
-	    <varlistentry>
-	      <term>
-		<code>&lt;nscreen:find&gt;</code>
-	      </term>
-	      <listitem>
-		<para>
-		  A request by app A to a control app C to identify suitable app
-		  B to dispatch a command to. The criteria for the search is
-		  given by the supplied attributes, e.g., application capability
-		  would be specified using the <code>capability</code>
-		  attribute.
-		</para>
-
-		<para>
-		  If no suitable application matching the criteria is running
-		  can be identified, the expectation is that the control
-		  application C will attempt to start a suitable application.
-		</para>
-
-		<para>
-		  Rationale: because of the need to
-		  facilitate e2e encryption, commands cannot be proxied through
-		  control applications; the <code>find</code> request allows
-		  clients to initiate a transfer to an application that might
-		  not yet be running on the target device (i.e., C will take
-		  care of spawning a suitable client if one is not available).
-		</para>
-	      </listitem>
-	    </varlistentry>
-	  </variablelist>
+	  Information requests use <code>get</code> type <code>&lt;iq&gt;</code>
+	  stanzas; the command payload is carried by one of the following XML
+	  elements.
 	</para>
+
+	<section xml:id="messaging-commands-find">
+	  <title><code>&lt;nscreen:find&gt;</code></title>
+
+	  <para>
+	    A request by application A to a control application C to identify
+	    suitable application B to dispatch a (subsequent) command to. The
+	    criteria for the search is given by the supplied attributes, (e.g.,
+	    application capability would be specified using the
+	    <code>capability</code> attribute); the control application returns
+	    the result of the search using the
+	    <code>&lt;nscreen:find-result&gt;</code> element (see <xref
+	    linkend="messaging-commands-find-result"/>.
+	  </para>
+
+	  <para>
+	    If no suitable running application matching the specified criteria
+	    can be identified, the control application C must return immediately
+	    an error of type <code>wait</code>, then attempt to start a suitable
+	    application. When the application successfully starts up, the control
+	    application must dispatch the
+	    <code>&lt;nscreen:find-result&gt;</code> response, with an identical
+	    <code>id</code>attribute of the <code>&lt;iq&gt;</code> query. If
+	    the application fails to start, the control application should
+	    return error of type <code>unavailable</code>, again with an
+	    identical <code>id</code>attribute of the <code>&lt;iq&gt;</code>
+	    query.
+	  </para>
+
+	  <para>
+	    Rationale: because of the need to
+	    facilitate e2e encryption, commands cannot be proxied through
+	    control applications; the <code>find</code> request allows
+	    clients to initiate a transfer to an application that might
+	    not yet be running on the target device.
+	  </para>
+	</section>
       </section>
 
       <section xml:id="messaging-commands-iq-result">
@@ -944,7 +1138,7 @@
 
 	<para>
 	  All received <code>set</code> and <code>get</code> nScreen messages
-	  queries must be explicitely acknowledged by the recipient. Success is
+	  queries must be explicitly acknowledged by the recipient. Success is
 	  indicated using an <code>&lt;iq&gt;</code> stanza of type
 	  <code>result</code>, while stanzas of type <code>error</code> are used
 	  to indicate failure.
@@ -952,31 +1146,28 @@
 
 	<para>
 	  Depending on the nature of the original <code>&lt;iq&gt;</code>
-	  <code>get</code> / <code>set</code> stanza, returned stanza of type
-	  <code>result</code> might, or might not hold additional information
-	  using one of the following xml elements:
-
-	  <variablelist>
-	    <varlistentry>
-	      <term>
-		<code>&lt;nscreen:find-result&gt;</code>
-	      </term>
-	      <listitem>
-		<para>
-		  Reply to a previous <code>find</code> query that was
-		  successfully resolved. The identified application jid is
-		  stored in the <code>jid</code> attribute.
-		</para>
-	      </listitem>
-	    </varlistentry>
-	  </variablelist>
+	  <code>get</code> / <code>set</code> stanza, returned stanza might, or might not hold additional information
+	  using one of the following XML elements.
 	</para>
 
-	<para>
-	  Returned stanzas of type <code>error</code> should include additional
-	  information as to the nature of the error, using the XMPP
-	  <code>&lt;error&gt;</code> container with the standard
-	  <code>urn:ietf:params:xml:ns:xmpp-stanzas</code> namespace.
+	<section xml:id="messaging-commands-find-result">
+	  <title><code>&lt;nscreen:find-result&gt;</code></title>
+
+	  <para>
+	    Reply to a previous <code>find</code> query that was successfully
+	    resolved. The identified application JID is stored in the
+	    <code>jid</code> attribute.
+	  </para>
+	</section>
+
+	<section xml:id="messaging-commands-errors">
+	  <title><code>&lt;error&gt;</code></title>
+
+	  <para>
+	    Returned stanzas of type <code>error</code> should include
+	    additional information as to the nature of the error, using the XMPP
+	    <code>&lt;error&gt;</code> container with the standard
+	    <code>urn:ietf:params:xml:ns:xmpp-stanzas</code> namespace.
 
 <annotation role='todo'>
   <info>
@@ -988,50 +1179,15 @@
     Can we manage with not defining our own error condition namespace ?
   </para>
 </annotation>
-	</para>
-      </section>
-
-      <section xml:id="messaging-commands-attributes">
-	<title>Common Attributes for nScreen message elements</title>
-
-
-	<para>
-	  The following attributes are used by the nScreen messages:
-
-	  <variablelist>
-	    <varlistentry>
-	      <term>
-		<code>version</code>
-	      </term>
-	      <listitem>
-		<para>
-		  The nscreen protocol version, this attribute is required on
-		  all top-level nScreen elements.
-		</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term>
-		<code>time</code>
-	      </term>
-	      <listitem>
-		<para>
-		  Time of message dispatch, in standard XMPP
-		  format<citation><xref linkend="xep0082"/></citation>, with at
-		  least millisecond precision.
-	      </para>
-	    </listitem>
-	    </varlistentry>
-	  </variablelist>
-	</para>
+	  </para>
+	</section>
       </section>
 
       <section xml:id="messaging-commands-example">
 	<title>Command example</title>
 
 	<para>
-	  The following xml snippet tells some other application to start
+	  The following XML snippet tells some other application to start
 	  playing given video starting 3/4 into the video duration:
 	</para>
 
@@ -1039,7 +1195,7 @@
 <iq type='set'
     id='command1'
     to='magic-video-player@blackbox.local'
-    xmlns='nscreen::message'>
+    xmlns='urn:nscreen:message'>
 
   <nscreen:command version='1.0'
                    time='1970-01-01T00:00:00.000Z'
@@ -1057,7 +1213,7 @@
     id='command1'
     to='the-other-player@bluebox.local'
     from='magic-video-player@blackbox.local'
-    xmlns='nscreen::message'>
+    xmlns='urn:nscreen:message'>
 
   <success/>
 </iq>]]>
@@ -1078,37 +1234,67 @@
 	<title>Common capability classes</title>
 
 	<para>
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		ns-caps-audio: audio playback capabilities
-	      </para>
-	    </listitem>
+	  <variablelist>
+	    <varlistentry>
+	      <term>
+		<code>ns-caps-audio</code>
+	      </term>
 
-	    <listitem>
-	      <para>
-		ns-caps-video: video playback capabilities
-	      </para>
-	    </listitem>
+	      <listitem>
+		<para>
+		  audio playback capabilities,
+		</para>
+	      </listitem>
+	    </varlistentry>
 
-	    <listitem>
-	      <para>
-		ns-caps-image: image display capabilities
-	      </para>
-	    </listitem>
+	    <varlistentry>
+	      <term>
+		<code>ns-caps-video</code>
+	      </term>
 
-	    <listitem>
-	      <para>
-		ns-caps-html: html rendering capabilities
-	      </para>
-	    </listitem>
+	      <listitem>
+		<para>
+		  video playback capabilities,
+		</para>
+	      </listitem>
+	    </varlistentry>
 
-	    <listitem>
-	      <para>
-		ns-caps-control: control application
-	      </para>
-	    </listitem>
-	  </itemizedlist>
+	    <varlistentry>
+	      <term>
+		<code>ns-caps-image</code>
+	      </term>
+
+	      <listitem>
+		<para>
+		  image display capabilities,
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<code>ns-caps-html</code>
+	      </term>
+
+	      <listitem>
+		<para>
+		  html rendering capabilities,
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<code>ns-caps-control</code>
+	      </term>
+
+	      <listitem>
+		<para>
+		  control application.
+		</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
 	</para>
 
 	<annotation role='comment'>
@@ -1134,37 +1320,63 @@
 	  Absence of the 'activity' attribute, or its empty value imply idle
 	  state.
 
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		ns-activity-play: playback
-	      </para>
-	    </listitem>
+	  <variablelist>
+	    <varlistentry>
+	      <term>
+		<code>ns-activity-playback</code>
+	      </term>
 
-	    <listitem>
-	      <para>
-		ns-activity-pause: paused state
-	      </para>
-	    </listitem>
+	      <listitem>
+		<para>
+		  playback,
+		</para>
+	      </listitem>
+	    </varlistentry>
 
-	    <listitem>
-	      <para>
-		ns-activity-ffw: fast forward
-	      </para>
-	    </listitem>
+	    <varlistentry>
+	      <term>
+		<code>ns-activity-pause</code>
+	      </term>
+	      <listitem>
+		<para>
+		  paused state,
+		</para>
+	      </listitem>
+	    </varlistentry>
 
-	    <listitem>
-	      <para>
-		ns-activity-rwd: rewind
-	      </para>
-	    </listitem>
+	    <varlistentry>
+	      <term>
+		<code>ns-activity-ffw</code>
+	      </term>
+	      <listitem>
+		<para>
+		  fast forward,
+		</para>
+	      </listitem>
+	    </varlistentry>
 
-	    <listitem>
-	      <para>
-		ns-activity-volume: volume adjustment
-	      </para>
-	    </listitem>
-	  </itemizedlist>
+	    <varlistentry>
+	      <term>
+		<code>ns-activity-rwd</code>
+	      </term>
+	      <listitem>
+		<para>
+		  rewind,
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<code>ns-activity-volume</code>
+	      </term>
+	      <listitem>
+		<para>
+		  volume adjustment.
+		</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
 	</para>
 
 	<annotation role='comment'>
@@ -1187,16 +1399,29 @@
 	<title>Common attributes</title>
 
 	<para>
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		uri: uri a of a resource associated with activity
-	      </para>
-	    </listitem>
+	  <variablelist>
+	    <varlistentry>
+	      <term><code>uri</code></term>
 
-	    <listitem>
-	      <para>
-		uid: uid identifying resource associated with activity.
+	      <listitem>
+		<para>
+		  <code>uri</code> a of a resource associated with activity;
+		  this can be either a <code>url</code> from which the resource
+		  can be fetched, or a <code>urn</code> identifying a suitable
+		  protocol through which the resource can be obtained directly
+		  from the initiating application (e.g.,
+		  <code>urn:xmpp:jingle:apps:rtp:video</code> would indicate a
+		  video is to be streamed using the Jingle RTP protocol).
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><code>uid</code></term>
+
+	      <listitem>
+		<para>
+		  uid: uid identifying resource associated with activity.
 
 		<annotation role='comment'>
 		  <info>
@@ -1208,52 +1433,76 @@
 		    this might be hard to extend beyond audio
 		  </para>
 		</annotation>
-	      </para>
-	    </listitem>
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><code>volume</code></term>
+
+	      <listitem>
+		<para>
+		  volume level (floating point number from &lt;0,1&gt;)
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><code>progress</code></term>
 
 	    <listitem>
 	      <para>
-		volume: volume level (floating point number from &lt;0,1&gt;)
-	      </para>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		progress: activity progress (floating point number from
+		activity progress (floating point number from
 		&lt;0,1&gt; this is the preferred way of passing information
 		such as stream position.
 	      </para>
 	    </listitem>
+	    </varlistentry>
 
-	    <listitem>
-	      <para>
-		position: activity position (floating point number); NB:
-		applications should use the 'progress' attribute whenever
-		possible instead of 'position'.
-	      </para>
-	    </listitem>
+	    <varlistentry>
+	      <term><code>position</code></term>
 
-	    <listitem>
-	      <para>
-		description: human readable description, suitable for
-		presentation to user
-	      </para>
-	    </listitem>
+	      <listitem>
+		<para>
+		  activity position (floating point number); NB: applications
+		  should use the <code>progress</code> attribute whenever
+		  possible instead of 'position',
+		</para>
+	      </listitem>
+	    </varlistentry>
 
-	    <listitem>
-	      <para>
-		jid: jabber id; primarily for use by messages with 'transfer'
-		payload
-	      </para>
-	    </listitem>
+	    <varlistentry>
+	      <term><code>description</code></term>
 
-	    <listitem>
-	      <para>
-		speed: speed of activity (floating point number; 1.0 indicates
-		'normal' speed)
-	      </para>
-	    </listitem>
-	  </itemizedlist>
+	      <listitem>
+		<para>
+		  description: human readable description, suitable for
+		  presentation to user,
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><code>jid</code></term>
+
+	      <listitem>
+		<para>
+		  jabber id,
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><code>speed</code></term>
+
+	      <listitem>
+		<para>
+		  speed of activity (floating point number; 1.0 indicates
+		  normal speed)
+		</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
 	</para>
 
 	<para>
@@ -1293,34 +1542,20 @@
 		this protocol is currently in experimental stage, but once it is
 		reaches the draft stage, it will be adopted as the default file
 		transfer protocol for nScreen clients.
-
-
-		<annotation role='comment'>
-		  <info>
-		    <authorinitials>tf</authorinitials>
-		  </info>
-		  <para>
-		    This has relatively limited practical impact on us, the
-		    initial deployment will be Telepathy based, which presumably
-		    will hide this distinction from us.
-		  </para>
-		</annotation>
 	      </para>
 	    </listitem>
 	  </itemizedlist>
 	</para>
+      </section>
 
-	<annotation role='todo'>
-	  <info>
-	    <authorinitials>tf</authorinitials>
-	  </info>
-	  <para>
-	    We should recommend protocols for data streaming, and specifically
-	    mandate preferred protocols for streaming of video and audio in the
-	    manner we mandate the File Transfers. Presumably around
-	    Jingle<citation><xref linkend="xep0166"/></citation>.
-	  </para>
-	</annotation>
+      <section xml:id="messaging-data-transfer-streaming">
+	<title>Streaming</title>
+
+	<para>
+	  The preferred streaming protocol is XMPP Jingle RTP<citation><xref
+	  linkend="xep0167"/></citation>; applications that support media
+	  streaming should implement this protocol.
+	</para>
       </section>
     </section>
   </section>
@@ -1332,16 +1567,33 @@
 <!-- The xi:include line must be aligned directly at the end of this comment,
      as any padding will end up in the final document !!! --><xi:include
     parse="text"
-    href="./nscreen-protocol.xsd" />
-    </programlisting>
+    href="./nscreen-protocol.xsd" /></programlisting>
   </appendix>
 
   <bibliography>
     <title>External Resources</title>
 
+    <biblioentry xml:id="jng-xtls">
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/inbox/jingle-xtls.html">Jingle XTLS</link>
+      </bibliomisc>
+    </biblioentry>
+
+    <biblioentry xml:id="rfc2222">
+      <bibliomisc>
+      <link xlink:href="http://tools.ietf.org/html/rfc2222">RFC 2222</link>
+      </bibliomisc>
+    </biblioentry>
+
     <biblioentry xml:id="rfc3920">
       <bibliomisc>
       <link xlink:href="http://tools.ietf.org/html/rfc3920">RFC 3920</link>
+      </bibliomisc>
+    </biblioentry>
+
+    <biblioentry xml:id="rfc3921">
+      <bibliomisc>
+      <link xlink:href="http://tools.ietf.org/html/rfc3921">RFC 3921</link>
       </bibliomisc>
     </biblioentry>
 
@@ -1408,6 +1660,12 @@
     <biblioentry xml:id="xep0166">
       <bibliomisc>
       <link xlink:href="http://xmpp.org/extensions/xep-0166.html">XEP-0166</link>
+      </bibliomisc>
+    </biblioentry>
+
+    <biblioentry xml:id="xep0167">
+      <bibliomisc>
+      <link xlink:href="http://xmpp.org/extensions/xep-0167.html">XEP-0167</link>
       </bibliomisc>
     </biblioentry>
 
