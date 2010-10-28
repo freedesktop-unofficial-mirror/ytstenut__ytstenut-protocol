@@ -7,12 +7,16 @@
 # /usr/lib/jvm/java-6-openjdk/jre/ on my Debian box
 
 annot="1"
+impl="1"
+draft="maybe"
 sfx="-internal"
 
 while [ "x$1" != x ]; do
     case "$1" in
 	--final )
 	    annot="0"
+	    annot="0"
+	    draft="no"
 	    sfx="";;
 	--help )
 	  echo "\n  Usage: $0 [options]\n"
@@ -29,16 +33,20 @@ done
 
 xsltproc -o /tmp/titlepage.xsl                                           \
          --stringparam show.annotations.comments "$annot"                \
+         --stringparam show.annotations.implementation "$impl"           \
+         --stringparam draft.mode "$draft"                               \
 	 --xinclude                                                      \
          /usr/share/xml/docbook/stylesheet/nwalsh/template/titlepage.xsl \
          scripts/titlepage.templates.xml || exit 1
 
 xsltproc \
     --xinclude \
-    --stringparam show.annotations.comments "$annot"                \
+    --stringparam show.annotations.comments "$annot"                          \
+    --stringparam show.annotations.implementation "$impl"                     \
+    --stringparam draft.mode "$draft"                                         \
     -o nscreen-protocol.fo scripts/template.xsl nscreen-protocol.xml || exit 1;
 
 fop -fo nscreen-protocol.fo -pdf nscreen-protocol${sfx}.pdf || exit 1
 
-rm -f nscreen-protocol.fo
-rm -f  /tmp/titlepage.xsl
+#rm -f nscreen-protocol.fo
+#rm -f  /tmp/titlepage.xsl
