@@ -40,9 +40,7 @@
     <xsl:choose>
       <xsl:when test="$draft.mode = 'yes'">
 	<fo:inline color="red" font-weight="bold">
-	  <xsl:call-template name="gentext">
-	    <xsl:with-param name="key" select="'Draft'"/>
-	  </xsl:call-template>
+	  <xsl:text>***&#xA0;&#xA0;DRAFT&#xA0;&#xA0;***</xsl:text>
 	</fo:inline>
       </xsl:when>
       <xsl:when test="$draft.mode = 'no'">
@@ -50,9 +48,7 @@
       </xsl:when>
       <xsl:when test="ancestor-or-self::*[@status][1]/@status = 'draft'">
 	<fo:inline color="red" font-weight="bold">
-	  <xsl:call-template name="gentext">
-	    <xsl:with-param name="key" select="'Draft'"/>
-	  </xsl:call-template>
+	  <xsl:text>***&#xA0;&#xA0;DRAFT&#xA0;&#xA0;***</xsl:text>
 	</fo:inline>
       </xsl:when>
       <xsl:otherwise>
