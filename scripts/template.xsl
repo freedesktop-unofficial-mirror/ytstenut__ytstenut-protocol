@@ -39,17 +39,17 @@
   <xsl:template name="draft.text">
     <xsl:choose>
       <xsl:when test="$draft.mode = 'yes'">
-	<fo:inline color="red" font-weight="bold">
+	<fo:block text-align="center" color="red" font-weight="bold">
 	  <xsl:text>***&#xA0;&#xA0;DRAFT&#xA0;&#xA0;***</xsl:text>
-	</fo:inline>
+	</fo:block>
       </xsl:when>
       <xsl:when test="$draft.mode = 'no'">
 	<!-- nop -->
       </xsl:when>
       <xsl:when test="ancestor-or-self::*[@status][1]/@status = 'draft'">
-	<fo:inline color="red" font-weight="bold">
+	<fo:block text-align="center" color="red" font-weight="bold">
 	  <xsl:text>***&#xA0;&#xA0;DRAFT&#xA0;&#xA0;***</xsl:text>
-	</fo:inline>
+	</fo:block>
       </xsl:when>
       <xsl:otherwise>
 	<!-- nop -->
