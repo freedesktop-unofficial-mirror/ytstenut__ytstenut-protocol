@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema
+   xmlns:xs='http://www.w3.org/2001/XMLSchema'
+   targetNamespace='nscreen:status'
+   xmlns='nscreen:status'
+   elementFormDefault='qualified'>
+
+  <xs:import namespace='http://jabber.org/protocol/pubsub'/>
+
+  <xs:element name='status'>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice minOccurs='1' maxOccurs='unbouned'>
+          <xs:element ref='description'/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name='version'
+                    type='xs:string'
+                    use='required'/>
+      <xs:attribute name='capability'
+                    type='xs:NMTOKEN'
+                    use='required'/>
+      <xs:attribute name='activity'
+                    type='xs:NMTOKEN'
+                    use='optional'
+                    default='ns-activity-idle'/>
+      <xs:attribute name='primary-capability'
+                    type='boolean'
+                    use='optional'
+                    default='false'/>
+      <xs:attribute name='uri'
+                    type='xs:anyURI'
+                    use='optional'/>
+      <xs:attribute name='uid'
+                    type='xs:string'
+                    use='optional'/>
+      <xs:attribute name='volume'
+                    type='xs:double'
+                    use='optional'>
+        <xs:simpleType>
+          <xs:restriction base='double'>
+            <xs:minInclusive value='0.0'/>
+              <xs:maxInclusive value='1.0'/>
+            </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:anyAttribute namespace='##other'/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name='description'>
+    <xs:complexType>
+       <xs:simpleContent>
+         <xs:extension base='xs:string'>
+           <xs:attribute name='xml:lang'
+                         type='xs:string'
+                         use='required'/>
+         </xs:extension>
+       </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

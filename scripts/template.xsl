@@ -34,21 +34,108 @@
   <xsl:param name="draft.mode">maybe</xsl:param>
   <xsl:param name="draft.watermark.image"></xsl:param>
 
-  <!-- make the 'Draft' text in page headers bold and read to make it more
-       prominent than the default -->
+  <!-- want bit more content over the draft text output in the header based
+       on its position, but the stock header.content template does not pass that
+       parameter in, so we copy it here, with that singular addition. -->
+  <xsl:template name="header.content">
+    <xsl:param name="pageclass" select="''"/>
+    <xsl:param name="sequence" select="''"/>
+    <xsl:param name="position" select="''"/>
+    <xsl:param name="gentext-key" select="''"/>
+
+    <fo:block>
+      <!-- sequence can be odd, even, first, blank -->
+      <!-- position can be left, center, right -->
+      <xsl:choose>
+	<xsl:when test="$sequence = 'blank'">
+	  <!-- nothing -->
+	</xsl:when>
+
+	<xsl:when test="$position='left'">
+	  <!-- Same for odd, even, empty, and blank sequences -->
+	  <xsl:call-template name="draft.text">
+	    <xsl:with-param name="position" select="$position"/>
+	  </xsl:call-template>
+	</xsl:when>
+
+	<xsl:when test="($sequence='odd' or $sequence='even') and $position='center'">
+	  <xsl:if test="$pageclass != 'titlepage'">
+	    <xsl:choose>
+	      <xsl:when test="ancestor::book and ($double.sided != 0)">
+		<fo:retrieve-marker retrieve-class-name="section.head.marker"
+				    retrieve-position="first-including-carryover"
+				    retrieve-boundary="page-sequence"/>
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:apply-templates select="." mode="titleabbrev.markup"/>
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </xsl:if>
+	</xsl:when>
+
+	<xsl:when test="$position='center'">
+	  <!-- nothing for empty and blank sequences -->
+	</xsl:when>
+
+	<xsl:when test="$position='right'">
+	  <!-- Same for odd, even, empty, and blank sequences -->
+	  <xsl:call-template name="draft.text">
+	    <xsl:with-param name="position" select="$position"/>
+	  </xsl:call-template>
+	</xsl:when>
+
+	<xsl:when test="$sequence = 'first'">
+	  <!-- nothing for first pages -->
+	</xsl:when>
+
+	<xsl:when test="$sequence = 'blank'">
+	  <!-- nothing for blank pages -->
+	</xsl:when>
+      </xsl:choose>
+    </fo:block>
+  </xsl:template>
+
+  <!-- * make the 'Draft' text in page headers bold and red,
+       * different text by position in the header -->
   <xsl:template name="draft.text">
+    <xsl:param name="position" select="''"/>
     <xsl:choose>
       <xsl:when test="$draft.mode = 'yes'">
-	<fo:block text-align="center" color="red" font-weight="bold">
-	  <xsl:text>***&#xA0;&#xA0;DRAFT&#xA0;&#xA0;***</xsl:text>
-	</fo:block>
+	<xsl:call-template name="draft.header.text">
+	  <xsl:with-param name="position" select="$position"/>
+	</xsl:call-template>
       </xsl:when>
       <xsl:when test="$draft.mode = 'no'">
 	<!-- nop -->
       </xsl:when>
       <xsl:when test="ancestor-or-self::*[@status][1]/@status = 'draft'">
+	<xsl:call-template name="draft.header.text">
+	  <xsl:with-param name="position" select="$position"/>
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<!-- nop -->
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- helper template that generates the required draft header text -->
+  <xsl:template name="draft.header.text">
+    <xsl:param name="position" select="''"/>
+
+    <xsl:choose>
+      <xsl:when test="$position = 'left'">
 	<fo:block text-align="center" color="red" font-weight="bold">
-	  <xsl:text>***&#xA0;&#xA0;DRAFT&#xA0;&#xA0;***</xsl:text>
+	  <xsl:text>***&#xA0;EARLY DRAFT&#xA0;***</xsl:text>
+	</fo:block>
+      </xsl:when>
+      <xsl:when test="$position = 'right'">
+	<fo:block text-align="center"
+		  space-before="0em"
+		  space-after="0em"
+		  color="red"
+		  font-size="9pt">
+	  <xsl:text>Do not distribute outwith CC POC team please</xsl:text>
 	</fo:block>
       </xsl:when>
       <xsl:otherwise>

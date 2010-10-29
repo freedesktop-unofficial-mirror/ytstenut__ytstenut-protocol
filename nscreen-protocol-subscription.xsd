@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema
+   xmlns:xs='http://www.w3.org/2001/XMLSchema'
+   targetNamespace='nscreen:local-subscription'
+   xmlns='nscreen:local-subscription'
+   elementFormDefault='qualified'>
+
+  <xs:import namespace='jabber:client'/>
+
+  <!-- <iq> wrapper around <presence> stanza -->
+  <xs:redefine schemaLocation='jabber:client'>
+    <xs:complexType name='iq'>
+      <xs:complexContent>
+        <xs:extension base='iq'>
+          <xs:sequence>
+            <xs:element ref='presence'
+                        minOccurs='1'
+                        maxOccurs='1'/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:redefine>
+</xs:schema>

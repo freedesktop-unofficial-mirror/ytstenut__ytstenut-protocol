@@ -781,7 +781,7 @@
 
       <para>
 	(For full description of the XML elements, see <xref
-	linkend="appendix-dtd"/>).
+	linkend="appendix-schemas"/>).
       </para>
 
       <example xml:id="messaging-app-info-example">
@@ -962,7 +962,7 @@
 
       <para>
 	The messages per se are exchanged using XMPP <code>&lt;iq/&gt;</code>
-	stanzas, with xmlns of <code>urn:nscreen:message</code>.
+	stanzas, with xmlns of <code>urn:nscreen:messages</code>.
 
 	<itemizedlist>
 	  <listitem>
@@ -1343,7 +1343,7 @@
 <iq type='set'
     id='command1'
     to='magic-video-player@blackbox.local'
-    xmlns='urn:nscreen:message'>
+    xmlns='urn:nscreen:messages'>
 
   <nscreen:command version='1.0'
                    time='1970-01-01T00:00:00.000Z'
@@ -1361,7 +1361,7 @@
     id='command1'
     to='the-other-player@bluebox.local'
     from='magic-video-player@blackbox.local'
-    xmlns='urn:nscreen:message'/>]]>
+    xmlns='urn:nscreen:messages'/>]]>
       </programlisting>
     </example>
 
@@ -1373,9 +1373,9 @@
       <title>Common meta-data classes</title>
 
       <para>
-	The canonical definition is given by the DTD (see <xref
-	linkend="appendix-dtd"/>); the following information is extracted from
-	the DTD for convenience.
+	The canonical definition is given in <xref
+	linkend="appendix-schemas"/>); the following information is extracted from
+	the XML schemas for convenience.
       </para>
 
 
@@ -1772,22 +1772,38 @@
   </section>
 
   <?hard-pagebreak?>
-  <appendix xml:id="appendix-dtd">
-    <title>nScreen DTD</title>
-<annotation role='todo'>
-  <info>
-    <authorinitials>tf</authorinitials>
-    <orgname>Intel</orgname>
-  </info>
-  <para>
-    Should split the DTD into individual namespaces.
-  </para>
-</annotation>
-    <programlisting>
-<!-- The xi:include line must be aligned directly at the end of this comment,
-     as any padding will end up in the final document !!! --><xi:include
-    parse="text"
-    href="./nscreen-protocol.xsd" /></programlisting>
+  <appendix xml:id="appendix-schemas">
+    <title>nScreen XML Schemas</title>
+
+    <section xml:id="appendix-schemas-nscreen-subscription">
+      <title>Schema for <code>urn:nscreen:local-subscription</code></title>
+      <programlisting><!-- The xi:include line must be aligned directly at the
+			   end of this comment, as any padding will end up in
+			   the final document !!!
+		      --><xi:include
+	     parse="text"
+	     href="./nscreen-protocol-subscription.xsd" /></programlisting>
+    </section>
+
+    <section xml:id="appendix-schemas-nscreen-status">
+      <title>Schema for <code>urn:nscreen:status</code></title>
+      <programlisting><!-- The xi:include line must be aligned directly at the
+			   end of this comment, as any padding will end up in
+			   the final document !!!
+		      --><xi:include
+	     parse="text"
+	     href="./nscreen-protocol-status.xsd" /></programlisting>
+    </section>
+
+    <section xml:id="appendix-schemas-nscreen-messages">
+      <title>Schema for <code>urn:nscreen:messages</code></title>
+      <programlisting><!-- The xi:include line must be aligned directly at the
+			   end of this comment, as any padding will end up in
+			   the final document !!!
+		      --><xi:include
+	     parse="text"
+	     href="./nscreen-protocol-messages.xsd" /></programlisting>
+    </section>
   </appendix>
 
   <bibliography>
