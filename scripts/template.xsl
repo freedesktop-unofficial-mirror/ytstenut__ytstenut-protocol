@@ -28,6 +28,7 @@
   <xsl:param name="show.annotations.comments" select="1"/>
   <xsl:param name="body.start.indent" select="'4pc'"/>
   <xsl:param name="bibliography.style" select="iso690"/>
+  <xsl:param name="bibliography.numbered" select="1"/>
   <xsl:param name="highlight.source" select="0"></xsl:param>
   <xsl:param name="shade.verbatim" select="1"></xsl:param>
   <xsl:param name="toc.section.depth">3</xsl:param>
@@ -232,6 +233,59 @@
     </fo:block>
   </xsl:template>
 
+  <!-- tweak the appendix lable markup by prefixing 'Appendix' -->
+  <xsl:template match="appendix" mode="label.markup">
+    <xsl:variable name="is.numbered">
+      <xsl:call-template name="label.this.section"/>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="@label">
+	<xsl:value-of select="@label"/>
+      </xsl:when>
+      <xsl:when test="$is.numbered != 0">
+	<xsl:call-template name="gentext">
+          <xsl:with-param name="key">Appendix</xsl:with-param>
+        </xsl:call-template>
+	<xsl:text> </xsl:text>
+        <xsl:call-template name="autolabel.format">
+          <xsl:with-param name="format" select="$appendix.autolabel"/>
+        </xsl:call-template>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- prefix the appendix letter to numbers of appendix sections, but
+       not the word 'Appendix' -->
+  <xsl:template match="appendix/section" mode="label.markup">
+    <xsl:call-template name="autolabel.format">
+      <xsl:with-param name="format" select="$appendix.autolabel"/>
+    </xsl:call-template>
+    <xsl:apply-templates select=".." mode="intralabel.punctuation"/>
+    <xsl:number count="section" />
+  </xsl:template>
+
+<!--
+  <xsl:template match="bibliodiv">
+    <xsl:variable name="lang">
+      <xsl:call-template name="l10n.language"/>
+    </xsl:variable>
+    <fo:block>
+      <xsl:attribute name="id">
+	<xsl:call-template name="object.id"/>
+      </xsl:attribute>
+      <xsl:call-template name="bibliodiv.titlepage"/>
+      <xsl:apply-templates
+	  select="*[not(self::biblioentry) and not(self::bibliomixed)]"/>
+      <xsl:apply-templates select="biblioentry|bibliomixed">
+	<xsl:sort select="title"
+		  xml:lang="$lang"
+		  data-type="text" order="ascending"/>
+      </xsl:apply-templates>
+    </fo:block>
+  </xsl:template>
+-->
+
   <!-- attribute sets for annotations -->
   <xsl:attribute-set name="annotations.comment">
     <xsl:attribute name="space-before">0.5em</xsl:attribute>
@@ -286,12 +340,12 @@
     <xsl:attribute name="end-indent">1pc</xsl:attribute>
   </xsl:attribute-set>
 
-<!-- not sure why, but the appendix title is indented like the body text,
-     not like section title; this overrides that. -->
-<xsl:attribute-set name="article.appendix.title.properties">
-  <xsl:attribute name="margin-{$direction.align.start}">
-    -4pc
-  </xsl:attribute>
-</xsl:attribute-set>
+  <!-- not sure why, but the appendix title is indented like the body text,
+       not like section title; this overrides that. -->
+  <xsl:attribute-set name="article.appendix.title.properties">
+    <xsl:attribute name="margin-{$direction.align.start}">
+      -4pc
+    </xsl:attribute>
+  </xsl:attribute-set>
 
 </xsl:stylesheet>

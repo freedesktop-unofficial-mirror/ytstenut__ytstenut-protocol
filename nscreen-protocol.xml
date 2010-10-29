@@ -94,8 +94,8 @@
       <listitem>
 	<para>
 	  To provide unified discovery, connection and transport mechanism that
-	  could be utilised on a variety of hardware and software platforms by a
-	  wide spectrum of user-facing applications,
+	  could be utilised by user-facing applications running on a variety of
+	  hardware and software platforms,
 	</para>
       </listitem>
 
@@ -220,7 +220,7 @@
 	content tied to a specific capability). Both the capability and the
 	activity in each specific pair can be further qualified by attributes;
 	the resulting <code>{capability, activity, attributes}</code> tuple
-	constitutes the elementary meta-data unit.
+	constitutes the elementary unit of nScreen meta-data.
       </para>
 
       <para>
@@ -247,15 +247,15 @@
       <title>XMPP backbone</title>
 
       <para>
-	The nScreen communication protocols are built on the existing XMPP (aka
-	'jabber') standard. The reasons for choosing XMPP as the basic transport
-	protocol are:
+	The nScreen communication protocols are built on the existing XMPP
+	standard. The reasons for choosing XMPP as the basic transport protocol
+	are:
 
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      Using an established standard means that much of the wheel needs
-	      not to be reinvented,
+	      Using an established messaging standard means that much of the
+	      wheel needs not to be reinvented,
 	    </para>
 	  </listitem>
 
@@ -300,7 +300,7 @@
       </para>
 
       <para>
-	As far as possible, the nScreen framework aims to reusing existing XMPP
+	As far as possible, the nScreen framework aims to reuse existing XMPP
 	capabilities and features; these are augmented by two extensions:
 
 	<itemizedlist>
@@ -313,7 +313,7 @@
 	  <listitem>
 	    <para>
 	      A server-less protocol similar to link-local XMPP<citation><xref
-	      linkend="xep0174"/></citation> , but reserved for nScreen use.
+	      linkend="xep0174"/></citation> , but taylored for nScreen use.
 	    </para>
 	  </listitem>
 	</itemizedlist>
@@ -416,13 +416,13 @@
 	  application are permitted and differentiated by the resource part of
 	  the fully qualified JID (an example of a bare JID would be
 	  <code>application@somewhere.com</code> while a fully qualified JID
-	  would be <code>application@somewhere.com/myresource</code>.
+	  would be <code>application@somewhere.com/myimportantdocument</code>.
 	</para>
 
 	<para>
-	  In the remainder of this document, the term 'JID' is used to refer
-	  to bare JIDs; if a fully qualified jabber id is meant, this will
-	  always be explicitly stated.
+	  In the remainder of this document, the term <code>JID</code> is used
+	  to refer to bare JIDs; if a fully qualified jabber id is meant, this
+	  will always be explicitly stated.
 	</para>
       </section>
 
@@ -430,11 +430,10 @@
 	<title>Authentication</title>
 
 	<para>
-	  Authentication is accomplished via SASL per core XMPP
-	  protocol (<citation><xref linkend="rfc3920"/></citation>,
-	  <citation><xref linkend="rfc2222"/></citation>). SASL authentication
-	  must be implemented both for both server-based and server-less
-	  contexts.
+	  Authentication is accomplished via SASL per core XMPP protocol
+	  (<citation><xref linkend="rfc3920"/></citation>, <citation><xref
+	  linkend="rfc2222"/></citation>). SASL authentication must be
+	  implemented both for server-based and server-less contexts.
 	</para>
       </section>
 
@@ -828,7 +827,7 @@
 	Each individual capability is represented by the
 	<code>&lt;feature/&gt;</code> element; the <code>var</code> attribute is
 	constructed by concatenating an <code>'urn:nscreen:capabilies:'</code>
-	prefix and the canonical name of the capabality (for standard
+	prefix and the canonical name of the capability (for standard
 	capabilities defined in <xref linkend="messaging-metadata-caps"/>). For
 	example, a video playback capability would be represented as:
       </para>
@@ -846,7 +845,7 @@
 	Extended status information is advertised using XMPP Personal Eventing
 	Protocol<citation><xref linkend="xep0163"/></citation>. The status
 	payload is held by an <code>&lt;nscreen:status/&gt;</code> element and
-	its attributes; applications with multiple capabilites must include
+	its attributes; applications with multiple capabilities must include
 	an <code>&lt;nscreen:status/&gt;</code> element for each capability.
       </para>
 
@@ -1005,7 +1004,8 @@
 
 	<para>
 	  Commands use <code>set</code> type <code>&lt;iq/&gt;</code> stanzas;
-	  the command payload is carried by one of the following XML elements.
+	  the command payload is carried by one of the XML elements defined
+	  below.
 	</para>
 
 	<section xml:id="messaging-commands-command">
@@ -1025,7 +1025,7 @@
 		</term>
 		<listitem>
 		  <para>
-		    The nscreen protocol version,
+		    The nScreen protocol version,
 		  </para>
 		</listitem>
 	      </varlistentry>
@@ -1078,7 +1078,6 @@
 
 	  <section xml:id="messaging-commands-command-error">
 	    <title>Error handling</title>
-
 	    <para>
 	      When the resource to which the nScreen command pertains is
 	      unavailable, the command recipient should return an error that
@@ -1089,7 +1088,7 @@
 		  <term><code>&lt;forbidden/&gt;</code></term>
 		  <listitem>
 		    <para>
-		      The recipient does not have sufficient privilidges to
+		      The recipient does not have sufficient privileges to
 		      carry out the command.
 		    </para>
 		  </listitem>
@@ -1105,11 +1104,10 @@
 		</varlistentry>
 	      </variablelist>
 	    </para>
-
 	    <para>
 	      The <code>type</code> attribute of the
 	      <code>&lt;error/&gt;</code> stanza should be set appropriately:
-	      the <code>modify</code> value should be used if the recepient is
+	      the <code>modify</code> value should be used if the recipient is
 	      able to explore other sources for the same resource; the value
 	      <code>cancel</code> is used to indicate that no further attempts
 	      to execute this command should be made.
@@ -1121,9 +1119,7 @@
 	      sources are exhausted, the initiating application should notify
 	      user that the command could not be executed.
 	    </para>
-
 	  </section>
-
 	</section>
 
 	<section xml:id="messaging-commands-transfer">
@@ -1145,7 +1141,7 @@
 		</term>
 		<listitem>
 		  <para>
-		    The nscreen protocol version,
+		    The nScreen protocol version,
 		  </para>
 		</listitem>
 	      </varlistentry>
@@ -1253,7 +1249,7 @@
 	      If no suitable running application matching the specified criteria
 	      can be identified but a suitable application is available on the
 	      system, the control application must return immediately an error
-	      of type <code>wait</code>, then attempt to start a suitable
+	      of type <code>wait</code>, then attempt to start such suitable
 	      application.
 	    </para>
 
@@ -1301,8 +1297,8 @@
 	  <itemizedlist>
 	    <listitem>
 	      <para>
-		Failure is inidicated using an an <code>&lt;iq/&gt;</code>
-		stanza of type <code>error</code>,
+		Failure is indicated using an <code>&lt;iq/&gt;</code> stanza of
+		type <code>error</code>,
 	      </para>
 	    </listitem>
 
@@ -1806,116 +1802,166 @@
     </section>
   </appendix>
 
+  <?hard-pagebreak?>
   <bibliography>
     <title>External Resources</title>
-
-    <biblioentry xml:id="jng-xtls">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/inbox/jingle-xtls.html">Jingle XTLS</link>
-      </bibliomisc>
-    </biblioentry>
-
-    <biblioentry xml:id="rfc2222">
-      <bibliomisc>
-      <link xlink:href="http://tools.ietf.org/html/rfc2222">RFC 2222</link>
-      </bibliomisc>
-    </biblioentry>
+    <bibliodiv>
+    <title></title>
 
     <biblioentry xml:id="rfc3920">
-      <bibliomisc>
-      <link xlink:href="http://tools.ietf.org/html/rfc3920">RFC 3920</link>
-      </bibliomisc>
+      <title>RFC 3920</title>
+      <subtitle>Extensible Messaging and Presence Protocol (XMPP):
+      Core</subtitle>
+      <publishername>The Internet Engineering Task Force</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://tools.ietf.org/html/rfc3920"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="rfc3921">
-      <bibliomisc>
-      <link xlink:href="http://tools.ietf.org/html/rfc3921">RFC 3921</link>
-      </bibliomisc>
+      <title>RFC 3921</title>
+      <subtitle>Extensible Messaging and Presence Protocol (XMPP): Instant
+      Messaging and Presence</subtitle>
+      <publishername>The Internet Engineering Task Force</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://tools.ietf.org/html/rfc3921"/>
+      </bibliosource>
+    </biblioentry>
+
+    <biblioentry xml:id="rfc2222">
+      <title>RFC 2222</title>
+      <subtitle>Simple Authentication and Security Layer (SASL)</subtitle>
+      <publishername>The Internet Engineering Task Force</publishername>
+      <bibliosource>
+	<link xlink:href="http://tools.ietf.org/html/rfc2222"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="rfc3923">
-      <bibliomisc>
-      <link xlink:href="http://tools.ietf.org/html/rfc3923">RFC 3923</link>
-      </bibliomisc>
+      <title>RFC 3923</title>
+      <subtitle>End-to-End Signing and Object Encryption for the Extensible
+      Messaging and Presence Protocol (XMPP)</subtitle>
+      <publishername>The Internet Engineering Task Force</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://tools.ietf.org/html/rfc3923"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0030">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0030.html">XEP-0060</link>
-      </bibliomisc>
-    </biblioentry>
-
-    <biblioentry xml:id="xep0050">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0050.html">XEP-0050</link>
-      </bibliomisc>
-    </biblioentry>
-
-    <biblioentry xml:id="xep0054">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0054.html">XEP-0054</link>
-      </bibliomisc>
+      <title>XEP-0030</title>
+      <subtitle>Service Discovery</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0030.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0060">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0060.html">XEP-0060</link>
-      </bibliomisc>
+      <title>XEP-0060</title>
+      <subtitle>Publish-Subscribe</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0060.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0082">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0084.html">XEP-0082</link>
-      </bibliomisc>
+      <title>XEP-0082</title>
+      <publishername>XMPP Standards Foundation</publishername>
+      <subtitle>XMPP Date and Time Profiles</subtitle>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0082.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0084">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0084.html">XEP-0084</link>
-      </bibliomisc>
+      <title>XEP-0084</title>
+      <subtitle>User Avatar</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0084.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0096">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0096.html">XEP-0096</link>
-      </bibliomisc>
+      <title>XEP-0096</title>
+      <subtitle>SI File Transfer</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0096.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0115">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0115.html">XEP-0115</link>
-      </bibliomisc>
+      <title>XEP-0115</title>
+      <subtitle>Entity Capabilities</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0115.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0163">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0163.html">XEP-0163</link>
-      </bibliomisc>
+      <title>XEP-0163</title>
+      <subtitle>Personal Eventing Protocol</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0163.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0166">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0166.html">XEP-0166</link>
-      </bibliomisc>
+      <title>XEP-0166</title>
+      <subtitle>Jingle</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0166.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0167">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0167.html">XEP-0167</link>
-      </bibliomisc>
+      <title>XEP-0167</title>
+      <subtitle>Jingle RTP Sessions</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0167.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0174">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0174.html">XEP-0174</link>
-      </bibliomisc>
+      <title>XEP-0174</title>
+      <subtitle>Serverless Messaging</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0174.html"/>
+      </bibliosource>
     </biblioentry>
 
     <biblioentry xml:id="xep0234">
-      <bibliomisc>
-      <link xlink:href="http://xmpp.org/extensions/xep-0234.html">XEP-0234</link>
-      </bibliomisc>
+<!--
+      <author>
+	<personname>
+	  <firstname>Peter</firstname>
+	  <surname>Saint-Andre</surname>
+	</personname>
+      </author>
+-->
+      <title>XEP-0234</title>
+      <subtitle>Jingle File Transfer</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0234.html"/>
+      </bibliosource>
     </biblioentry>
 
+    <biblioentry xml:id="jng-xtls">
+      <title>Jingle XTLS</title>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/inbox/jingle-xtls.html"/>
+      </bibliosource>
+    </biblioentry>
+
+    </bibliodiv>
   </bibliography>
 </article>
