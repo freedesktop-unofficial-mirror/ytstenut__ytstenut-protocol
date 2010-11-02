@@ -127,7 +127,7 @@
     <xsl:choose>
       <xsl:when test="$position = 'left'">
 	<fo:block text-align="center" color="red" font-weight="bold">
-	  <xsl:text>***&#xA0;EARLY DRAFT&#xA0;***</xsl:text>
+	  <xsl:text>***&#xA0;DRAFT&#xA0;***</xsl:text>
 	</fo:block>
       </xsl:when>
       <xsl:when test="$position = 'right'">
@@ -136,7 +136,7 @@
 		  space-after="0em"
 		  color="red"
 		  font-size="9pt">
-	  <xsl:text>Do not distribute outwith CC POC team please</xsl:text>
+	  <xsl:text>Internal use only</xsl:text>
 	</fo:block>
       </xsl:when>
       <xsl:otherwise>

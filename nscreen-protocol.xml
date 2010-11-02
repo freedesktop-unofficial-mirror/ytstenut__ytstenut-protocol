@@ -27,6 +27,7 @@
     </author>
 
     <revhistory>
+<!--
       <revision>
          <revnumber>0.1</revnumber>
          <date>22 October 2010</date>
@@ -44,6 +45,21 @@
          <date>29 October 2010</date>
          <revremark>
 	   tidying up loose ends
+	 </revremark>
+      </revision>
+-->
+      <revision>
+         <revnumber>0.4</revnumber>
+         <date>1 November 2010</date>
+         <revremark>
+	   Initial draft
+	 </revremark>
+      </revision>
+      <revision>
+         <revnumber>0.5</revnumber>
+         <date>1 November 2010</date>
+         <revremark>
+	   ...
 	 </revremark>
       </revision>
     </revhistory>
@@ -313,7 +329,7 @@
 	  <listitem>
 	    <para>
 	      A server-less protocol similar to link-local XMPP<citation><xref
-	      linkend="xep0174"/></citation> , but taylored for nScreen use.
+	      linkend="xep0174"/></citation> , but tailored for nScreen use.
 	    </para>
 	  </listitem>
 	</itemizedlist>
@@ -636,7 +652,8 @@
 	    <orgname>Collabora</orgname>
 	  </info>
 	  <para>
-	    Should be possible to support in salut using a connection parameter.
+	    As far as Salut is concerned, this will be a protocol distinct from
+	    local-xmpp.
 	  </para>
 	</annotation>
 
@@ -666,7 +683,8 @@
 
 	  <listitem>
 	    <para>
-	      All implementations must support SASL authentication.
+	      All implementations must support SASL authentication
+	      <citation><xref linkend="rfc2222"/></citation>.
 	    </para>
 	  </listitem>
 	</itemizedlist>
@@ -750,16 +768,6 @@
 	linkend="intro-application-classes"/>).
       </para>
 
-<annotation role='comment'>
-  <info>
-    <authorinitials>tf</authorinitials>
-    <orgname>Intel</orgname>
-  </info>
-  <para>
-    I assume XEP-0030 will work in server-less context?
-  </para>
-</annotation>
-
       <para>
 	The <code>name</code> attribute of the <code>&lt;identity/&gt;</code>
 	element holds application name, while the <code>xml:lang</code>
@@ -817,24 +825,35 @@
       <title>Application Capabilities</title>
 
       <para>
-	nScreen applications advertise their capabilities via XMPP Entity
-	Capabilities protocol<citation><xref linkend="xep0115"/></citation>,
-	using <code>urn:nscreen:capabilities</code> as the value of the
+	nScreen applications must advertise their nScreen capabilities via XMPP
+	Entity Capabilities protocol<citation><xref
+	linkend="xep0115"/></citation>, using
+	<code>urn:nscreen:capabilities</code> as the value of the
 	<code>node</code> attribute of the <code>&lt;c/&gt;</code> element.
       </para>
 
       <para>
-	Each individual capability is represented by the
+	Each individual nScreen capability is represented by the
 	<code>&lt;feature/&gt;</code> element; the <code>var</code> attribute is
 	constructed by concatenating an <code>'urn:nscreen:capabilies:'</code>
 	prefix and the canonical name of the capability (for standard
-	capabilities defined in <xref linkend="messaging-metadata-caps"/>). For
-	example, a video playback capability would be represented as:
+	capabilities defined in <xref linkend="messaging-metadata-caps"/>).
+      </para>
+
+      <para>
+	In addition, nScreen applications should also advertise any data
+	transfer protocols they support as above, using the <code>urn</code>s
+	defined in <xref linkend="messaging-data-transfer-urns"/> as the value
+	of the <code>var</code> attribute. For example, an application
+	supporting video playback capability and able to stream files via Jingle
+	RTP would be represented as:
       </para>
 
       <programlisting><![CDATA[
-<feature var='urn:nscreen:capabilities:ns-caps-video' />
-
+<c node='urn:nscreen:capabilities'>
+  <feature var='urn:nscreen:capabilities:ns-caps-video' />
+  <feature var='urn:nscreen:data:jingle:rtp' />
+<c/>
 ]]></programlisting>
     </section>
 
@@ -960,8 +979,8 @@
       </para>
 
       <para>
-	The messages per se are exchanged using XMPP <code>&lt;iq/&gt;</code>
-	stanzas, with xmlns of <code>urn:nscreen:messages</code>.
+	The messages are exchanged using XMPP <code>&lt;iq/&gt;</code>
+	stanzas, using the <code>urn:nscreen:messages</code> namespace:
 
 	<itemizedlist>
 	  <listitem>
@@ -1012,8 +1031,8 @@
 	  <title><code>&lt;nscreen:command/&gt;</code></title>
 
 	  <para>
-	    A command sent from application <code>A</code> to application <code>B</code> to executed
-	    directly by application <code>B</code>.
+	    A command sent from application <code>A</code> to application
+	    <code>B</code> to executed directly by application <code>B</code>.
 	  </para>
 	  <para>
 	    Required attributes:
@@ -1274,11 +1293,11 @@
 	    </para>
 
 	    <para>
-	      Application that receives an <code>&lt;error/&gt;</code> of type
-	      <code>wait</code> in response to
-	      <code>&lt;nscreen:find/&gt;</code> request should wait for
-	      further communication from the recipient (either result or error);
-	      the sender must not resend the original request in response to the
+	      An application that receives an <code>&lt;error/&gt;</code> of
+	      type <code>wait</code> in response to
+	      <code>&lt;nscreen:find/&gt;</code> request should wait for further
+	      communication from the recipient (either result or error); the
+	      sender must not resend the original request in response to the
 	      <code>wait</code> error (NB: this is a departure from the regular
 	      semantics of XMPP <code>wait</code> errors).
 	    </para>
@@ -1369,9 +1388,9 @@
       <title>Common meta-data classes</title>
 
       <para>
-	The canonical definition is given in <xref
-	linkend="appendix-schemas"/>); the following information is extracted from
-	the XML schemas for convenience.
+	The canonical definition is given in <xref linkend="appendix-schemas"/>;
+	the following information is extracted from the XML schemas for
+	convenience.
       </para>
 
 
@@ -1380,6 +1399,18 @@
 
 	<para>
 	  <variablelist>
+	    <varlistentry>
+	      <term>
+		<code>ns-caps-control</code>
+	      </term>
+
+	      <listitem>
+		<para>
+		  control application,
+		</para>
+	      </listitem>
+	    </varlistentry>
+
 	    <varlistentry>
 	      <term>
 		<code>ns-caps-audio</code>
@@ -1430,15 +1461,16 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-caps-control</code>
+		<code>ns-caps-antivirus</code>
 	      </term>
 
 	      <listitem>
 		<para>
-		  control application.
+		  anti-virus capabilities,
 		</para>
 	      </listitem>
 	    </varlistentry>
+
 	  </variablelist>
 	</para>
 
@@ -1448,7 +1480,8 @@
 	      <orgname>Intel</orgname>
 	    </info>
 	    <para>
-	      More stuff should be added here; open to suggestions.
+	      More standard definitions should be added here; open to
+	      suggestions.
 	    </para>
 	  </annotation>
 
@@ -1463,7 +1496,7 @@
 	<title>Common activity classes</title>
 
 	<para>
-	  Absence of the 'activity' attribute, or its empty value imply idle
+	  Absence of the 'activity' attribute, or its empty value, imply idle
 	  state.
 
 	  <variablelist>
@@ -1514,6 +1547,17 @@
 
 	    <varlistentry>
 	      <term>
+		<code>ns-activity-scan</code>
+	      </term>
+	      <listitem>
+		<para>
+		  scan,
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
 		<code>ns-activity-volume</code>
 	      </term>
 	      <listitem>
@@ -1531,7 +1575,7 @@
 	    <orgname>Intel</orgname>
 	  </info>
 	  <para>
-	  More stuff should be added here, open to suggestions.
+	  More standard definitions should be added here, open to suggestions.
 	  </para>
 	</annotation>
 
@@ -1548,15 +1592,25 @@
 	<para>
 	  <variablelist>
 	    <varlistentry>
+	      <term><code>protocol</code></term>
+
+	      <listitem>
+		<para>
+		  <code>urn</code> identifying a suitable protocol through which
+		  the resource on which to operate can be obtained (see <xref
+		  linkend="messaging-data-transfer-urns"/>). Multiple protocols
+		  can be listed as a space separated list, in descending order
+		  of preference.
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
 	      <term><code>uri</code></term>
 
 	      <listitem>
 		<para>
 		  <code>uri</code> a of a resource associated with activity.
-		  This can be either a <code>url</code> from which the resource
-		  can be fetched, or a <code>urn</code> identifying a suitable
-		  protocol through which the resource can be obtained (see <xref
-		  linkend="messaging-data-transfer-urns"/>).
 		</para>
 	      </listitem>
 	    </varlistentry>
@@ -1633,7 +1687,7 @@
 
 	      <listitem>
 		<para>
-		  jabber id,
+		  XMPP id,
 		</para>
 	      </listitem>
 	    </varlistentry>
@@ -1709,14 +1763,17 @@
 	<title>URNs for common resource fetching protocols</title>
 
 	<para>
-	  This section codifies <code>urn</code> to be used with the
+	  This section codifies <code>urn</code>s to be used with the
 	  <code>uri</code> attribute of nScreen commands to indicate how to
-	  reach the resource.
+	  reach the resource, and when advertising application capabilities (see
+	  <xref linkend="messaging-app-caps"/>). Each <code>urn</code> is formed
+	  by combining a '<code>urn:nscreen:data:</code>' prefix with one of the
+	  protocol ids defined below:
 	</para>
 	<para>
 	  <variablelist>
 	    <varlistentry>
-	      <term><code>urn:nscreen:si-file</code></term>
+	      <term><code>si-file</code></term>
 
 	      <listitem>
 		<para>
@@ -1728,7 +1785,7 @@
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><code>urn:nscreen:jingle:ft</code></term>
+	      <term><code>jingle:ft</code></term>
 
 	      <listitem>
 		<para>
@@ -1741,7 +1798,7 @@
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><code>urn:nscreen:jingle:rtp</code></term>
+	      <term><code>jingle:rtp</code></term>
 
 	      <listitem>
 		<para>
@@ -1753,7 +1810,7 @@
 	    </varlistentry>
 
 	    <varlistentry>
-	      <term><code>urn:nscreen:upnp-av</code></term>
+	      <term><code>upnp-av</code></term>
 
 	      <listitem>
 		<para>

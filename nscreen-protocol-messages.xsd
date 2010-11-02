@@ -23,6 +23,14 @@
           <xs:attribute name='activity'
                         type='xs:NMTOKEN'
                         use='required'/>
+
+	  <xs:simpleType name="listOfAnyURI">
+	    <xs:list itemType="xs:anyURI"/>
+	  </xs:simpleType>
+          <xs:attribute name='protocol'
+                        type='listOfAnyURI'
+                        use='optional'/>
+
           <xs:attribute name='uri'
                         type='xs:anyURI'
                         use='optional'/>
