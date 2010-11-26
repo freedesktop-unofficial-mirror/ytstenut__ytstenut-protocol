@@ -2,11 +2,11 @@
 <article xmlns="http://docbook.org/ns/docbook" version="5.0"
 	 xmlns:xi="http://www.w3.org/2001/XInclude"
 	 xmlns:xlink="http://www.w3.org/1999/xlink"
-	 xml:id="nscreen-protocol" xml:lang="en" class="specification"
+	 xml:id="ytstenut-protocol" xml:lang="en" class="specification"
 	 status="draft">
   <info>
 
-    <title>nScreen Protocol Specification</title>
+    <title>Ytstenut Protocol Specification</title>
 	<subtitle>Version 0.2</subtitle>
 
 	<org>
@@ -84,7 +84,7 @@
     </para>
 
     <para>
-      The nScreen framework aims to facilitates seamless transition of the
+      The Ytstenut framework aims to facilitates seamless transition of the
       user's activities as she moves around. It does so by providing a
       communication channels through which individual user-facing applications
       on distinct devices can cooperate and coordinate their discrete
@@ -94,16 +94,16 @@
 
     <para>
       The activities for which consumers use computers are impossible to
-      enumerate, and are set to evolve. Consequently the nScreen framework does
+      enumerate, and are set to evolve. Consequently the Ytstenut framework does
       not seek to narrowly define the activities and/or services that might fall
       withing its scope, nor it seeks to prescribe the ways in which such
-      activities or tasks should be accomplished. Rather the nScreen framework
+      activities or tasks should be accomplished. Rather the Ytstenut framework
       is a set of generic protocols that can support new activities and services
       without the need to modify the core protocols.
     </para>
 
     <para>
-      More specifically, the aims of the nScreen framework are as follows:
+      More specifically, the aims of the Ytstenut framework are as follows:
     </para>
 
     <itemizedlist>
@@ -117,7 +117,7 @@
 
       <listitem>
 	<para>
-	  To provide standardised meta-data model to facilitate efficient
+	  To provide standardised metadata model to facilitate efficient
 	  inter-application communication.
 	</para>
       </listitem>
@@ -127,7 +127,7 @@
       <title>Service Models</title>
 
       <para>
-	nScreen services fall into two broad categories:
+	Ytstenut services fall into two broad categories:
       </para>
 
       <para>
@@ -135,7 +135,7 @@
 	  <listitem>
 	    <para>
 	      Subscription-based services: these are provided by discrete
-	      entities, each operating their own nScreen server. nScreen users
+	      entities, each operating their own Ytstenut server. Ytstenut users
 	      connect to this server using credentials agreed with the service
 	      provider, and interact with applications offered by the service
 	      provider through their server.
@@ -153,7 +153,7 @@
       </para>
 
       <para>
-	The nScreen framework aims to support both of these scenarios in a
+	The Ytstenut framework aims to support both of these scenarios in a
 	transparent manner.
       </para>
 
@@ -163,21 +163,21 @@
       <title>Application Classes</title>
 
       <para>
-	nScreen applications can be divided into two broad classes:
+	Ytstenut applications can be divided into two broad classes:
 
 	<itemizedlist>
 	  <listitem>
 	    <para>
 	      Task-oriented applications: these are the core participants in the
-	      nScreen mesh. They are user-facing applications, such as media
-	      players, that have been enriched by adding the nScreen
+	      Ytstenut mesh. They are user-facing applications, such as media
+	      players, that have been enriched by adding the Ytstenut
 	      capabilities.
 	    </para>
 	  </listitem>
 	  <listitem>
 	    <para>
-	      Control Applications: these provide background nScreen services on
-	      an nScreen-enabled devices. Their principal purpose is to allow
+	      Control Applications: these provide background Ytstenut services on
+	      an Ytstenut-enabled devices. Their principal purpose is to allow
 	      task-oriented applications to direct their communications at a
 	      device, rather than a specific task-oriented application on that
 	      device, and to ensure that appropriate task-oriented application
@@ -188,7 +188,7 @@
 	    <para>
 	      While control applications can be purely background processes,
 	      when provided with a suitable UI they can be used as generic
-	      nScreen remote controls.
+	      Ytstenut remote controls.
 	    </para>
 	  </listitem>
 	</itemizedlist>
@@ -196,14 +196,14 @@
     </section>
 
     <section xml:id="intro-metadata">
-      <title>Meta-data model</title>
+      <title>Metadata model</title>
 
       <para>
-	One of the key components of the nScreen framework is the meta-data
-	model. The purpose of the nScreen protocols is to allow applications to
-	exchange meta-data describing their activities in a way that would allow
+	One of the key components of the Ytstenut framework is the metadata
+	model. The purpose of the Ytstenut protocols is to allow applications to
+	exchange metadata describing their activities in a way that would allow
 	them to coordinate these across multiple devices and
-	platforms. Consequently, the meta-data model must be:
+	platforms. Consequently, the metadata model must be:
 
 	<itemizedlist>
 	  <listitem>
@@ -230,13 +230,13 @@
       </para>
 
       <para>
-	The nScreen meta-data is modelled as a pairing of a capability subject
+	The Ytstenut metadata is modelled as a pairing of a capability subject
 	(representing a single application feature that is of interest to a
 	user) and an activity predicate (a way in which the user can manipulate
 	content tied to a specific capability). Both the capability and the
 	activity in each specific pair can be further qualified by attributes;
 	the resulting <code>{capability, activity, attributes}</code> tuple
-	constitutes the elementary unit of nScreen meta-data.
+	constitutes the elementary unit of Ytstenut metadata.
       </para>
 
       <para>
@@ -253,7 +253,7 @@
       </para>
 
       <para>
-	In addition to the meta-data describing application activities, the
+	In addition to the metadata describing application activities, the
 	protocol also specifies means through which application describe
 	themselves to the user.
       </para>
@@ -263,7 +263,7 @@
       <title>XMPP backbone</title>
 
       <para>
-	The nScreen communication protocols are built on the existing XMPP
+	The Ytstenut communication protocols are built on the existing XMPP
 	standard. The reasons for choosing XMPP as the basic transport protocol
 	are:
 
@@ -278,7 +278,7 @@
 	  <listitem>
 	    <para>
 	      XMPP is supported on a broad range of hardware and software
-	      platforms, thus aiding the speed with which the nScreen framework
+	      platforms, thus aiding the speed with which the Ytstenut framework
 	      can be rolled out,
 	    </para>
 	  </listitem>
@@ -316,27 +316,27 @@
       </para>
 
       <para>
-	As far as possible, the nScreen framework aims to reuse existing XMPP
+	As far as possible, the Ytstenut framework aims to reuse existing XMPP
 	capabilities and features; these are augmented by two extensions:
 
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      Protocols for encoding of nScreen meta-data,
+	      Protocols for encoding of Ytstenut metadata,
 	    </para>
 	  </listitem>
 
 	  <listitem>
 	    <para>
 	      A server-less protocol similar to link-local XMPP<citation><xref
-	      linkend="xep0174"/></citation> , but tailored for nScreen use.
+	      linkend="xep0174"/></citation> , but tailored for Ytstenut use.
 	    </para>
 	  </listitem>
 	</itemizedlist>
       </para>
 
       <para>
-	In addition, at number of points, the nScreen specification mandates
+	In addition, at number of points, the Ytstenut specification mandates
 	the use of standard, but optional, XMPP features, particularly so, where
 	this is desirable to improve security and privacy.
       </para>
@@ -349,7 +349,7 @@
     <title>Security and Privacy Considerations</title>
 
     <para>
-      The flexible and extensible nature of the nScreen framework means that it
+      The flexible and extensible nature of the Ytstenut framework means that it
       is not possible to predict what kind of data may be transmitted via the
       protocol in its real-world deployment. Furthermore, the expectation of
       deployment on a variety of platforms, ranging from desktop computers to
@@ -398,7 +398,7 @@
 	    Normal XMPP presence information is broadcast across all subscribed
 	    contacts, or, in the case of link-local XMPP protocol, even
 	    advertised entirely openly via m-DNS broadcasts; consequently the
-	    protocol avoids using the presence mechanism for meta-data
+	    protocol avoids using the presence mechanism for metadata
 	    exchanges, including the extended status information (see <xref
 	    linkend="messaging-status"/>).
 	  </para>
@@ -407,7 +407,7 @@
     </para>
 
     <para>
-      The nScreen protocol specifies two sets of features aiming to ensure
+      The Ytstenut protocol specifies two sets of features aiming to ensure
       privacy of user data: the use of TLS (see <xref
       linkend="comm-protocols-privacy-tls"/>), and the use of end-to-end
       encryption (see <xref linkend="comm-protocols-privacy-e2e"/>).
@@ -420,13 +420,13 @@
     <title>Communication Backbone Protocols</title>
 
       <section xml:id="comm-protocols-jid">
-	<title>nScreen JID</title>
+	<title>Ytstenut JID</title>
 
 	<para>
-	  All nScreen applications, regardless whether running in server-based
+	  All Ytstenut applications, regardless whether running in server-based
 	  or server-less context, are identified using a bare XMPP
 	  JID<citation><xref linkend="rfc3920"/></citation>. A single
-	  application connection to the nScreen mesh is identified by a fully
+	  application connection to the Ytstenut mesh is identified by a fully
 	  qualified JID, consisting of a bare JID, identifying the application,
 	  and a resource identifier; multiple simultaneous connections by single
 	  application are permitted and differentiated by the resource part of
@@ -471,16 +471,16 @@
 	    which cannot be automatically granted.  Therefore, this generic
 	    scenario is only acceptable if data exchanged between <code>A</code>
 	    and <code>B</code> contains no sensitive information, i.e., for what
-	    essentially amounts to an anonymous nScreen service.
+	    essentially amounts to an anonymous Ytstenut service.
 	  </para>
 
 	  <para>
-	    Though there might be numerous nScreen applications for which an
-	    anonymous service is entirely appropriate, an nScreen service that
+	    Though there might be numerous Ytstenut applications for which an
+	    anonymous service is entirely appropriate, an Ytstenut service that
 	    requires reliable identity verification must either implement
 	    additional identity verification measures beyond what is specified
 	    by the current version of the protocol, or be implemented using a
-	    dedicated nScreen server that requires direct login, and does not
+	    dedicated Ytstenut server that requires direct login, and does not
 	    permit server hops (i.e., both <code>A</code> and <code>B</code> are
 	    logging into the same server in order to talk to each other). In
 	    this situation the service provider is fully in control of the
@@ -495,7 +495,7 @@
 
 	  <para>
 	    In server-less context of a home cloud, the 1:1 mapping between
-	    nScreen users and authentication credentials cannot be guaranteed; a
+	    Ytstenut users and authentication credentials cannot be guaranteed; a
 	    simple home cloud set up might, for example, rely on a shared secret
 	    to allow applications across the cloud to authenticate, which in
 	    turn allows an authenticated application to spoof another
@@ -505,15 +505,15 @@
 	  <para>
 	    Although identity spoofing carries with it lesser risks in the
 	    context of the home cloud, the following measures are required to be
-	    taken by compliant nScreen implementations to improve security:
+	    taken by compliant Ytstenut implementations to improve security:
 
 	    <itemizedlist>
 	      <listitem>
 		<para>
 		  Applications must not make assumptions about identity of other
-		  nScreen participants in the cloud context, unless they
+		  Ytstenut participants in the cloud context, unless they
 		  implement additional identity verification procedures not
-		  specified by the current version of the nScreen protocol,
+		  specified by the current version of the Ytstenut protocol,
 		</para>
 	      </listitem>
 
@@ -543,8 +543,8 @@
 	<title>Subscription</title>
 
 	<para>
-	  The nScreen framework uses a subscription mechanism to provide access
-	  control between nScreen applications; the details of the subscription
+	  The Ytstenut framework uses a subscription mechanism to provide access
+	  control between Ytstenut applications; the details of the subscription
 	  mechanism vary between the server-based and server-less modes of
 	  operation.
 	</para>
@@ -553,7 +553,7 @@
 	  <title>Server-end subscription</title>
 
 	  <para>
-	    Server-based nScreen services must implement standard subscription
+	    Server-based Ytstenut services must implement standard subscription
 	    mechanism as set out by the core XMPP protocol<citation><xref
 	    linkend="rfc3920"/></citation> and must comply with the subscription
 	    policies the core specification sets out.
@@ -572,8 +572,8 @@
 	  <para>
 	    The standard, server-centric, XMPP subscription mechanism is not
 	    applicable for the link-local set up; in order to circumvent this
-	    limitation, the local-nscreen protocol specification defined later
-	    in this document (see <xref linkend="local-nscreen"/>), defines a
+	    limitation, the local-ytstenut protocol specification defined later
+	    in this document (see <xref linkend="local-ytstenut"/>), defines a
 	    separate subscription mechanism to use in its place.
 	  </para>
 	</section>
@@ -587,7 +587,7 @@
 	<title>TLS</title>
 
 	<para>
-	  Compliant nScreen applications, both servers and clients, must
+	  Compliant Ytstenut applications, both servers and clients, must
 	  support TLS as specified by the core XMPP protocol <citation><xref
 	  linkend="rfc3920"/></citation>, and must use TLS secured
 	  connections exclusively, both for client-to-server and
@@ -598,7 +598,7 @@
 	<para>
 	  It should be noted here again that the use of TLS on its own does not
 	  prevent server eavesdropping when the XMPP conversation spans multiple
-	  servers. nScreen applications needing to transmit highly sensitive
+	  servers. Ytstenut applications needing to transmit highly sensitive
 	  data should either use single-server XMPP exchanges along the lines
 	  described in <xref linkend="comm-protocols-identity-server"/>, or
 	  otherwise will have to make use of end-to-end encryption.
@@ -610,7 +610,7 @@
 	<title>End to end encryption</title>
 
 	<para>
-	  The end-to-end encryption to be used by nScreen clients is described
+	  The end-to-end encryption to be used by Ytstenut clients is described
 	  by the XMPP e2e extension <citation><xref
 	  linkend="rfc3923"/></citation>.
 
@@ -626,7 +626,7 @@
 	      linkend="jng-xtls"/></citation>. The xep-e2e will do in principle;
 	      it is worth noting that it is unlikely to be used because entities
 	      requiring this level of privacy will have to use a dedicated
-	      nScreen server for identity verification, in which case TLS
+	      Ytstenut server for identity verification, in which case TLS
 	      provides complete privacy of data in transit by virtue of no
 	      server hops being involved, thus rendering e2e superfluous.
 	    </para>
@@ -638,12 +638,12 @@
   </section>
 
   <?hard-pagebreak?>
-  <section xml:id="local-nscreen">
-      <title>Link-local nScreen protocol</title>
+  <section xml:id="local-ytstenut">
+      <title>Link-local Ytstenut protocol</title>
 
       <para>
-	The link-local nScreen protocol allows for automatic connection between
-	nScreen clients running on the same LAN. It is derived from the
+	The link-local Ytstenut protocol allows for automatic connection between
+	Ytstenut clients running on the same LAN. It is derived from the
 	local-xmpp protocol, but with some differences:
 
 	<annotation role="implementation">
@@ -660,8 +660,8 @@
 	<itemizedlist>
 	  <listitem>
 	    <para>
-	      The link-local service is called 'nscreen' rather than 'presence',
-	      i.e., the PTRs have pattern 'JID._nscreen._tcp._local.',
+	      The link-local service is called 'ytstenut' rather than 'presence',
+	      i.e., the PTRs have pattern 'JID._ytstenut._tcp._local.',
 	    </para>
 	  </listitem>
 
@@ -677,7 +677,7 @@
 	  <listitem>
 	    <para>
 	      The connection manager implements the subscription mechanism
-	      described below (<xref linkend="local-nscreen-subscription"/>,
+	      described below (<xref linkend="local-ytstenut-subscription"/>,
 	    </para>
 	  </listitem>
 
@@ -690,7 +690,7 @@
 	</itemizedlist>
       </para>
 
-      <section xml:id="local-nscreen-subscription">
+      <section xml:id="local-ytstenut-subscription">
 	<title>Subscription mechanism</title>
 
 	<para>
@@ -708,24 +708,24 @@
 	  mechanism would be functionally equivalent to standard XMPP
 	  subscription so that any user-level APIs could be identical for both
 	  the server-based and server-less scenarios. To this end, the
-	  local-nscreen protocol defines a thin layer allowing the relevant
+	  local-ytstenut protocol defines a thin layer allowing the relevant
 	  <code>&lt;presence/&gt;</code> stanzas to be delivered independently
 	  of the m-DNS presence broadcasts.
 	</para>
 
 	<para>
-	  The local-nscreen subscription handshake is carried out by exchanging
+	  The local-ytstenut subscription handshake is carried out by exchanging
 	  <code>&lt;iq/&gt;</code> <code>set</code> stanzas using
-	  <code>urn:nscreen:local-subscription</code> namespace. These
+	  <code>urn:ytstenut:local-subscription</code> namespace. These
 	  <code>&lt;iq/&gt;</code> stanzas provide a wrapper around appropriate
 	  <code>&lt;presence/&gt;</code> stanzas as used by the standard XMPP
-	  subscription mechanism, so that a local-nscreen subscription exchange
+	  subscription mechanism, so that a local-ytstenut subscription exchange
 	  can be converted into a standard XMPP subscription exchange by simply
 	  stripping out the external <code>&lt;iq/&gt;</code> layer.
 	</para>
 
 	<para>
-	  Compliant local-nscreen connection managers are required to implement
+	  Compliant local-ytstenut connection managers are required to implement
 	  this mechanism.
 	</para>
 
@@ -752,7 +752,7 @@
       <title>Descriptive Application Information</title>
 
       <para>
-	nScreen applications need to provide descriptive information about
+	ytstenut applications need to provide descriptive information about
 	themselves that can be presented to the user. At the bare minimum, this
 	information includes a suitable, localised, application name.
       </para>
@@ -762,8 +762,8 @@
 	linkend="xep0030"/></citation>; the descriptive information is contained
 	in a <code>&lt;identity/&gt;</code> element of <code>category</code>
 	'client'. Two new types are defined for use with this category:
-	<code>'nscreen-application'</code> and
-	<code>'nscreen-controller'</code>, corresponding to task-oriented and
+	<code>'ytstenut-application'</code> and
+	<code>'ytstenut-controller'</code>, corresponding to task-oriented and
 	control applications respectively (see <xref
 	linkend="intro-application-classes"/>).
       </para>
@@ -811,7 +811,7 @@
     id="appinfo1">
 
   <identity category='client'
-            type='nscreen-application'
+            type='ytstenut-application'
             name='Magic Icecream Maker'
 	    xml:lang='en-GB'/>
 
@@ -825,23 +825,23 @@
       <title>Application Capabilities</title>
 
       <para>
-	nScreen applications must advertise their nScreen capabilities via XMPP
+	Ytstenut applications must advertise their Ytstenut capabilities via XMPP
 	Entity Capabilities protocol<citation><xref
 	linkend="xep0115"/></citation>, using
-	<code>urn:nscreen:capabilities</code> as the value of the
+	<code>urn:ytstenut:capabilities</code> as the value of the
 	<code>node</code> attribute of the <code>&lt;c/&gt;</code> element.
       </para>
 
       <para>
-	Each individual nScreen capability is represented by the
+	Each individual Ytstenut capability is represented by the
 	<code>&lt;feature/&gt;</code> element; the <code>var</code> attribute is
-	constructed by concatenating an <code>'urn:nscreen:capabilies:'</code>
+	constructed by concatenating an <code>'urn:ytstenut:capabilies:'</code>
 	prefix and the canonical name of the capability (for standard
 	capabilities defined in <xref linkend="messaging-metadata-caps"/>).
       </para>
 
       <para>
-	In addition, nScreen applications should also advertise any data
+	In addition, Ytstenut applications should also advertise any data
 	transfer protocols they support as above, using the <code>urn</code>s
 	defined in <xref linkend="messaging-data-transfer-urns"/> as the value
 	of the <code>var</code> attribute. For example, an application
@@ -850,9 +850,9 @@
       </para>
 
       <programlisting><![CDATA[
-<c node='urn:nscreen:capabilities'>
-  <feature var='urn:nscreen:capabilities:ns-caps-video' />
-  <feature var='urn:nscreen:data:jingle:rtp' />
+<c node='urn:ytstenut:capabilities'>
+  <feature var='urn:ytstenut:capabilities:ns-caps-video' />
+  <feature var='urn:ytstenut:data:jingle:rtp' />
 <c/>
 ]]></programlisting>
     </section>
@@ -863,15 +863,15 @@
       <para>
 	Extended status information is advertised using XMPP Personal Eventing
 	Protocol<citation><xref linkend="xep0163"/></citation>. The status
-	payload is held by an <code>&lt;nscreen:status/&gt;</code> element and
+	payload is held by an <code>&lt;ytstenut:status/&gt;</code> element and
 	its attributes; applications with multiple capabilities must include
-	an <code>&lt;nscreen:status/&gt;</code> element for each capability.
+	an <code>&lt;ytstenut:status/&gt;</code> element for each capability.
       </para>
 
       <para>
 	The following attributes, in addition to those defined in <xref
 	linkend="messaging-metadata-attributes"/>, are used with the
-	<code>&lt;nscreen:status/&gt;</code> element:
+	<code>&lt;ytstenut:status/&gt;</code> element:
 
 	<variablelist>
 	  <varlistentry>
@@ -879,7 +879,7 @@
 
 	    <listitem>
 	      <para>
-		nScreen protocol version; required,
+		Ytstenut protocol version; required,
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -925,7 +925,7 @@
       </para>
 
       <para>
-	While the <code>&lt;nscreen:status/&gt;</code> element can be extended
+	While the <code>&lt;ytstenut:status/&gt;</code> element can be extended
 	with custom attributes, no frequently changing information
 	(such as current playback position) is permitted as part of status to
 	avoid flooding of the network.
@@ -933,11 +933,11 @@
 
       <para>
 	Human readable description is provided using one or more
-	<code>&lt;nscreen:description/&gt;</code> elements inside the
-	<code>&lt;nscreen:status/&gt;</code> element; each
-	<code>&lt;nscreen:description/&gt;</code> element must have an
+	<code>&lt;ytstenut:description/&gt;</code> elements inside the
+	<code>&lt;ytstenut:status/&gt;</code> element; each
+	<code>&lt;ytstenut:description/&gt;</code> element must have an
 	<code>xml:lang</code> attribute, and multiple
-	<code>&lt;nscreen:description/&gt;</code> elements must have a different
+	<code>&lt;ytstenut:description/&gt;</code> elements must have a different
 	<code>xml:lang</code> attribute each.
       </para>
 
@@ -945,15 +945,15 @@
 	  <title>Status XML example</title>
 
 	  <programlisting><![CDATA[
-<nscreen:status version='1.0'
+<ytstenut:status version='1.0'
                 capability='ns-caps-video'
                 activity='ns-activity-play'
                 uri='some random youtube url'
                 volume='0.75'>
-  <nscreen:description xml:lang='en-GB'>
+  <ytstenut:description xml:lang='en-GB'>
     Playing a video about colour-based optical illusions.
-  </nscreen:description>
-</nscreen:status>]]>
+  </ytstenut:description>
+</ytstenut:status>]]>
 	  </programlisting>
 	</example>
 
@@ -962,7 +962,7 @@
 
 	<para>
 	  In addition to the extended status mechanism described above, it is
-	  recommended that all nScreen implementations support the XMPP User
+	  recommended that all ytstenut implementations support the XMPP User
 	  Avatar specification<citation><xref linkend="xep0084"/></citation>.
 	</para>
       </section>
@@ -972,7 +972,7 @@
       <title>Instruction Messages</title>
 
       <para>
-	Instruction messages are used to send nScreen commands and information
+	Instruction messages are used to send ytstenut commands and information
 	queries. The protocol defines a set of generic XML elements that are
 	used to encapsulate such messages, with parameters transmitted via
 	XML attributes.
@@ -980,7 +980,7 @@
 
       <para>
 	The messages are exchanged using XMPP <code>&lt;iq/&gt;</code>
-	stanzas, using the <code>urn:nscreen:messages</code> namespace:
+	stanzas, using the <code>urn:ytstenut:messages</code> namespace:
 
 	<itemizedlist>
 	  <listitem>
@@ -1028,7 +1028,7 @@
 	</para>
 
 	<section xml:id="messaging-commands-command">
-	  <title><code>&lt;nscreen:command/&gt;</code></title>
+	  <title><code>&lt;ytstenut:command/&gt;</code></title>
 
 	  <para>
 	    A command sent from application <code>A</code> to application
@@ -1044,7 +1044,7 @@
 		</term>
 		<listitem>
 		  <para>
-		    The nScreen protocol version,
+		    The Ytstenut protocol version,
 		  </para>
 		</listitem>
 	      </varlistentry>
@@ -1098,7 +1098,7 @@
 	  <section xml:id="messaging-commands-command-error">
 	    <title>Error handling</title>
 	    <para>
-	      When the resource to which the nScreen command pertains is
+	      When the resource to which the Ytstenut command pertains is
 	      unavailable, the command recipient should return an error that
 	      best describes reason why:
 
@@ -1142,7 +1142,7 @@
 	</section>
 
 	<section xml:id="messaging-commands-transfer">
-	  <title><code>&lt;nscreen:transfer/&gt;</code></title>
+	  <title><code>&lt;ytstenut:transfer/&gt;</code></title>
 
 	  <para>
 	    A request by application <code>A</code> to application
@@ -1160,7 +1160,7 @@
 		</term>
 		<listitem>
 		  <para>
-		    The nScreen protocol version,
+		    The Ytstenut protocol version,
 		  </para>
 		</listitem>
 	      </varlistentry>
@@ -1209,7 +1209,7 @@
 	</para>
 
 	<section xml:id="messaging-commands-find">
-	  <title><code>&lt;nscreen:find/&gt;</code></title>
+	  <title><code>&lt;ytstenut:find/&gt;</code></title>
 
 	  <para>
 	    A request by an application <code>A</code> to a control application
@@ -1235,7 +1235,7 @@
 	      <listitem>
 		<para>
 		  The control application returns the result of the search using
-		  the <code>&lt;nscreen:find-result/&gt;</code> element (see
+		  the <code>&lt;ytstenut:find-result/&gt;</code> element (see
 		  <xref linkend="messaging-commands-find-result"/>).
 		</para>
 	      </listitem>
@@ -1282,7 +1282,7 @@
 	    <para>
 	      When the spawned client application successfully starts up, the
 	      control application must dispatch the
-	      <code>&lt;nscreen:find-result/&gt;</code> response, with an
+	      <code>&lt;ytstenut:find-result/&gt;</code> response, with an
 	      identical <code>id</code> attribute of the
 	      <code>&lt;iq/&gt;</code> query. If the application fails to start,
 	      the control application must dispatch error of type
@@ -1295,7 +1295,7 @@
 	    <para>
 	      An application that receives an <code>&lt;error/&gt;</code> of
 	      type <code>wait</code> in response to
-	      <code>&lt;nscreen:find/&gt;</code> request should wait for further
+	      <code>&lt;ytstenut:find/&gt;</code> request should wait for further
 	      communication from the recipient (either result or error); the
 	      sender must not resend the original request in response to the
 	      <code>wait</code> error (NB: this is a departure from the regular
@@ -1310,7 +1310,7 @@
 	<title>Replies</title>
 
 	<para>
-	  All received <code>set</code> and <code>get</code> nScreen message
+	  All received <code>set</code> and <code>get</code> Ytstenut message
 	  queries must be explicitly acknowledged by the recipient:
 
 	  <itemizedlist>
@@ -1338,7 +1338,7 @@
 	</para>
 
 	<section xml:id="messaging-commands-find-result">
-	  <title><code>&lt;nscreen:find-result/&gt;</code></title>
+	  <title><code>&lt;ytstenut:find-result/&gt;</code></title>
 
 	  <para>
 	    Reply to a previous <code>find</code> query that was successfully
@@ -1358,16 +1358,16 @@
 <iq type='set'
     id='command1'
     to='magic-video-player@blackbox.local'
-    xmlns='urn:nscreen:messages'>
+    xmlns='urn:ytstenut:messages'>
 
-  <nscreen:command version='1.0'
+  <ytstenut:command version='1.0'
                    time='1970-01-01T00:00:00.000Z'
                    capability='ns-caps-video'
                    activity='ns-activity-play'
                    uri='some random youtube url'
                    progress='0.75'>
         [Optional command data; binary data base64 encoded]
-  </nscreen:command>
+  </ytstenut:command>
 </iq>
 
  ...
@@ -1376,7 +1376,7 @@
     id='command1'
     to='the-other-player@bluebox.local'
     from='magic-video-player@blackbox.local'
-    xmlns='urn:nscreen:messages'/>]]>
+    xmlns='urn:ytstenut:messages'/>]]>
       </programlisting>
     </example>
 
@@ -1385,7 +1385,7 @@
     </section>
 
     <section xml:id="messaging-metadata">
-      <title>Common meta-data classes</title>
+      <title>Common metadata classes</title>
 
       <para>
 	The canonical definition is given in <xref linkend="appendix-schemas"/>;
@@ -1718,7 +1718,7 @@
 
       <para>
 	This section defines standard data transfer protocols to be used by
-	nScreen clients; this list does not restrict clients to these protocols
+	Ytstenut clients; this list does not restrict clients to these protocols
 	alone, but sets out preferred protocols.
       </para>
 
@@ -1731,7 +1731,7 @@
 	      <para>
 		The preferred file transfer protocol is SI File
 		Transfer<citation><xref linkend="xep0096"/></citation>; this
-		protocol must be supported by all compliant nScreen clients for
+		protocol must be supported by all compliant Ytstenut clients for
 		which a <code>file</code> constitutes a meaningful data unit,
 	      </para>
 	    </listitem>
@@ -1742,7 +1742,7 @@
 		File Transfer<citation><xref linkend="xep0234"/></citation>;
 		this protocol is currently in experimental stage, but once it is
 		reaches the draft stage, it will be adopted as the default file
-		transfer protocol for nScreen clients.
+		transfer protocol for Ytstenut clients.
 	      </para>
 	    </listitem>
 	  </itemizedlist>
@@ -1764,10 +1764,10 @@
 
 	<para>
 	  This section codifies <code>urn</code>s to be used with the
-	  <code>uri</code> attribute of nScreen commands to indicate how to
+	  <code>uri</code> attribute of Ytstenut commands to indicate how to
 	  reach the resource, and when advertising application capabilities (see
 	  <xref linkend="messaging-app-caps"/>). Each <code>urn</code> is formed
-	  by combining a '<code>urn:nscreen:data:</code>' prefix with one of the
+	  by combining a '<code>urn:ytstenut:data:</code>' prefix with one of the
 	  protocol ids defined below:
 	</para>
 	<para>
@@ -1826,36 +1826,36 @@
 
   <?hard-pagebreak?>
   <appendix xml:id="appendix-schemas">
-    <title>nScreen XML Schemas</title>
+    <title>Ytstenut XML Schemas</title>
 
-    <section xml:id="appendix-schemas-nscreen-subscription">
-      <title>Schema for <code>urn:nscreen:local-subscription</code></title>
+    <section xml:id="appendix-schemas-ytstenut-subscription">
+      <title>Schema for <code>urn:ytstenut:local-subscription</code></title>
       <programlisting><!-- The xi:include line must be aligned directly at the
 			   end of this comment, as any padding will end up in
 			   the final document !!!
 		      --><xi:include
 	     parse="text"
-	     href="./nscreen-protocol-subscription.xsd" /></programlisting>
+	     href="./ytstenut-protocol-subscription.xsd" /></programlisting>
     </section>
 
-    <section xml:id="appendix-schemas-nscreen-status">
-      <title>Schema for <code>urn:nscreen:status</code></title>
+    <section xml:id="appendix-schemas-ytstenut-status">
+      <title>Schema for <code>urn:ytstenut:status</code></title>
       <programlisting><!-- The xi:include line must be aligned directly at the
 			   end of this comment, as any padding will end up in
 			   the final document !!!
 		      --><xi:include
 	     parse="text"
-	     href="./nscreen-protocol-status.xsd" /></programlisting>
+	     href="./ytstenut-protocol-status.xsd" /></programlisting>
     </section>
 
-    <section xml:id="appendix-schemas-nscreen-messages">
-      <title>Schema for <code>urn:nscreen:messages</code></title>
+    <section xml:id="appendix-schemas-ytstenut-messages">
+      <title>Schema for <code>urn:ytstenut:messages</code></title>
       <programlisting><!-- The xi:include line must be aligned directly at the
 			   end of this comment, as any padding will end up in
 			   the final document !!!
 		      --><xi:include
 	     parse="text"
-	     href="./nscreen-protocol-messages.xsd" /></programlisting>
+	     href="./ytstenut-protocol-messages.xsd" /></programlisting>
     </section>
   </appendix>
 

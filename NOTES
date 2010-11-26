@@ -9,3 +9,183 @@ Robsta: some formfactor and such description
 
 
  navigation metadata ?
+
+################
+
+Fri 26 Nov 2010 13:00
+[13:36] tf> someone pointed out that although we are construing this as
+application to application IM, there needs to be some clear mapping between the
+applications and actual users
+[13:37] tf> so, I am thinking to introduce back the idea of the structured jid,
+in the form app.user@somewhere, which should take care of the basics
+[13:38] tf> now, there will also need to be some human-friendly info for the
+user, which in server context could be accomplished via the vcard
+[13:38] will.thompson@collabora.co.uk> well
+[13:38] will.thompson@collabora.co.uk> this actually raises a separate question
+i had
+[13:38] tf> but I think the vcard does not work with local-xmpp
+[13:38] tf> aha
+[13:38] will.thompson@collabora.co.uk> are we expecting one link-local xmpp
+connection per device, or one per application?
+[13:38] will.thompson@collabora.co.uk> vCard should work with local-xmpp
+[13:38] will.thompson@collabora.co.uk> i think that's how avatars work
+[13:39] will.thompson@collabora.co.uk> i'm wrong, it's not.
+[13:39] tf> connection per jid, so that would be per application
+[13:40] will.thompson@collabora.co.uk> but vcard-temp should work fine on
+local-xmpp. or we could also put this information into the disco reply
+[13:40] tf> yes
+[13:40] tf> that was the other option
+[13:40] will.thompson@collabora.co.uk> see
+http://xmpp.org/extensions/xep-0115.html#ver-gen-complex for instance: you can
+put data forms into the disco reply
+[13:40] tf> just wanted to ask what you think, so we avoid creating as much new
+stuff as posible
+[13:40] will.thompson@collabora.co.uk> okay
+[13:41] will.thompson@collabora.co.uk> i had been assuming that we'd have one
+connection per device, shared between all applications. making it one per
+application makes a lot of things easier, though it could be considered wasteful
+[13:42] will.thompson@collabora.co.uk> it makes some of the telepathy stuff
+redundant... but that's not intrinsically bad :)
+[13:42] will.thompson@collabora.co.uk> one other option is to put a resource
+into the local-xmpp jids
+[13:42] will.thompson@collabora.co.uk> so user@device/application
+[13:43] tf> realistically, I can't see there being many enable apps on a single
+device
+[13:43] will.thompson@collabora.co.uk> i don't think this is particularly
+common, but i don't see any reason why it shouldn't be legal
+[13:43] tf> we need the resouce for like mywordprocessor.myself@local/document1
+[13:44] will.thompson@collabora.co.uk> hmm
+[13:44] tf> now, but using a single connection per device is not out of the
+question, I just have hard time to picutre how that would work
+[13:45] will.thompson@collabora.co.uk> i guess my standard analogy is tubes: all
+your applications can share the same connection. your caps show which
+applications you have installed (you can also have caps saying which
+applications are running, etc)
+[13:45] will.thompson@collabora.co.uk> one pep node per application for its
+current status
+[13:46] tf> could you sketch that out as an xml snippet ?
+[13:46] will.thompson@collabora.co.uk> either way is feasible.
+[13:46] will.thompson@collabora.co.uk> sure, just a minute
+[13:46] tf> thx
+[13:57] tf> the other thing that came back, I discovered a whole bunch of guys
+here at intel who seems to have indepently though of using xmpp for this kind of
+a thing, and they are using the ad-hoc commands extension for the command
+exchanges; this got me back to wonder if the instruction messages should not be
+exchanged using that
+[13:58] will.thompson@collabora.co.uk> hah, parallel evolution
+[13:58] tf> seems like it
+[13:58] will.thompson@collabora.co.uk> i don't see any particular problem with
+using that extension... it's not perfect, but it would do
+[13:58] tf> it's a standard already, and in many ways it does what we need it to
+do
+[13:59] tf> also, the xforms are very extensible
+[13:59] will.thompson@collabora.co.uk> yep
+[13:59] tf> I gather TP does not support that currently ?
+[13:59] will.thompson@collabora.co.uk> we already have code for building and
+parsing them
+Fri 26 Nov 2010 14:00
+[14:00] will.thompson@collabora.co.uk> we don't have D-Bus APIs for the custom
+commands xep though
+[14:00] tf> but if we used that, you would end up with a bit more of the
+standard xmpp suported in TP, which can't be a bad thing either
+[14:01] will.thompson@collabora.co.uk> right!
+[14:01] tf> I am just thinking that what is in the nscreen spec is susipicously
+like that in some respects
+[14:01] will.thompson@collabora.co.uk> i think the only difference is that it
+doesn't have the first step to retrieve the form fields
+[14:02] will.thompson@collabora.co.uk> the only substantial difference, i mean
+[14:03] tf> yeah, but you would not need to do that; the <command/> field can
+hold arbitrary xml according to the spec, and if we define standard xforms for
+certain capabilites, the first step could be just skipped
+[14:03] will.thompson@collabora.co.uk> that should be fine
+[14:04] will.thompson@collabora.co.uk> the only problem is that, as specified,
+executing XEP-0050 commands needs a sessionid=''
+[14:04] will.thompson@collabora.co.uk> oh no, it doesn't
+[14:04] tf> right, I need to re-read that
+[14:05] will.thompson@collabora.co.uk> none of the examples show it, but i don't
+see any reason why we couldn't just shove an xform into the initial <command/>
+node in http://xmpp.org/extensions/xep-0050.html#execute-simple
+[14:06] tf> cool, I will look into changing that part of the draft in that
+direction
+[14:06] will.thompson@collabora.co.uk> col
+[14:19] tf> ok, I need to read through that bug report and the associated
+documents :-)
+[14:19] will.thompson@collabora.co.uk> the bug report is really long
+[14:19] tf> but just looking at the xml
+[14:20] will.thompson@collabora.co.uk> that was more for future reference than
+anything else
+[14:20] will.thompson@collabora.co.uk> it had completely slipped my mind :)
+[14:21] tf> if we have a single connection per-device, how do you we go about
+multiple applications with identical capability on the same device ?
+[14:21] will.thompson@collabora.co.uk> hm
+[14:21] tf> and, could two applications on the same device still talk to each
+other ?
+[14:22] will.thompson@collabora.co.uk> for the first: i hadn't considered that
+possibility. what's the use case? it should be workable, just thinking about it
+[14:23] will.thompson@collabora.co.uk> for the second: yes, that should work
+fine. For the per-application extended status, all the other Telepathy API
+exposes your own status in the same way as your contacts', so that should work
+without extra work. For sending commands, we'd have to explicitly add a
+pass-through, but that should also work
+[14:26] tf> right; this probably not the most important thing, but some of the
+use cases we are looking at is one application watching the extended status of
+another and presenting the user with some extra information based on that status
+[14:28] tf> say you are watching the Matrix, and there is another app that
+automatically build a list of webpages that you might be interested in; this
+could be on the same device, though most of then elsewhere
+[14:28] will.thompson@collabora.co.uk> ah, nice
+[14:29] tf> having a single jabber connection makes sense, as long as we can
+still make specific apps talk to each other
+[14:30] will.thompson@collabora.co.uk> with multiple apps with the same caps,
+this is possible, too: the PEP events/items would be published at the node for
+the caps, and the payload would contain application info; there would be more
+than one <nscreen:status/> element in the <item> if there's more than one
+application with these caps
+[14:30] will.thompson@collabora.co.uk> yeah, it shouldn't stop specific apps
+communicating at all
+[14:31] tf> right, I need to think this through, that's quite a mental shift for
+me, but I think I like it
+[14:31] will.thompson@collabora.co.uk> i actually don't think it will change the
+protocol very much
+[14:32] will.thompson@collabora.co.uk> it mainly affects the D-Bus API design —
+I started writing about it while writing that proposal :)
+[14:32] will.thompson@collabora.co.uk> erm. thinking about it.
+
+[14:39] will.thompson@collabora.co.uk> of course, it'd be nice if we also
+supported http://xmpp.org/extensions/xep-0118.html and friends where appropriate
+[14:40] will.thompson@collabora.co.uk> but this is out of scope for this project
+[14:40] tf> yes, though if we are going to conceptually move to a single device
+connection, this becomes more relevant
+[14:41] tf> then the contection represents a person
+[14:41] will.thompson@collabora.co.uk> (also,
+http://xmpp.org/extensions/xep-0108.html#activities might amuse: they attempt to
+define all of the possible activities a person might be doing...)
+[14:41] will.thompson@collabora.co.uk> right, we could think about re-using the
+existing Salut connection
+[14:42] will.thompson@collabora.co.uk> erm, i mean, share the same connection
+used for link-local IM
+[14:42] tf> excellent; this is what I want to avoid; I mean to define everything
+[14:42] will.thompson@collabora.co.uk> but do you really want IM presence for
+all your devices showing up in iChat when your friend brings their macbook over?
+[14:42] tf> no
+[14:42] will.thompson@collabora.co.uk> actually things get difficult if the user
+doesn't want to be available for chat, but they do want their applications to be
+communicating
+[14:43] tf> we don't want to reuse the human IM connection
+[14:43] will.thompson@collabora.co.uk> yep, totalyl
+[14:43] will.thompson@collabora.co.uk> a different project i was involved with
+made this mistake at first
+[14:43] will.thompson@collabora.co.uk> and we ended up with
+http://telepathy.freedesktop.org/spec/Account_Interface_Minimum_Presence.html to
+have some way to have orthogonal presence for IM and the background service on
+the same connection
+[14:44] will.thompson@collabora.co.uk> happily, the decision was made to stop
+sharing the connection
+[14:44] tf> I realized we do not want to do that when my test apps started
+appearing in my IM roster when I was playing with local-xmpp
+[14:44] tf> ok, I got lot's of food for though, I will try to produce a revised
+version of the spec document early next week
+[14:45] will.thompson@collabora.co.uk> great
+[14:45] tf> many thanks
+[14:45] will.thompson@collabora.co.uk> ditto: this has clarified a lot of things
+in my head :)

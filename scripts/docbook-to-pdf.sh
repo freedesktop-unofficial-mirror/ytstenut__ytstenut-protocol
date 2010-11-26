@@ -20,7 +20,7 @@ while [ "x$1" != x ]; do
 	    sfx="";;
 	--help )
 	  echo "\n  Usage: $0 [options]\n"
-	  echo "  Run from withing the directory cotaining nscreen-protocol.xml"
+	  echo "  Run from withing the directory cotaining ytstenut-protocol.xml"
 	  echo "\n  Options:"
 	  echo "       --final : don't include annotations"
 	  exit 1 ;;
@@ -44,9 +44,9 @@ xsltproc \
     --stringparam show.annotations.comments "$annot"                          \
     --stringparam show.annotations.implementation "$impl"                     \
     --stringparam draft.mode "$draft"                                         \
-    -o nscreen-protocol.fo scripts/template.xsl nscreen-protocol.xml || exit 1;
+    -o ytstenut-protocol.fo scripts/template.xsl ytstenut-protocol.xml || exit 1;
 
-fop -fo nscreen-protocol.fo -pdf nscreen-protocol${sfx}.pdf || exit 1
+fop -fo ytstenut-protocol.fo -pdf ytstenut-protocol${sfx}.pdf || exit 1
 
-#rm -f nscreen-protocol.fo
+#rm -f ytstenut-protocol.fo
 #rm -f  /tmp/titlepage.xsl
