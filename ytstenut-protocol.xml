@@ -57,9 +57,9 @@
       </revision>
       <revision>
          <revnumber>0.5</revnumber>
-         <date>1 November 2010</date>
+         <date>29 November 2010</date>
          <revremark>
-	   ...
+	   Changed JID specification; use XEP-0050 as messaging backbone
 	 </revremark>
       </revision>
     </revhistory>
@@ -75,21 +75,63 @@
   <section xml:id="intro">
     <title>Introduction</title>
     <para>
-      Users often carry out similar activities on different devices, e.g., watch
-      videos on a smart phone, laptop, or a TV set. However, as the user moves
-      in time and space, the optimal choice of a device for any given activity
-      might change: a smart phone might be the optimal video viewing platform
-      while travelling on a train, but a TV set might be optimal in the comfort
-      of one's living room.
+      We often carry out similar activities on different devices, e.g., watch
+      videos on a smart phone, laptop, or a TV set. However, as we move in time
+      and space, the optimal choice of a device for any given activity might
+      change: a smart phone might be the optimal video viewing platform while
+      travelling on a train, but a TV set might be preferred in the comfort of
+      one's living room.
     </para>
 
     <para>
-      The Ytstenut framework aims to facilitates seamless transition of the
-      user's activities as she moves around. It does so by providing a
-      communication channels through which individual user-facing applications
-      on distinct devices can cooperate and coordinate their discrete
-      behaviours, and in so construct a dynamic and homogeneous experience
-      spanning the devices involved.
+      Furthermore, our discrete activities are often interconnected even when
+      distributed across distinct devices: a person watching a video on TV might
+      want to locate an additional information about the video itself (e.g.,
+      about the leading actor, director, special effects, etc.), and might use a
+      smart phone, rather than the TV, to retrieve this information.
+    </para>
+
+    <para>
+      The above examples illustrate two key aspects of human interaction with
+      today's technology: (a) our activities are no longer confined to a single
+      dedicated device each, but are distributed over a device mesh, and (b) the
+      mesh as a whole now provides a context which shapes the activities
+      themselves.
+    </para>
+
+    <para>
+      Unfortunately, the technologies of today neither allow for our experience
+      to stretch seamlessly over the device mesh, nor provide an easy access to
+      the unified activity context the device mesh represents.  What device
+      meshing technologies there already are (e.g., UPnP), tend to focus
+      narrowly on the sharing of hardware resources. While resource sharing is
+      an important capability of the device mesh, on it's own it only provides a
+      quantitative, rather than qualitative, improvement on the overall user
+      experience (e.g., the ability to use a TV set to watch a video
+      stored on a PC does not represent a radical improvement on using a memory
+      stick to achieve the same).
+    </para>
+
+    <para>
+      A radical improvement of the user experience requires to move focus from
+      hardware to the user activities, and to start thinking in terms of
+      interacting with, and transferring, the user activities per se; and since
+      user activities are generally mapped directly to user facing applications,
+      what is needed is not just a device mesh, but rather an application
+      mesh. This mesh must facilitate both active interaction as well as passive
+      mutual awareness between applications (for the activity context is
+      constantly changing). Such a mesh would enable applications to cooperate
+      and coordinate their discrete behaviours, and in doing so construct a
+      dynamic and homogeneous experience spanning the devices involved.
+    </para>
+
+    <para>
+      The Ytstenut framework aims to facilitate the creation of a such a dynamic
+      application mesh. It does so by providing a communication channels through
+      which individual user-facing applications on distinct devices can
+      passively advertised their activities in real time, and actively cooperate
+      and coordinate their discrete behaviours, and in so construct a dynamic
+      and homogeneous experience spanning the devices involved.
     </para>
 
     <para>
@@ -118,7 +160,14 @@
       <listitem>
 	<para>
 	  To provide standardised metadata model to facilitate efficient
-	  inter-application communication.
+	  inter-application communication,
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  To provide mechanisms for both active interaction between
+	  applications, and passive awareness of each other.
 	</para>
       </listitem>
     </itemizedlist>
@@ -422,23 +471,30 @@
       <section xml:id="comm-protocols-jid">
 	<title>Ytstenut JID</title>
 
+	  <annotation role="comment">
+	    <info>
+	      <authorinitials>tf</authorinitials>
+	      <orgname>Intel</orgname>
+	    </info>
+	    <para>
+	      This section is under further review; we are looking into ways of
+	      sharing a connection (i.e., a JID) between applications on the
+	      same device.
+	    </para>
+	  </annotation>
+
 	<para>
-	  All Ytstenut applications, regardless whether running in server-based
-	  or server-less context, are identified using a bare XMPP
-	  JID<citation><xref linkend="rfc3920"/></citation>. A single
-	  application connection to the Ytstenut mesh is identified by a fully
-	  qualified JID, consisting of a bare JID, identifying the application,
-	  and a resource identifier; multiple simultaneous connections by single
-	  application are permitted and differentiated by the resource part of
-	  the fully qualified JID (an example of a bare JID would be
-	  <code>application@somewhere.com</code> while a fully qualified JID
-	  would be <code>application@somewhere.com/myimportantdocument</code>.
+	  All Ytstenut participants, whether running in server-based or
+	  server-less context, are identified by an XMPP JID<citation><xref
+	  linkend="rfc3920"/></citation>. The bare JID identifies the (human)
+	  user, while the resource part of a fully qualified JID is used to
+	  identify the application: <code>user@somewhere/application</code>.
 	</para>
 
 	<para>
 	  In the remainder of this document, the term <code>JID</code> is used
-	  to refer to bare JIDs; if a fully qualified jabber id is meant, this
-	  will always be explicitly stated.
+	  to refer to fully qualified JIDs; if a bare JID is meant, this will
+	  always be explicitly stated.
 	</para>
       </section>
 
@@ -752,7 +808,7 @@
       <title>Descriptive Application Information</title>
 
       <para>
-	ytstenut applications need to provide descriptive information about
+	Ytstenut applications need to provide descriptive information about
 	themselves that can be presented to the user. At the bare minimum, this
 	information includes a suitable, localised, application name.
       </para>
@@ -851,7 +907,7 @@
 
       <programlisting><![CDATA[
 <c node='urn:ytstenut:capabilities'>
-  <feature var='urn:ytstenut:capabilities:ns-caps-video' />
+  <feature var='urn:ytstenut:capabilities:yts-caps-video' />
   <feature var='urn:ytstenut:data:jingle:rtp' />
 <c/>
 ]]></programlisting>
@@ -902,7 +958,7 @@
 	    <listitem>
 	      <para>
 		The activity this status represents; optional (if not present
-		<code>ns-activity-idle</code> is implied). The value should be
+		<code>yts-activity-idle</code> is implied). The value should be
 		preferably one of those defined in <xref
 		linkend="messaging-metadata-activity"/>
 	      </para>
@@ -946,8 +1002,8 @@
 
 	  <programlisting><![CDATA[
 <ytstenut:status version='1.0'
-                capability='ns-caps-video'
-                activity='ns-activity-play'
+                capability='yts-caps-video'
+                activity='yts-activity-play'
                 uri='some random youtube url'
                 volume='0.75'>
   <ytstenut:description xml:lang='en-GB'>
@@ -962,7 +1018,7 @@
 
 	<para>
 	  In addition to the extended status mechanism described above, it is
-	  recommended that all ytstenut implementations support the XMPP User
+	  recommended that all Ytstenut implementations support the XMPP User
 	  Avatar specification<citation><xref linkend="xep0084"/></citation>.
 	</para>
       </section>
@@ -972,68 +1028,49 @@
       <title>Instruction Messages</title>
 
       <para>
-	Instruction messages are used to send ytstenut commands and information
-	queries. The protocol defines a set of generic XML elements that are
-	used to encapsulate such messages, with parameters transmitted via
-	XML attributes.
+	Instruction messages are used to send Ytstenut commands and information
+	queries; the underlying protocol for exchange of instruction messages
+	is defined by the Ad-Hoc Commands XMPP extension<citation><xref
+	linkend="xep0030"/></citation>.
       </para>
 
       <para>
-	The messages are exchanged using XMPP <code>&lt;iq/&gt;</code>
-	stanzas, using the <code>urn:ytstenut:messages</code> namespace:
-
-	<itemizedlist>
-	  <listitem>
-	    <para>
-	      Commands are dispatched using <code>&lt;iq/&gt;</code> stanza of
-	      type <code>set</code>,
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para>
-	      Information requests are sent using type <code>get</code>,
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para>
-	      All <code>get</code> / <code>set</code> requests must be
-	      acknowledged by the recipient using <code>&lt;iq/&gt;</code>
-	      stanzas of type <code>result</code> or <code>error</code>,
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para>
-	      Error handling is done via <code>&lt;iq/&gt;</code> stanzas of
-	      type <code>error</code>, using the stanza error protocol
-	      (<code>urn:ietf:params:xml:ns:xmpp-stanzas</code>) defined by XMPP
-	      core <citation><xref linkend="rfc3920"/></citation>. Additional,
-	      application specific information can be included as per the
-	      core protocol.
-	    </para>
-	  </listitem>
-	</itemizedlist>
+	The Ad-Hoc command extension was defined primarily with a view to
+	handling user driven commands and distributed user interfaces. A typical
+	Ad-Hoc exchange, therefore, requires two round trips between the
+	involved parties: during the first trip UI definition is passed from the
+	target entity to the initiating entity, during the second trip the
+	command itself is dispatched from the initiating entity to the target
+	entity and results are returned.
       </para>
 
+      <para>
+	While there will be some Ytstenut use cases where this type of
+	(user-driven) exchange is desirable, many Ytstenut exchanges will be
+	automated in the background, and using a priory known metadata
+	model. This specification, therefore, defines a set of standard commands
+	that can be used with the Ad-Hoc mechanism, and stipulates that a well
+	defined payload can be included in the initial XML
+	<code>&lt;command/&gt;</code> element of the Ad-Hoc exchange; this
+	eliminates the need for the the initial round trip.
+      </para>
 
-      <section xml:id="messaging-commands-iq-set">
-	<title>Commands</title>
+      <para>
+	User-driven exchanges, that cannot be encapsulated in terms of standard
+	Ytstenut messages, should make use of standard XMPP data
+	forms<citation><xref linkend="xep0004"/></citation>. Custom payload
+	formats are permitted, where this makes sense for specialised
+	applications.
+      </para>
 
-	<para>
-	  Commands use <code>set</code> type <code>&lt;iq/&gt;</code> stanzas;
-	  the command payload is carried by one of the XML elements defined
-	  below.
-	</para>
-
-	<section xml:id="messaging-commands-command">
-	  <title><code>&lt;ytstenut:command/&gt;</code></title>
+	<section xml:id="messaging-commands-message">
+	  <title>Message payload: <code>&lt;ytstenut:message/&gt;</code></title>
 
 	  <para>
-	    A command sent from application <code>A</code> to application
-	    <code>B</code> to executed directly by application <code>B</code>.
+	    The <code>&lt;ytstenut:message/&gt;</code> element is used to
+	    encapsulate the payload of standardised Ytstenut messages.
 	  </para>
+
 	  <para>
 	    Required attributes:
 
@@ -1048,7 +1085,29 @@
 		  </para>
 		</listitem>
 	      </varlistentry>
+	    </variablelist>
+	  </para>
 
+	  <para>
+	    Depending on the message purpose, additional attributes are used to
+	    define the message payload.
+	  </para>
+	</section>
+
+	<section xml:id="messaging-commands-nodes">
+	  <title>Standardised Ad-Hoc nodes</title>
+
+	<section xml:id="messaging-commands-command">
+	  <title><code>ytstenut/command</code></title>
+
+	  <para>
+	    A command sent from application <code>A</code> to application
+	    <code>B</code> to executed directly by application <code>B</code>.
+	  </para>
+	  <para>
+	    Required <code>&lt;ytstenut:message/&gt;</code> attributes:
+
+	    <variablelist>
 	      <varlistentry>
 		<term>
 		  <code>capability</code>
@@ -1094,6 +1153,44 @@
 	    linkend="messaging-metadata-attributes"/>, are used to further
 	    qualify the capability and activity specified.
 	  </para>
+
+    <example xml:id="messaging-commands-example"> <title>Command example</title>
+
+      <para>
+	The following XML snippet tells some other application to start
+	playing given video starting 3/4 into the video duration:
+      </para>
+
+      <programlisting><![CDATA[
+
+<iq type='set'
+    id='command1'
+    to='myself@blackbox.local/magic-video-player'
+    >
+  <command xmlns='http://jabber.org/protocol/commands'
+           node='ytstenut/command'
+           action='execute'
+           xmlns='urn:ytstenut:messages'>
+
+    <ytstenut:message version='1.0'
+                      time='1970-01-01T00:00:00.000Z'
+                      capability='yts-caps-video'
+                      activity='yts-activity-play'
+                      uri='some random youtube url'
+                      progress='0.75'>
+        [Optional command data; binary data base64 encoded]
+    </ytstenut:message>
+</iq>
+
+ ...
+
+<iq type='result'
+    id='command1'
+    to='myself@bluebox.local/the-other-player'
+    from='myself@blackbox.local/magic-video-player'
+    xmlns='urn:ytstenut:messages'/>]]>
+      </programlisting>
+    </example>
 
 	  <section xml:id="messaging-commands-command-error">
 	    <title>Error handling</title>
@@ -1142,7 +1239,7 @@
 	</section>
 
 	<section xml:id="messaging-commands-transfer">
-	  <title><code>&lt;ytstenut:transfer/&gt;</code></title>
+	  <title><code>ytstenut/transfer</code></title>
 
 	  <para>
 	    A request by application <code>A</code> to application
@@ -1151,20 +1248,9 @@
 	  </para>
 
 	  <para>
-	    Required attributes:
+	    Required <code>&lt;ytstenut:message/&gt;</code> attributes:
 
 	    <variablelist>
-	      <varlistentry>
-		<term>
-		  <code>version</code>
-		</term>
-		<listitem>
-		  <para>
-		    The Ytstenut protocol version,
-		  </para>
-		</listitem>
-	      </varlistentry>
-
 	      <varlistentry>
 		<term>
 		  <code>capability</code>
@@ -1197,19 +1283,8 @@
 
 	</section>
 
-      </section>
-
-      <section xml:id="messaging-commands-iq-get">
-	<title>Information requests</title>
-
-	<para>
-	  Information requests use <code>get</code> type
-	  <code>&lt;iq/&gt;</code> stanzas; the command payload is carried by
-	  one of the following XML elements:
-	</para>
-
 	<section xml:id="messaging-commands-find">
-	  <title><code>&lt;ytstenut:find/&gt;</code></title>
+	  <title><code>ytstenut/find</code></title>
 
 	  <para>
 	    A request by an application <code>A</code> to a control application
@@ -1220,7 +1295,7 @@
 	      <listitem>
 		<para>
 		  The criteria for the search is given by the supplied
-		  attributes, (e.g., application capability would be specified
+		  attributes (e.g., application capability would be specified
 		  using the <code>capability</code> attribute),
 		</para>
 	      </listitem>
@@ -1235,8 +1310,8 @@
 	      <listitem>
 		<para>
 		  The control application returns the result of the search using
-		  the <code>&lt;ytstenut:find-result/&gt;</code> element (see
-		  <xref linkend="messaging-commands-find-result"/>).
+		  the <code>jid</code> attribute of the
+		  <code>&lt;ytstenut:message/&gt;</code> payload.
 		</para>
 	      </listitem>
 	    </itemizedlist>
@@ -1267,119 +1342,28 @@
 	    <para>
 	      If no suitable running application matching the specified criteria
 	      can be identified but a suitable application is available on the
-	      system, the control application must return immediately an error
-	      of type <code>wait</code>, then attempt to start such suitable
+	      system, the control application must return immediately with
+	      status <code>executing</code>, then attempt to start such suitable
 	      application.
 	    </para>
 
 	    <para>
 	      If a suitable application does not exist on the system, the
-	      control application must return immediately error of type
-	      <code>cancel</code> and an error condition
+	      control application must return immediately an error condition
 	      <code>&lt;item-not-found/&gt;</code>.
 	    </para>
 
 	    <para>
 	      When the spawned client application successfully starts up, the
-	      control application must dispatch the
-	      <code>&lt;ytstenut:find-result/&gt;</code> response, with an
-	      identical <code>id</code> attribute of the
-	      <code>&lt;iq/&gt;</code> query. If the application fails to start,
-	      the control application must dispatch error of type
-	      <code>cancel</code>, again with an identical <code>id</code>
-	      attribute of the <code>&lt;iq/&gt;</code> query; the error
+	      control application returns the result of the search using the
+	      <code>jid</code> attribute of the
+	      <code>&lt;ytstenut:message/&gt;</code> payload. If the application
+	      fails to start, the control application must dispatch response
+	      with status <code>completed</code> and an error; the error
 	      condition should indicate why the application failed to start, if
 	      that is known.
 	    </para>
-
-	    <para>
-	      An application that receives an <code>&lt;error/&gt;</code> of
-	      type <code>wait</code> in response to
-	      <code>&lt;ytstenut:find/&gt;</code> request should wait for further
-	      communication from the recipient (either result or error); the
-	      sender must not resend the original request in response to the
-	      <code>wait</code> error (NB: this is a departure from the regular
-	      semantics of XMPP <code>wait</code> errors).
-	    </para>
 	  </section>
-
-	</section>
-      </section>
-
-      <section xml:id="messaging-commands-iq-result">
-	<title>Replies</title>
-
-	<para>
-	  All received <code>set</code> and <code>get</code> Ytstenut message
-	  queries must be explicitly acknowledged by the recipient:
-
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		Failure is indicated using an <code>&lt;iq/&gt;</code> stanza of
-		type <code>error</code>,
-	      </para>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		Success is indicated by a stanza of type <code>result</code>,
-	      </para>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		Depending on the nature of the original query, a returned
-		<code>result</code> stanza might, or might not hold additional
-		information using one of the following XML elements.
-	      </para>
-	    </listitem>
-	  </itemizedlist>
-	</para>
-
-	<section xml:id="messaging-commands-find-result">
-	  <title><code>&lt;ytstenut:find-result/&gt;</code></title>
-
-	  <para>
-	    Reply to a previous <code>find</code> query that was successfully
-	    resolved. The identified application JID is stored in the
-	    required <code>jid</code> attribute.
-	  </para>
-
-    <example xml:id="messaging-commands-example">
-      <title>Command example</title>
-
-      <para>
-	The following XML snippet tells some other application to start
-	playing given video starting 3/4 into the video duration:
-      </para>
-
-      <programlisting><![CDATA[
-<iq type='set'
-    id='command1'
-    to='magic-video-player@blackbox.local'
-    xmlns='urn:ytstenut:messages'>
-
-  <ytstenut:command version='1.0'
-                   time='1970-01-01T00:00:00.000Z'
-                   capability='ns-caps-video'
-                   activity='ns-activity-play'
-                   uri='some random youtube url'
-                   progress='0.75'>
-        [Optional command data; binary data base64 encoded]
-  </ytstenut:command>
-</iq>
-
- ...
-
-<iq type='result'
-    id='command1'
-    to='the-other-player@bluebox.local'
-    from='magic-video-player@blackbox.local'
-    xmlns='urn:ytstenut:messages'/>]]>
-      </programlisting>
-    </example>
-
 	</section>
       </section>
     </section>
@@ -1401,7 +1385,7 @@
 	  <variablelist>
 	    <varlistentry>
 	      <term>
-		<code>ns-caps-control</code>
+		<code>yts-caps-control</code>
 	      </term>
 
 	      <listitem>
@@ -1413,7 +1397,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-caps-audio</code>
+		<code>yts-caps-audio</code>
 	      </term>
 
 	      <listitem>
@@ -1425,7 +1409,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-caps-video</code>
+		<code>yts-caps-video</code>
 	      </term>
 
 	      <listitem>
@@ -1437,7 +1421,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-caps-image</code>
+		<code>yts-caps-image</code>
 	      </term>
 
 	      <listitem>
@@ -1449,7 +1433,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-caps-html</code>
+		<code>yts-caps-html</code>
 	      </term>
 
 	      <listitem>
@@ -1461,7 +1445,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-caps-antivirus</code>
+		<code>yts-caps-antivirus</code>
 	      </term>
 
 	      <listitem>
@@ -1488,7 +1472,7 @@
 	<para>
 	  Custom capabilities can be defined, providing these are suitably
 	  name-spaced with a custom prefix; custom capabilities must not use
-	  'ns-' prefix.
+	  'yts-' prefix.
 	</para>
       </section>
 
@@ -1502,7 +1486,7 @@
 	  <variablelist>
 	    <varlistentry>
 	      <term>
-		<code>ns-activity-playback</code>
+		<code>yts-activity-playback</code>
 	      </term>
 
 	      <listitem>
@@ -1514,7 +1498,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-activity-pause</code>
+		<code>yts-activity-pause</code>
 	      </term>
 	      <listitem>
 		<para>
@@ -1525,7 +1509,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-activity-ffw</code>
+		<code>yts-activity-ffw</code>
 	      </term>
 	      <listitem>
 		<para>
@@ -1536,7 +1520,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-activity-rwd</code>
+		<code>yts-activity-rwd</code>
 	      </term>
 	      <listitem>
 		<para>
@@ -1547,7 +1531,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-activity-scan</code>
+		<code>yts-activity-scan</code>
 	      </term>
 	      <listitem>
 		<para>
@@ -1558,7 +1542,7 @@
 
 	    <varlistentry>
 	      <term>
-		<code>ns-activity-volume</code>
+		<code>yts-activity-volume</code>
 	      </term>
 	      <listitem>
 		<para>
@@ -1581,7 +1565,7 @@
 
 	<para>
 	  Custom activities can be defined, providing these are suitably
-	  name-spaced with a custom prefix; custom activities must not use 'ns-'
+	  name-spaced with a custom prefix; custom activities must not use 'yts-'
 	  prefix.
 	</para>
       </section>
@@ -1707,7 +1691,7 @@
 
 	<para>
 	  Custom attributes can be defined, providing these are suitably
-	  name-spaced with a custom prefix; custom attributes must not use 'ns-'
+	  name-spaced with a custom prefix; custom attributes must not use 'yts-'
 	  prefix.
 	</para>
       </section>
@@ -1904,12 +1888,30 @@
       </bibliosource>
     </biblioentry>
 
+    <biblioentry xml:id="xep0004">
+      <title>XEP-0030</title>
+      <subtitle>Data Forms</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0004.html"/>
+      </bibliosource>
+    </biblioentry>
+
     <biblioentry xml:id="xep0030">
       <title>XEP-0030</title>
       <subtitle>Service Discovery</subtitle>
       <publishername>XMPP Standards Foundation</publishername>
       <bibliosource class="uri">
 	<link xlink:href="http://xmpp.org/extensions/xep-0030.html"/>
+      </bibliosource>
+    </biblioentry>
+
+    <biblioentry xml:id="xep0050">
+      <title>XEP-0050</title>
+      <subtitle>Ad-Hoc Commands</subtitle>
+      <publishername>XMPP Standards Foundation</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://xmpp.org/extensions/xep-0050.html"/>
       </bibliosource>
     </biblioentry>
 

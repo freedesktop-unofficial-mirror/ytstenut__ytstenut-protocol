@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <xs:schema
    xmlns:xs='http://www.w3.org/2001/XMLSchema'
-   targetNamespace='nscreen:messages'
-   xmlns='nscreen:messages'
+   targetNamespace='ytstenut:messages'
+   xmlns='ytstenut:messages'
    elementFormDefault='qualified'>
 
   <xs:import namespace='jabber:client'/>
 
-  <xs:element name='command'>
+  <xs:element name='message'>
     <xs:complexType>
       <xs:simpleContent>
         <xs:extension base='xs:string'>
@@ -58,57 +58,6 @@
                         type='xs:string'
                         use='optional'/>
           <xs:anyAttribute namespace='##other'/>
-        </xs:extension>
-      </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name='transfer'>
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base='xs:string'>
-          <xs:attribute name='version'
-                        type='xs:string'
-                        use='required'/>
-          <xs:attribute name='capability'
-                        type='xs:NMTOKEN'
-                        use='required'/>
-          <xs:attribute name='to'
-                        type='xs:string'
-                        use='required'/>
-        </xs:extension>
-      </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name='find'>
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base='xs:string'>
-          <xs:attribute name='version'
-                        type='xs:string'
-                        use='required'/>
-          <xs:attribute name='capability'
-                        type='xs:NMTOKEN'
-                        use='required'/>
-        </xs:extension>
-      </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name='find-result'>
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base='xs:string'>
-          <xs:attribute name='version'
-                        type='xs:string'
-                        use='required'/>
-          <xs:attribute name='capability'
-                        type='xs:NMTOKEN'
-                        use='required'/>
-          <xs:attribute name='jid'
-                        type='xs:string'
-                        use='required'/>
         </xs:extension>
       </xs:simpleContent>
     </xs:complexType>

@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <xs:schema
    xmlns:xs='http://www.w3.org/2001/XMLSchema'
-   targetNamespace='nscreen:status'
-   xmlns='nscreen:status'
+   targetNamespace='ytstenut:status'
+   xmlns='ytstenut:status'
    elementFormDefault='qualified'>
 
   <xs:import namespace='http://jabber.org/protocol/pubsub'/>
@@ -23,7 +23,7 @@
       <xs:attribute name='activity'
                     type='xs:NMTOKEN'
                     use='optional'
-                    default='ns-activity-idle'/>
+                    default='yts-activity-idle'/>
       <xs:attribute name='primary-capability'
                     type='boolean'
                     use='optional'
