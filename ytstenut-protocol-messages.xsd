@@ -57,6 +57,7 @@
           <xs:attribute name='device'
                         type='xs:string'
                         use='optional'/>
+
           <xs:anyAttribute namespace='##other'/>
         </xs:extension>
       </xs:simpleContent>

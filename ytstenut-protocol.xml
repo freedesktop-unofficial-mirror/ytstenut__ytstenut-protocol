@@ -62,6 +62,13 @@
 	   Changed JID specification; use XEP-0050 as messaging backbone
 	 </revremark>
       </revision>
+      <revision>
+         <revnumber>0.6</revnumber>
+         <date>30 November 2010</date>
+         <revremark>
+	   General edits.
+	 </revremark>
+      </revision>
     </revhistory>
 
     <copyright>
@@ -77,18 +84,18 @@
     <para>
       We often carry out similar activities on different devices, e.g., watch
       videos on a smart phone, laptop, or a TV set. However, as we move in time
-      and space, the optimal choice of a device for any given activity might
-      change: a smart phone might be the optimal video viewing platform while
-      travelling on a train, but a TV set might be preferred in the comfort of
-      one's living room.
+      and space, the optimal choice of a device for any given activity changes:
+      a smart phone might be the perfect video viewing platform while travelling
+      on a train, but a TV set might be preferred in the comfort of one's living
+      room.
     </para>
 
     <para>
       Furthermore, our discrete activities are often interconnected even when
-      distributed across distinct devices: a person watching a video on TV might
-      want to locate an additional information about the video itself (e.g.,
-      about the leading actor, director, special effects, etc.), and might use a
-      smart phone, rather than the TV, to retrieve this information.
+      distributed across distinct devices: a person watching a TV might
+      want to locate some additional information about the broadcast (e.g.,
+      who the director is, special effects details, etc.), and might use a
+      smart phone, rather than the TV, to search for it.
     </para>
 
     <para>
@@ -113,23 +120,20 @@
     </para>
 
     <para>
-      A radical improvement of the user experience requires to move focus from
-      hardware to the user activities, and to start thinking in terms of
-      interacting with, and transferring, the user activities per se; and since
-      user activities are generally mapped directly to user facing applications,
-      what is needed is not just a device mesh, but rather an application
-      mesh. This mesh must facilitate both active interaction as well as passive
-      mutual awareness between applications (for the activity context is
-      constantly changing). Such a mesh would enable applications to cooperate
-      and coordinate their discrete behaviours, and in doing so construct a
-      dynamic and homogeneous experience spanning the devices involved.
+      A radical improvement of the user experience requires to be able not just
+      to share resources between devices, but to be able to share, and to
+      interact with, the user activities per se, and do so across the device
+      mesh in a seamless fashion. And since user activities are generally mapped
+      directly to user facing applications, what is in fact needed is an
+      application mesh facilitating both active interaction and passive mutual
+      awareness between applications.
     </para>
 
     <para>
       The Ytstenut framework aims to facilitate the creation of a such a dynamic
       application mesh. It does so by providing a communication channels through
       which individual user-facing applications on distinct devices can
-      passively advertised their activities in real time, and actively cooperate
+      passively advertise their activities in real time, and actively cooperate
       and coordinate their discrete behaviours, and in so construct a dynamic
       and homogeneous experience spanning the devices involved.
     </para>
@@ -1090,7 +1094,9 @@
 
 	  <para>
 	    Depending on the message purpose, additional attributes are used to
-	    define the message payload.
+	    define the message payload; there are no standard child elements
+	    defined by this specification, but custom child elements are
+	    allowed.
 	  </para>
 	</section>
 
@@ -1307,6 +1313,7 @@
 		  device the control application is running on,
 		</para>
 	      </listitem>
+
 	      <listitem>
 		<para>
 		  The control application returns the result of the search using
@@ -1789,16 +1796,6 @@
 		  Resource can be obtained from initiating application using
 		  XMPP Jingle RTP<citation><xref linkend="xep0167"/></citation>,
 		  see <xref linkend="messaging-data-transfer-streaming"/>
-		</para>
-	      </listitem>
-	    </varlistentry>
-
-	    <varlistentry>
-	      <term><code>upnp-av</code></term>
-
-	      <listitem>
-		<para>
-		  Resource can be obtained using UPnP AV protocols.
 		</para>
 	      </listitem>
 	    </varlistentry>
