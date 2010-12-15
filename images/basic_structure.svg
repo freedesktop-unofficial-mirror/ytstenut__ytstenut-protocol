@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="43cm" height="21cm" viewBox="84 86 860 413" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #eeeeee" x="87" y="89" width="855" height="408" rx="10" ry="10"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #000000" x="87" y="89" width="855" height="408" rx="10" ry="10"/>
+  </g>
+  <text style="fill: #a52a2a;text-anchor:start;font-size:14.6756;font-family:sanserif;font-style:normal;font-weight:normal" x="441" y="272">
+    <tspan x="441" y="272">Status and metadata</tspan>
+  </text>
+  <text style="fill: #000000;text-anchor:start;font-size:14.6756;font-family:sanserif;font-style:normal;font-weight:normal" x="466" y="415">
+    <tspan x="466" y="415">Content data</tspan>
+  </text>
+  <g>
+    <g>
+      <rect style="fill: #c7e1fd" x="100" y="102" width="303" height="379" rx="10" ry="10"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #000099" x="100" y="102" width="303" height="379" rx="10" ry="10"/>
+    </g>
+    <g>
+      <rect style="fill: #dcfcdc" x="111" y="117" width="282" height="64" rx="10" ry="10"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #386f38" x="111" y="117" width="282" height="64" rx="10" ry="10"/>
+    </g>
+    <g>
+      <rect style="fill: #f9d1d1" x="186" y="260" width="204.2" height="63.5" rx="10" ry="10"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #a52a2a" x="186" y="260" width="204.2" height="63.5" rx="10" ry="10"/>
+    </g>
+    <g>
+      <rect style="fill: #e8e8e8" x="109.4" y="398" width="282" height="68" rx="10" ry="10"/>
+      <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #000000" x="109.4" y="398" width="282" height="68" rx="10" ry="10"/>
+    </g>
+    <text style="fill: #386f38;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="246" y="155">
+      <tspan x="246" y="155">Application</tspan>
+    </text>
+    <text style="fill: #386f38;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="276" y="154">
+      <tspan x="276" y="154"></tspan>
+    </text>
+    <text style="fill: #a52a2a;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="286.1" y="294.25">
+      <tspan x="286.1" y="294.25">Ytstenut Framework</tspan>
+    </text>
+    <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="243.4" y="426">
+      <tspan x="243.4" y="426">Standard data exchange </tspan>
+      <tspan x="243.4" y="442">protocol stack, etc.</tspan>
+    </text>
+    <g>
+      <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #386f38" x1="138.673" y1="191.971" x2="139.923" y2="385.028"/>
+      <polygon style="fill: #386f38" points="138.625,184.471 143.689,194.438 138.673,191.971 133.689,194.503 "/>
+      <polygon style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #386f38" points="138.625,184.471 143.689,194.438 138.673,191.971 133.689,194.503 "/>
+      <polygon style="fill: #386f38" points="139.971,392.528 134.906,382.561 139.923,385.028 144.906,382.496 "/>
+      <polygon style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #386f38" points="139.971,392.528 134.906,382.561 139.923,385.028 144.906,382.496 "/>
+    </g>
+    <g>
+      <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #a52a2a" x1="288.015" y1="190.972" x2="288.085" y2="248.028"/>
+      <polygon style="fill: #a52a2a" points="288.006,183.472 293.018,193.466 288.015,190.972 283.018,193.478 "/>
+      <polygon style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #a52a2a" points="288.006,183.472 293.018,193.466 288.015,190.972 283.018,193.478 "/>
+      <polygon style="fill: #a52a2a" points="288.094,255.528 283.082,245.534 288.085,248.028 293.082,245.522 "/>
+      <polygon style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #a52a2a" points="288.094,255.528 283.082,245.534 288.085,248.028 293.082,245.522 "/>
+    </g>
+    <text style="fill: #000000;text-anchor:start;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="251.5" y="291.5">
+      <tspan x="251.5" y="291.5"></tspan>
+    </text>
+    <text style="fill: #000099;text-anchor:start;font-size:20.32;font-family:sanserif;font-style:normal;font-weight:normal" x="223.5" y="366.5">
+      <tspan x="223.5" y="366.5">Smart Phone</tspan>
+    </text>
+  </g>
+  <g>
+    <g>
+      <g>
+        <rect style="fill: #c7e1fd" x="625.2" y="102.5" width="303" height="379" rx="10" ry="10"/>
+        <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #000099" x="625.2" y="102.5" width="303" height="379" rx="10" ry="10"/>
+      </g>
+      <g>
+        <rect style="fill: #dcfcdc" x="636.2" y="117.5" width="282" height="64" rx="10" ry="10"/>
+        <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #386f38" x="636.2" y="117.5" width="282" height="64" rx="10" ry="10"/>
+      </g>
+      <g>
+        <rect style="fill: #f9d1d1" x="711.2" y="260.5" width="204.2" height="63.5" rx="10" ry="10"/>
+        <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #a52a2a" x="711.2" y="260.5" width="204.2" height="63.5" rx="10" ry="10"/>
+      </g>
+      <g>
+        <rect style="fill: #e8e8e8" x="634.6" y="398.5" width="282" height="68" rx="10" ry="10"/>
+        <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #000000" x="634.6" y="398.5" width="282" height="68" rx="10" ry="10"/>
+      </g>
+      <text style="fill: #386f38;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="771.2" y="155.5">
+        <tspan x="771.2" y="155.5">Application</tspan>
+      </text>
+      <text style="fill: #386f38;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="801.2" y="154.5">
+        <tspan x="801.2" y="154.5"></tspan>
+      </text>
+      <text style="fill: #a52a2a;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="811.3" y="294.75">
+        <tspan x="811.3" y="294.75">Ytstenut Framework</tspan>
+      </text>
+      <text style="fill: #000000;text-anchor:middle;font-size:12.8;font-family:sanserif;font-style:normal;font-weight:normal" x="768.6" y="426.5">
+        <tspan x="768.6" y="426.5">Standard data exchange </tspan>
+        <tspan x="768.6" y="442.5">protocol stack, etc.</tspan>
+      </text>
+      <g>
+        <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke-linejoin: round; stroke: #386f38" x1="663.873" y1="192.471" x2="665.123" y2="385.528"/>
+        <polygon style="fill: #386f38" points="663.825,184.971 668.89,194.938 663.873,192.471 658.89,195.003 "/>
+        <polygon style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #386f38" points="663.825,184.971 668.89,194.938 663.873,192.471 658.89,195.003 "/>
+        <polygon style="fill: #386f38" points="665.171,393.028 660.106,383.061 665.123,385.528 670.106,382.996 "/>
+        <polygon style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #386f38" points="665.171,393.028 660.106,383.061 665.123,385.528 670.106,382.996 "/>
+      </g>
+      <g>
+        <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #a52a2a" x1="813.215" y1="191.472" x2="813.285" y2="248.528"/>
+        <polygon style="fill: #a52a2a" points="813.206,183.972 818.218,193.966 813.215,191.472 808.218,193.978 "/>
+        <polygon style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #a52a2a" points="813.206,183.972 818.218,193.966 813.215,191.472 808.218,193.978 "/>
+        <polygon style="fill: #a52a2a" points="813.294,256.028 808.282,246.034 813.285,248.528 818.282,246.022 "/>
+        <polygon style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #a52a2a" points="813.294,256.028 808.282,246.034 813.285,248.528 818.282,246.022 "/>
+      </g>
+    </g>
+    <text style="fill: #000099;text-anchor:start;font-size:20.32;font-family:sanserif;font-style:normal;font-weight:normal" x="777.7" y="364">
+      <tspan x="777.7" y="364">TV Set</tspan>
+    </text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 8; stroke: #000000" x1="407.844" y1="432.034" x2="618.156" y2="432.466"/>
+    <polygon style="fill: #000000" points="400.344,432.018 410.355,427.039 407.844,432.034 410.334,437.039 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 8; stroke: #000000" points="400.344,432.018 410.355,427.039 407.844,432.034 410.334,437.039 "/>
+    <polygon style="fill: #000000" points="625.656,432.482 615.645,437.461 618.156,432.466 615.666,427.461 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 8; stroke: #000000" points="625.656,432.482 615.645,437.461 618.156,432.466 615.666,427.461 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 8; stroke: #a52a2a" x1="406.644" y1="291.776" x2="694.756" y2="292.224"/>
+    <polygon style="fill: #a52a2a" points="399.144,291.764 409.152,286.78 406.644,291.776 409.136,296.78 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 8; stroke: #a52a2a" points="399.144,291.764 409.152,286.78 406.644,291.776 409.136,296.78 "/>
+    <polygon style="fill: #a52a2a" points="702.256,292.236 692.248,297.22 694.756,292.224 692.264,287.22 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 8; stroke: #a52a2a" points="702.256,292.236 692.248,297.22 694.756,292.224 692.264,287.22 "/>
+  </g>
+</svg>

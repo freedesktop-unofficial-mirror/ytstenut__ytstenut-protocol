@@ -69,6 +69,14 @@
 	   General edits.
 	 </revremark>
       </revision>
+
+      <revision>
+         <revnumber>0.7</revnumber>
+         <date>15 December 2010</date>
+         <revremark>
+	   Improvements to Introduction, diagrams
+	 </revremark>
+      </revision>
     </revhistory>
 
     <copyright>
@@ -176,39 +184,96 @@
       </listitem>
     </itemizedlist>
 
-    <section xml:id="intro-usecases">
-      <title>Service Models</title>
+    <section xml:id="intro-big-picture">
+      <title>The Big Picture</title>
+
+      <figure xml:id="fig-two-app-mesh">
+	<title>Two-application mesh</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata align="center" width="95%"
+		       fileref="images/basic_structure.svg"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
 
       <para>
-	Ytstenut services fall into two broad categories:
+	The preceding diagram outlines a Ytstenut mesh consisting of two
+	applications on two devices. Note the separation between the metadata
+	and status channel, provided by the Ytstenut framework, and the actual
+	content data transfer, which is happening outwidth the framework, and
+	relies on other industry standards.
       </para>
 
       <para>
-	<itemizedlist>
-	  <listitem>
-	    <para>
-	      Subscription-based services: these are provided by discrete
-	      entities, each operating their own Ytstenut server. Ytstenut users
-	      connect to this server using credentials agreed with the service
-	      provider, and interact with applications offered by the service
-	      provider through their server.
-	    </para>
-	  </listitem>
-	  <listitem>
-	    <para>
-	      Applications interacting within a home cloud: the home cloud use
-	      case differs from the subscription service by the absence of a
-	      central server; instead the cloud transparently fulfils the role
-	      of a subscription-less server.
-	    </para>
-	  </listitem>
-	</itemizedlist>
+	The Ytstenut mesh, may, of course consist of any number of
+	applications, on any number of devices (potentially with multiple
+	applications on any single device). The possible topologies of the mesh
+	are described in the following section.
       </para>
 
+    </section>
+
+    <section xml:id="intro-topologies">
+      <title>Ytstenut Mesh Topologies</title>
+
       <para>
-	The Ytstenut framework aims to support both of these scenarios in a
-	transparent manner.
+	The application mesh established through the Ytstenut framework can have
+	two basic topologies: server-centric, and server-less home cloud. The
+	Ytstenut framework aims to support both of these scenarios in a
+	transparent manner, and it is possible that additional mesh topologies
+	will be facilitated in future versions of this protocol.
       </para>
+
+      <section xml:id="intro-topologies-server">
+	<title>Server-based Mesh</title>
+
+      <figure xml:id="fig-two-server-mesh">
+	<title>Server mesh</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata align="center" width="95%"
+		       fileref="images/server_mesh.svg"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+	<para>
+	  In a server-based mesh applications communicate with each other via a
+	  central server (NB: only metadata and status information is passed
+	  through the server; content is passed out of band). This type of mesh
+	  provides two principal benefits: it places no requirements on the
+	  topology of the underlying network, and it gives the server operator
+	  complete control over access and services on offer. As such, the
+	  server-based mesh is well suited, for example, for subscription
+	  services.
+	</para>
+
+      </section>
+
+      <section xml:id="intro-topologies-cloud">
+	<title>LAN-based Cloud Mesh</title>
+
+      <figure xml:id="fig-two-cloud-mesh">
+	<title>Cloud mesh</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata align="center" width="95%"
+		       fileref="images/cloud_mesh.svg"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+	<para>
+	  The LAN-based cloud mesh differs from server-based mesh by the absence
+	  of a central server; instead applications are able to discover each
+	  other, and communicate, transparently throughout the cloud. The main
+	  benefit of the LAN-based cloud is eliminating the need for operating
+	  and administrating a server; as such this type of mesh is particularly
+	  suited for the domestic use case.
+	</para>
+
+      </section>
 
     </section>
 
