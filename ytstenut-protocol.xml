@@ -77,6 +77,14 @@
 	   Improvements to Introduction, diagrams
 	 </revremark>
       </revision>
+
+      <revision>
+         <revnumber>0.8</revnumber>
+         <date>24 January 2011</date>
+         <revremark>
+	   Initial update to use XPMN backbone
+	 </revremark>
+      </revision>
     </revhistory>
 
     <copyright>
@@ -378,11 +386,13 @@
     </section>
 
     <section xml:id="intro-xmpp">
-      <title>XMPP backbone</title>
+      <title>XMPP/XPMN Backbone</title>
 
       <para>
 	The Ytstenut communication protocols are built on the existing XMPP
-	standard. The reasons for choosing XMPP as the basic transport protocol
+	standard, using the XPMN protocol<citation><xref
+	linkend="xpmn"/></citation> to construct the backbone of the application
+	mesh.  The reasons for choosing XMPP as the basic transport protocol
 	are:
 
 	<itemizedlist>
@@ -459,312 +469,89 @@
 	this is desirable to improve security and privacy.
       </para>
     </section>
-  </section>
 
-  <?hard-pagebreak?>
+    <section xml:id="security">
+      <title>Security and Privacy Considerations</title>
 
-  <section xml:id="security">
-    <title>Security and Privacy Considerations</title>
+      <para>
+	The flexible and extensible nature of the Ytstenut framework means that
+	it is not possible to predict what kind of data may be transmitted via
+	the protocol in its real-world deployment. Furthermore, the expectation
+	of deployment on a variety of platforms, ranging from desktop computers
+	to mobile phones, means that multiple implementations of the protocol
+	will be in use. It is, therefore, important that security and privacy of
+	user data is a key factor in the design of the protocol itself. More
+	specifically:
 
-    <para>
-      The flexible and extensible nature of the Ytstenut framework means that it
-      is not possible to predict what kind of data may be transmitted via the
-      protocol in its real-world deployment. Furthermore, the expectation of
-      deployment on a variety of platforms, ranging from desktop computers to
-      mobile phones, means that multiple implementations of the protocol will be
-      in use. It is, therefore, important that security and privacy of user data
-      is a key factor in the design of the protocol itself. More specifically:
-
-      <itemizedlist>
-	<listitem>
-	  <para>
-	    The protocol must facilitate privacy of data in transit where that
-	    is appropriate or required,
-	  </para>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    Reliable identity verification mechanism must be available,
-	  </para>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    The protocol must provide structured access control to user's
-	    local resources.
-	  </para>
-	</listitem>
-      </itemizedlist>
-    </para>
-
-    <para>
-      With regards to the above, the following should be noted in particular:
-
-      <itemizedlist>
-	<listitem>
-	  <para>
-	    XMPP on its on only provides client-to-server privacy. As such XMPP
-	    exchanges that span multiple servers are susceptible to server
-	    eavesdropping; the practical implications of this are addressed in
-	    <xref linkend="comm-protocols-privacy"/>,
-	  </para>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    Normal XMPP presence information is broadcast across all subscribed
-	    contacts, or, in the case of link-local XMPP protocol, even
-	    advertised entirely openly via m-DNS broadcasts; consequently the
-	    protocol avoids using the presence mechanism for metadata
-	    exchanges, including the extended status information (see <xref
-	    linkend="messaging-status"/>).
-	  </para>
-	</listitem>
-      </itemizedlist>
-    </para>
-
-    <para>
-      The Ytstenut protocol specifies two sets of features aiming to ensure
-      privacy of user data: the use of TLS (see <xref
-      linkend="comm-protocols-privacy-tls"/>), and the use of end-to-end
-      encryption (see <xref linkend="comm-protocols-privacy-e2e"/>).
-    </para>
-
-  </section>
-
-<?hard-pagebreak?>
-  <section xml:id="comm-protocols">
-    <title>Communication Backbone Protocols</title>
-
-      <section xml:id="comm-protocols-jid">
-	<title>Ytstenut JID</title>
-
-	  <annotation role="comment">
-	    <info>
-	      <authorinitials>tf</authorinitials>
-	      <orgname>Intel</orgname>
-	    </info>
+	<itemizedlist>
+	  <listitem>
 	    <para>
-	      This section is under further review; we are looking into ways of
-	      sharing a connection (i.e., a JID) between applications on the
-	      same device.
+	      The protocol must facilitate privacy of data in transit where that
+	      is appropriate or required,
 	    </para>
-	  </annotation>
+	  </listitem>
 
-	<para>
-	  All Ytstenut participants, whether running in server-based or
-	  server-less context, are identified by an XMPP JID<citation><xref
-	  linkend="rfc3920"/></citation>. The bare JID identifies the (human)
-	  user, while the resource part of a fully qualified JID is used to
-	  identify the application: <code>user@somewhere/application</code>.
-	</para>
-
-	<para>
-	  In the remainder of this document, the term <code>JID</code> is used
-	  to refer to fully qualified JIDs; if a bare JID is meant, this will
-	  always be explicitly stated.
-	</para>
-      </section>
-
-      <section xml:id="comm-protocols-authentication">
-	<title>Authentication</title>
-
-	<para>
-	  Authentication is accomplished via SASL per core XMPP protocol
-	  (<citation><xref linkend="rfc3920"/></citation>, <citation><xref
-	  linkend="rfc2222"/></citation>). SASL authentication must be
-	  implemented both for server-based and server-less contexts.
-	</para>
-      </section>
-
-      <section xml:id="comm-protocols-identity">
-	<title>
-	  Identity Verification
-	</title>
-
-	<section xml:id="comm-protocols-identity-server">
-	  <title>Identity Verification in Server-Based Context</title>
-
-	  <para>
-	    Standard XMPP does not provide a formal mechanism for identity
-	    verification. Because the authentication of two communicating users,
-	    <code>A</code> and <code>B</code>, is typically done separately and
-	    independently by two different servers, <code>A</code>'s trust in
-	    <code>B</code>'s identity implies <code>A</code>'s trust in the
-	    authentication procedures of <code>B</code>'s service provider,
-	    which cannot be automatically granted.  Therefore, this generic
-	    scenario is only acceptable if data exchanged between <code>A</code>
-	    and <code>B</code> contains no sensitive information, i.e., for what
-	    essentially amounts to an anonymous Ytstenut service.
-	  </para>
-
-	  <para>
-	    Though there might be numerous Ytstenut applications for which an
-	    anonymous service is entirely appropriate, an Ytstenut service that
-	    requires reliable identity verification must either implement
-	    additional identity verification measures beyond what is specified
-	    by the current version of the protocol, or be implemented using a
-	    dedicated Ytstenut server that requires direct login, and does not
-	    permit server hops (i.e., both <code>A</code> and <code>B</code> are
-	    logging into the same server in order to talk to each other). In
-	    this situation the service provider is fully in control of the
-	    authentication procedure, and, assuming 1:1 mapping between users
-	    and their authentication credentials is in place, successful
-	    authentication provides also for identity verification.
-	  </para>
-	</section>
-
-	<section xml:id="comm-protocols-identity-cloud">
-	  <title>Identity Verification in Server-Less Context</title>
-
-	  <para>
-	    In server-less context of a home cloud, the 1:1 mapping between
-	    Ytstenut users and authentication credentials cannot be guaranteed; a
-	    simple home cloud set up might, for example, rely on a shared secret
-	    to allow applications across the cloud to authenticate, which in
-	    turn allows an authenticated application to spoof another
-	    application.
-	  </para>
-
-	  <para>
-	    Although identity spoofing carries with it lesser risks in the
-	    context of the home cloud, the following measures are required to be
-	    taken by compliant Ytstenut implementations to improve security:
-
-	    <itemizedlist>
-	      <listitem>
-		<para>
-		  Applications must not make assumptions about identity of other
-		  Ytstenut participants in the cloud context, unless they
-		  implement additional identity verification procedures not
-		  specified by the current version of the Ytstenut protocol,
-		</para>
-	      </listitem>
-
-	      <listitem>
-		<para>
-		  Applications running both in server-based and server-less
-		  contexts must not inject data from server-based streams into
-		  the cloud and vice versa.
-		</para>
-	      </listitem>
-	    </itemizedlist>
-	  </para>
-	</section>
-
-	<section xml:id="comm-protocols-identity-future">
-	  <title>Future Expectations</title>
-
-	  <para>
-	    Additional identity verification mechanism addressing the current
-	    limitations, using technologies such as PKI, will be defined in
-	    future versions of the protocol.
-	  </para>
-	</section>
-      </section>
-
-      <section xml:id="comm-protocols-subscription">
-	<title>Subscription</title>
-
-	<para>
-	  The Ytstenut framework uses a subscription mechanism to provide access
-	  control between Ytstenut applications; the details of the subscription
-	  mechanism vary between the server-based and server-less modes of
-	  operation.
-	</para>
-
-	<section xml:id="comm-protocols-server-subscription">
-	  <title>Server-end subscription</title>
-
-	  <para>
-	    Server-based Ytstenut services must implement standard subscription
-	    mechanism as set out by the core XMPP protocol<citation><xref
-	    linkend="rfc3920"/></citation> and must comply with the subscription
-	    policies the core specification sets out.
-	  </para>
-
-	  <para>
-	    Available outward facing services to which users can subscribe
-	    should be advertised by the server via XMPP Service Discovery
-	    mechanism <citation><xref linkend="xep0030"/></citation>.
-	  </para>
-	</section>
-
-	<section xml:id="comm-protocols-local-subscription">
-	  <title>Subscription in server-less context</title>
-
-	  <para>
-	    The standard, server-centric, XMPP subscription mechanism is not
-	    applicable for the link-local set up; in order to circumvent this
-	    limitation, the local-ytstenut protocol specification defined later
-	    in this document (see <xref linkend="local-ytstenut"/>), defines a
-	    separate subscription mechanism to use in its place.
-	  </para>
-	</section>
-
-    </section>
-
-    <section xml:id="comm-protocols-privacy">
-      <title>Privacy Protocols</title>
-
-      <section xml:id="comm-protocols-privacy-tls">
-	<title>TLS</title>
-
-	<para>
-	  Compliant Ytstenut applications, both servers and clients, must
-	  support TLS as specified by the core XMPP protocol <citation><xref
-	  linkend="rfc3920"/></citation>, and must use TLS secured
-	  connections exclusively, both for client-to-server and
-	  server-to-server connections; both compliant servers and clients are
-	  required to refuse connections that do not use TLS.
-	</para>
-
-	<para>
-	  It should be noted here again that the use of TLS on its own does not
-	  prevent server eavesdropping when the XMPP conversation spans multiple
-	  servers. Ytstenut applications needing to transmit highly sensitive
-	  data should either use single-server XMPP exchanges along the lines
-	  described in <xref linkend="comm-protocols-identity-server"/>, or
-	  otherwise will have to make use of end-to-end encryption.
-	</para>
-
-      </section>
-
-      <section xml:id="comm-protocols-privacy-e2e">
-	<title>End to end encryption</title>
-
-	<para>
-	  The end-to-end encryption to be used by Ytstenut clients is described
-	  by the XMPP e2e extension <citation><xref
-	  linkend="rfc3923"/></citation>.
-
-	  <annotation role="comment">
-	    <info>
-	      <authorinitials>tf</authorinitials>
-	      <orgname>Intel</orgname>
-	    </info>
+	  <listitem>
 	    <para>
-	      Ideally, some form of e2e TLS channel for exchange of presence and
-	      messages would be preferable, the support for which the XMPP group
-	      is looking into<citation><xref
-	      linkend="jng-xtls"/></citation>. The xep-e2e will do in principle;
-	      it is worth noting that it is unlikely to be used because entities
-	      requiring this level of privacy will have to use a dedicated
-	      Ytstenut server for identity verification, in which case TLS
-	      provides complete privacy of data in transit by virtue of no
-	      server hops being involved, thus rendering e2e superfluous.
+	      Reliable identity verification mechanism must be available,
 	    </para>
-	  </annotation>
+	  </listitem>
 
-	</para>
-      </section>
+	  <listitem>
+	    <para>
+	      The protocol must provide structured access control to user's
+	      local resources.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	With regards to the above, the following should be noted in particular:
+
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      XMPP on its on only provides client-to-server privacy. As such
+	      XMPP exchanges that span multiple servers are susceptible to
+	      server eavesdropping,
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Normal XMPP presence information is broadcast across all
+	      subscribed contacts, or, in the case of link-local XMPP protocol,
+	      even advertised entirely openly via m-DNS broadcasts; consequently
+	      the the presence mechanism is not suitable for metadata exchanges,
+	      including advertising extended status information (see <xref
+	      linkend="messaging-status"/>).
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	The Ytstenut framework uses the XPMN protocol which addresses the
+	security requirements above.
+      </para>
     </section>
   </section>
 
   <?hard-pagebreak?>
   <section xml:id="local-ytstenut">
       <title>Link-local Ytstenut protocol</title>
+
+      <annotation role="comment">
+	<info>
+	  <authorinitials>tf</authorinitials>
+	  <orgname>Intel</orgname>
+	</info>
+
+	<para>
+	  I think this needs to be folded into core XPMN.
+	</para>
+      </annotation>
 
       <para>
 	The link-local Ytstenut protocol allows for automatic connection between
@@ -792,99 +579,77 @@
 
 	  <listitem>
 	    <para>
-	      Connection is done by JID and resource as with regular XMPP; the
-	      JID part before the '@' symbol is provided explicitly to the
-	      connection manager, the server part after '@' is worked out
-	      automatically by the connection manager,
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para>
-	      The connection manager implements the subscription mechanism
-	      described below (<xref linkend="local-ytstenut-subscription"/>,
-	    </para>
-	  </listitem>
-
-	  <listitem>
-	    <para>
-	      All implementations must support SASL authentication
-	      <citation><xref linkend="rfc2222"/></citation>.
+	      All implementations must fulfill the requirements of XPMN
+	      <citation><xref linkend="xpmn"/></citation>.
 	    </para>
 	  </listitem>
 	</itemizedlist>
       </para>
-
-      <section xml:id="local-ytstenut-subscription">
-	<title>Subscription mechanism</title>
-
-	<para>
-	  Standard XMPP subscription is implemented exchanging
-	  <code>&lt;presence/&gt;</code> stanzas. However, the link-local
-	  version of XMPP<citation><xref linkend="xep0174"/></citation> uses
-	  m-DNS broadcast to distribute presence information, which makes it
-	  unsuitable for exchanging client-specific
-	  <code>&lt;presence/&gt;</code> stanzas, so a different mechanism for
-	  establishing subscription is needed.
-	</para>
-
-	<para>
-	  At the same time, it is desirable that the alternative subscription
-	  mechanism would be functionally equivalent to standard XMPP
-	  subscription so that any user-level APIs could be identical for both
-	  the server-based and server-less scenarios. To this end, the
-	  local-ytstenut protocol defines a thin layer allowing the relevant
-	  <code>&lt;presence/&gt;</code> stanzas to be delivered independently
-	  of the m-DNS presence broadcasts.
-	</para>
-
-	<para>
-	  The local-ytstenut subscription handshake is carried out by exchanging
-	  <code>&lt;iq/&gt;</code> <code>set</code> stanzas using
-	  <code>urn:ytstenut:local-subscription</code> namespace. These
-	  <code>&lt;iq/&gt;</code> stanzas provide a wrapper around appropriate
-	  <code>&lt;presence/&gt;</code> stanzas as used by the standard XMPP
-	  subscription mechanism, so that a local-ytstenut subscription exchange
-	  can be converted into a standard XMPP subscription exchange by simply
-	  stripping out the external <code>&lt;iq/&gt;</code> layer.
-	</para>
-
-	<para>
-	  Compliant local-ytstenut connection managers are required to implement
-	  this mechanism.
-	</para>
-
-<annotation role='implementation'>
-  <info>
-    <authorinitials>tf</authorinitials>
-    <orgname>Intel</orgname>
-  </info>
-  <para>
-    The initial Telepathy implementation of this protocol might not implement
-    this functionality, deferring it to a second iteration; based on the
-    experiences with the initial implementation, this, and other, parts of this
-    specification might need to be tuned.
-  </para>
-</annotation>
-      </section>
   </section>
 
   <?hard-pagebreak?>
   <section xml:id="messaging">
     <title>Messaging Protocols</title>
 
+    <section xml:id="messaging-device-info">
+      <title>Descriptive Device Information</title>
+
+      <annotation role="todo">
+	<info>
+	  <authorinitials>tf</authorinitials>
+	  <orgname>Intel</orgname>
+	</info>
+	<para>
+	  We need some way to advertise user-friendly device description; in
+	  regular XMPP this usually provided by a vCard, but the vCard spec is
+	  not suited for this too well.
+	</para>
+      </annotation>
+
+      <para>
+	Ytstenut device need to provide descriptive information about
+	themselves that can be presented to the user. At the bare minimum, this
+	information includes a suitable, localised, device name.
+      </para>
+
+      <section xml:id="messaging-device-info-avatars">
+	<title>Support for Avatars</title>
+
+	<para>
+	  In addition to the device description advertised above, it is
+	  recommended that all Ytstenut implementations support the XMPP User
+	  Avatar specification<citation><xref linkend="xep0084"/></citation>.
+	</para>
+      </section>
+
+    </section>
+
     <section xml:id="messaging-app-info">
       <title>Descriptive Application Information</title>
+
+      <annotation role="comment">
+	<info>
+	  <authorinitials>tf</authorinitials>
+	  <orgname>Intel</orgname>
+	</info>
+	<para>
+	  This is in keeping with XPMN device management, but AFAIK XPMN is
+	  missing the definition of user-friendly device and service
+	  description. Something along these lines should be added to the XPMN
+	  spec for service description.
+	</para>
+      </annotation>
 
       <para>
 	Ytstenut applications need to provide descriptive information about
 	themselves that can be presented to the user. At the bare minimum, this
 	information includes a suitable, localised, application name.
       </para>
+
       <para>
 	The mechanism for obtaining descriptive application information is XMPP
-	Service Discovery extension<citation><xref
-	linkend="xep0030"/></citation>; the descriptive information is contained
+	Entity Capabilities extension<citation><xref
+	linkend="xep0115"/></citation>; the descriptive information is contained
 	in a <code>&lt;identity/&gt;</code> element of <code>category</code>
 	'client'. Two new types are defined for use with this category:
 	<code>'ytstenut-application'</code> and
@@ -949,9 +714,19 @@
     <section xml:id="messaging-app-caps">
       <title>Application Capabilities</title>
 
+      <annotation role="comment">
+	<info>
+	  <authorinitials>tf</authorinitials>
+	  <orgname>Intel</orgname>
+	</info>
+	<para>
+	  This is in keeping with XPMN device and service management.
+	</para>
+      </annotation>
+
       <para>
-	Ytstenut applications must advertise their Ytstenut capabilities via XMPP
-	Entity Capabilities protocol<citation><xref
+	Ytstenut applications must advertise their Ytstenut capabilities via
+	XMPP Entity Capabilities protocol<citation><xref
 	linkend="xep0115"/></citation>, using
 	<code>urn:ytstenut:capabilities</code> as the value of the
 	<code>node</code> attribute of the <code>&lt;c/&gt;</code> element.
@@ -986,11 +761,13 @@
       <title>Extended Status</title>
 
       <para>
-	Extended status information is advertised using XMPP Personal Eventing
-	Protocol<citation><xref linkend="xep0163"/></citation>. The status
+	Extended status information is advertised using the XPMN eventing
+	mechanism (which in turn relies on XMPP Personal Eventing
+	Protocol<citation><xref linkend="xep0163"/></citation>). The status is
+	identified with item node <code>urn:ytstenut:status</code> and the
 	payload is held by an <code>&lt;ytstenut:status/&gt;</code> element and
-	its attributes; applications with multiple capabilities must include
-	an <code>&lt;ytstenut:status/&gt;</code> element for each capability.
+	its attributes; applications with multiple capabilities must include an
+	<code>&lt;ytstenut:status/&gt;</code> element for each capability.
       </para>
 
       <para>
@@ -1081,26 +858,33 @@
 </ytstenut:status>]]>
 	  </programlisting>
 	</example>
-
-      <section xml:id="messaging-status-avatars">
-	<title>Support for Avatars</title>
-
-	<para>
-	  In addition to the extended status mechanism described above, it is
-	  recommended that all Ytstenut implementations support the XMPP User
-	  Avatar specification<citation><xref linkend="xep0084"/></citation>.
-	</para>
-      </section>
     </section>
 
     <section xml:id="messaging-commands">
       <title>Instruction Messages</title>
 
+      <annotation role='todo'>
+	<info>
+	  <authorinitials>tf</authorinitials>
+	  <orgname>Intel</orgname>
+	</info>
+
+	<para>
+	  I want to take another look at this in light of XPMN. XPMN defines a
+	  command mechanism that uses simple iq/get iq/set to exchange commands
+	  between services, and PEP for feedback on command outcomes; this is
+	  very much like what we did in our initial implementation, but unlike
+	  AdHoc it provides no scope for error handling at all. However, it
+	  should be possible to simply extend the XPMN spec by adding iq/result
+	  for returning errors along the lines set out below.
+	</para>
+      </annotation>
+
       <para>
 	Instruction messages are used to send Ytstenut commands and information
 	queries; the underlying protocol for exchange of instruction messages
-	is defined by the Ad-Hoc Commands XMPP extension<citation><xref
-	linkend="xep0030"/></citation>.
+	is defined by Ad-Hoc Commands XMPP extension<citation><xref
+	linkend="xep0050"/></citation>.
       </para>
 
       <para>
@@ -1132,41 +916,65 @@
 	applications.
       </para>
 
-	<section xml:id="messaging-commands-message">
-	  <title>Message payload: <code>&lt;ytstenut:message/&gt;</code></title>
+      <section xml:id="messaging-commands-message">
+	<title>Message payload: <code>&lt;ytstenut:message/&gt;</code></title>
 
+	<para>
+	  The <code>&lt;ytstenut:message/&gt;</code> element is used to
+	  encapsulate the payload of standardised Ytstenut messages.
+	</para>
+
+	<para>
+	  Required attributes:
+
+	  <variablelist>
+	    <varlistentry>
+	      <term>
+		<code>version</code>
+	      </term>
+	      <listitem>
+		<para>
+		  The Ytstenut protocol version,
+		</para>
+	      </listitem>
+	    </varlistentry>
+	  </variablelist>
+	</para>
+
+	<para>
+	  Depending on the message purpose, additional attributes are used to
+	  define the message payload; there are no standard child elements
+	  defined by this specification, but custom child elements are allowed.
+	</para>
+
+	<para>
+	  User-driven exchanges, that cannot be encapsulated in terms of
+	  standard Ytstenut messages, should make use of standard XMPP data
+	  forms<citation><xref linkend="xep0004"/></citation>. Custom payload
+	  formats are permitted, where this makes sense for specialised
+	  applications.
+	</para>
+
+	<annotation role="implementation">
+	  <info>
+	    <authorinitials>tf</authorinitials>
+	    <orgname>Intel</orgname>
+	  </info>
 	  <para>
-	    The <code>&lt;ytstenut:message/&gt;</code> element is used to
-	    encapsulate the payload of standardised Ytstenut messages.
+	    In terms of API, I am thinking that the simplest way would be to
+	    provide access to the message XML payload, either in some parsed
+	    form that might be available in Wocky, or, perhaps even the raw XML
+	    (the assumption is that there will be a higher level library sitting
+	    on the top of telepathy-glib/qt that will provide conveniece API for
+	    developers, so this could take care of how to represent this to the
+	    developer.
 	  </para>
+	</annotation>
 
-	  <para>
-	    Required attributes:
+      </section>
 
-	    <variablelist>
-	      <varlistentry>
-		<term>
-		  <code>version</code>
-		</term>
-		<listitem>
-		  <para>
-		    The Ytstenut protocol version,
-		  </para>
-		</listitem>
-	      </varlistentry>
-	    </variablelist>
-	  </para>
-
-	  <para>
-	    Depending on the message purpose, additional attributes are used to
-	    define the message payload; there are no standard child elements
-	    defined by this specification, but custom child elements are
-	    allowed.
-	  </para>
-	</section>
-
-	<section xml:id="messaging-commands-nodes">
-	  <title>Standardised Ad-Hoc nodes</title>
+      <section xml:id="messaging-commands-nodes">
+	<title>Standardised Messages</title>
 
 	<section xml:id="messaging-commands-command">
 	  <title><code>ytstenut/command</code></title>
@@ -1874,16 +1682,6 @@
   <appendix xml:id="appendix-schemas">
     <title>Ytstenut XML Schemas</title>
 
-    <section xml:id="appendix-schemas-ytstenut-subscription">
-      <title>Schema for <code>urn:ytstenut:local-subscription</code></title>
-      <programlisting><!-- The xi:include line must be aligned directly at the
-			   end of this comment, as any padding will end up in
-			   the final document !!!
-		      --><xi:include
-	     parse="text"
-	     href="./ytstenut-protocol-subscription.xsd" /></programlisting>
-    </section>
-
     <section xml:id="appendix-schemas-ytstenut-status">
       <title>Schema for <code>urn:ytstenut:status</code></title>
       <programlisting><!-- The xi:include line must be aligned directly at the
@@ -1947,6 +1745,19 @@
       <publishername>The Internet Engineering Task Force</publishername>
       <bibliosource class="uri">
 	<link xlink:href="http://tools.ietf.org/html/rfc3923"/>
+      </bibliosource>
+    </biblioentry>
+
+    <biblioentry xml:id="xpmn">
+      <author>
+	<personname>
+	  <firstname>Dirk</firstname> <surname>Meyer</surname>
+	</personname>
+      </author>
+      <title>Extended Personal Media Networks (XPMN)</title>
+      <publishername>University of Bremen</publishername>
+      <bibliosource class="uri">
+	<link xlink:href="http://elib.suub.uni-bremen.de/diss/docs/00011878.pdf"/>
       </bibliosource>
     </biblioentry>
 
