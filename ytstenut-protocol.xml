@@ -85,6 +85,14 @@
 	   Initial update to use XPMN backbone
 	 </revremark>
       </revision>
+
+      <revision>
+         <revnumber>0.9</revnumber>
+         <date>24 January 2011</date>
+         <revremark>
+	   Not using Ad-Hoc
+	 </revremark>
+      </revision>
     </revhistory>
 
     <copyright>
@@ -549,7 +557,8 @@
 	</info>
 
 	<para>
-	  I think this needs to be folded into core XPMN.
+	  We might be able to piggyback directly on local-xmpp, so this might
+	  go.
 	</para>
       </annotation>
 
@@ -557,17 +566,6 @@
 	The link-local Ytstenut protocol allows for automatic connection between
 	Ytstenut clients running on the same LAN. It is derived from the
 	local-xmpp protocol, but with some differences:
-
-	<annotation role="implementation">
-	  <info>
-	    <authorinitials>wt</authorinitials>
-	    <orgname>Collabora</orgname>
-	  </info>
-	  <para>
-	    As far as Salut is concerned, this will be a protocol distinct from
-	    local-xmpp.
-	  </para>
-	</annotation>
 
 	<itemizedlist>
 	  <listitem>
@@ -863,57 +861,10 @@
     <section xml:id="messaging-commands">
       <title>Instruction Messages</title>
 
-      <annotation role='todo'>
-	<info>
-	  <authorinitials>tf</authorinitials>
-	  <orgname>Intel</orgname>
-	</info>
-
-	<para>
-	  I want to take another look at this in light of XPMN. XPMN defines a
-	  command mechanism that uses simple iq/get iq/set to exchange commands
-	  between services, and PEP for feedback on command outcomes; this is
-	  very much like what we did in our initial implementation, but unlike
-	  AdHoc it provides no scope for error handling at all. However, it
-	  should be possible to simply extend the XPMN spec by adding iq/result
-	  for returning errors along the lines set out below.
-	</para>
-      </annotation>
-
       <para>
 	Instruction messages are used to send Ytstenut commands and information
-	queries; the underlying protocol for exchange of instruction messages
-	is defined by Ad-Hoc Commands XMPP extension<citation><xref
-	linkend="xep0050"/></citation>.
-      </para>
-
-      <para>
-	The Ad-Hoc command extension was defined primarily with a view to
-	handling user driven commands and distributed user interfaces. A typical
-	Ad-Hoc exchange, therefore, requires two round trips between the
-	involved parties: during the first trip UI definition is passed from the
-	target entity to the initiating entity, during the second trip the
-	command itself is dispatched from the initiating entity to the target
-	entity and results are returned.
-      </para>
-
-      <para>
-	While there will be some Ytstenut use cases where this type of
-	(user-driven) exchange is desirable, many Ytstenut exchanges will be
-	automated in the background, and using a priory known metadata
-	model. This specification, therefore, defines a set of standard commands
-	that can be used with the Ad-Hoc mechanism, and stipulates that a well
-	defined payload can be included in the initial XML
-	<code>&lt;command/&gt;</code> element of the Ad-Hoc exchange; this
-	eliminates the need for the the initial round trip.
-      </para>
-
-      <para>
-	User-driven exchanges, that cannot be encapsulated in terms of standard
-	Ytstenut messages, should make use of standard XMPP data
-	forms<citation><xref linkend="xep0004"/></citation>. Custom payload
-	formats are permitted, where this makes sense for specialised
-	applications.
+	queries; as per XPMN this is achieved by exchanging
+	<code>&lt;iq/&gt;</code>stanzas with the Ytstenut metadata payload.
       </para>
 
       <section xml:id="messaging-commands-message">
@@ -938,6 +889,20 @@
 		</para>
 	      </listitem>
 	    </varlistentry>
+
+	    <varlistentry>
+	      <term>
+		<code>type</code>
+	      </term>
+	      <listitem>
+		<para>
+		  Message type. Standaridsed types have the prefix
+		  <code>ytstenut/</code> and are defined in the following
+		  section. Custom command types are permitted, and must use a
+		  suitable namespace prefix (other than <code>ytstenut/</code>).
+		</para>
+	      </listitem>
+	    </varlistentry>
 	  </variablelist>
 	</para>
 
@@ -947,21 +912,13 @@
 	  defined by this specification, but custom child elements are allowed.
 	</para>
 
-	<para>
-	  User-driven exchanges, that cannot be encapsulated in terms of
-	  standard Ytstenut messages, should make use of standard XMPP data
-	  forms<citation><xref linkend="xep0004"/></citation>. Custom payload
-	  formats are permitted, where this makes sense for specialised
-	  applications.
-	</para>
-
 	<annotation role="implementation">
 	  <info>
 	    <authorinitials>tf</authorinitials>
 	    <orgname>Intel</orgname>
 	  </info>
 	  <para>
-	    In terms of API, I am thinking that the simplest way would be to
+	    In terms of TP API, I am thinking that the simplest way would be to
 	    provide access to the message XML payload, either in some parsed
 	    form that might be available in Wocky, or, perhaps even the raw XML
 	    (the assumption is that there will be a higher level library sitting
@@ -973,8 +930,8 @@
 
       </section>
 
-      <section xml:id="messaging-commands-nodes">
-	<title>Standardised Messages</title>
+      <section xml:id="messaging-commands-types">
+	<title>Standardised Message Types</title>
 
 	<section xml:id="messaging-commands-command">
 	  <title><code>ytstenut/command</code></title>
@@ -1046,12 +1003,8 @@
     id='command1'
     to='myself@blackbox.local/magic-video-player'
     >
-  <command xmlns='http://jabber.org/protocol/commands'
-           node='ytstenut/command'
-           action='execute'
-           xmlns='urn:ytstenut:messages'>
-
     <ytstenut:message version='1.0'
+                      type='ytstenut/command'
                       time='1970-01-01T00:00:00.000Z'
                       capability='yts-caps-video'
                       activity='yts-activity-play'
@@ -1165,6 +1118,25 @@
 	<section xml:id="messaging-commands-find">
 	  <title><code>ytstenut/find</code></title>
 
+	  <annotation role='comment'>
+	    <info>
+	      <authorinitials>tf</authorinitials>
+	      <orgname>Intel</orgname>
+	    </info>
+	    <para>
+	      Rationale: because of the need to
+	      facilitate e2e encryption, commands cannot be proxied through
+	      control applications; the <code>find</code> request allows
+	      clients to initiate a transfer to an application that might
+	      not yet be running on the target device.
+	    </para>
+
+	    <para>
+	      Not allowing proxying of commands via intermediate applications
+	      also significantly simplifies issues related to access control.
+	    </para>
+	  </annotation>
+
 	  <para>
 	    A request by an application <code>A</code> to a control application
 	    <code>C</code> to identify a suitable application <code>B</code> to
@@ -1196,25 +1168,6 @@
 	      </listitem>
 	    </itemizedlist>
 	  </para>
-
-<annotation role='comment'>
-  <info>
-    <authorinitials>tf</authorinitials>
-    <orgname>Intel</orgname>
-  </info>
-  <para>
-    Rationale: because of the need to
-    facilitate e2e encryption, commands cannot be proxied through
-    control applications; the <code>find</code> request allows
-    clients to initiate a transfer to an application that might
-    not yet be running on the target device.
-  </para>
-
-  <para>
-    Not allowing proxying of commands via intermediate applications also
-    significantly simplifies issues related to access control.
-  </para>
-</annotation>
 
 	  <section xml:id="messaging-commands-find-error">
 	    <title>Error handling</title>

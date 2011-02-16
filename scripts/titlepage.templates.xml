@@ -78,7 +78,7 @@
 
     <!-- the space after is an uggly hack to force the generated toc
     onto a new page -->
-    <revhistory space-before="3in"
+    <revhistory space-before="2.5in"
 		start-indent="0pt"
 		end-indent="0pt"
 		font-size="&hsize0space;"/>
