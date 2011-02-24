@@ -14,6 +14,12 @@
           <xs:attribute name='version'
                         type='xs:string'
                         use='required'/>
+          <xs:attribute name='from-service'
+                        type='xs:NMTOKEN'
+                        use='required'/>
+          <xs:attribute name='to-service'
+                        type='xs:NMTOKEN'
+                        use='required'/>
           <xs:attribute name='time'
                         type='xs:dateTime'
                         use='required'/>

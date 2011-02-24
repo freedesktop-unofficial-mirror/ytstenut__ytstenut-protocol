@@ -17,6 +17,9 @@
       <xs:attribute name='version'
                     type='xs:string'
                     use='required'/>
+      <xs:attribute name='from-service'
+                    type='xs:NMTOKEN'
+                    use='required'/>
       <xs:attribute name='capability'
                     type='xs:NMTOKEN'
                     use='required'/>

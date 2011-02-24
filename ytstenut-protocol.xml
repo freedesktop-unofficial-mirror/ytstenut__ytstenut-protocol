@@ -105,7 +105,7 @@
     </revhistory>
 
     <copyright>
-      <year>2010</year>
+      <year>2011</year>
       <holder>Intel Corporation</holder>
     </copyright>
   </info>
@@ -559,18 +559,6 @@
   <section xml:id="local-ytstenut">
       <title>Link-local Ytstenut protocol</title>
 
-      <annotation role="comment">
-	<info>
-	  <authorinitials>tf</authorinitials>
-	  <orgname>Intel</orgname>
-	</info>
-
-	<para>
-	  We might be able to piggyback directly on local-xmpp, so this might
-	  go.
-	</para>
-      </annotation>
-
       <para>
 	The link-local Ytstenut protocol allows for automatic connection between
 	Ytstenut clients running on the same LAN. It is derived from the
@@ -631,21 +619,21 @@
 
     </section>
 
+    <section xml:id="messaging-app-id">
+      <title>Application/Service Identifier</title>
+
+      <para>
+	Each application/service is identified by a unique identifier. The
+	identifier is constructed following the D-Bus naming
+	convention<citation><xref linkend="dbus-spec"/></citation>, e.g.,
+	<code>com.meego.BestestFriendApplication</code>. This identifier is used
+	to identify message and status senders and recipients as described later
+	in this document.
+      </para>
+    </section>
+
     <section xml:id="messaging-app-info">
       <title>Descriptive Application Information</title>
-
-      <annotation role="comment">
-	<info>
-	  <authorinitials>tf</authorinitials>
-	  <orgname>Intel</orgname>
-	</info>
-	<para>
-	  This is in keeping with XPMN device management, but AFAIK XPMN is
-	  missing the definition of user-friendly device and service
-	  description. Something along these lines should be added to the XPMN
-	  spec for service description.
-	</para>
-      </annotation>
 
       <para>
 	Ytstenut applications need to provide descriptive information about
@@ -654,85 +642,16 @@
       </para>
 
       <para>
-	The mechanism for obtaining descriptive application information is XMPP
-	Entity Capabilities extension<citation><xref
-	linkend="xep0115"/></citation>; the descriptive information is contained
-	in a <code>&lt;identity/&gt;</code> element of <code>category</code>
-	'client'. Two new types are defined for use with this category:
-	<code>'ytstenut-application'</code> and
-	<code>'ytstenut-controller'</code>, corresponding to task-oriented and
-	control applications respectively (see <xref
-	linkend="intro-application-classes"/>).
+	The descriptive information is advertised together with the application
+	capabilities, as described in <xref linkend="messaging-apps-caps"/>
       </para>
-
-      <para>
-	The <code>name</code> attribute of the <code>&lt;identity/&gt;</code>
-	element holds application name, while the <code>xml:lang</code>
-	attribute identifies the locale used by the <code>name</code>
-	attribute. As per XMPP Service Discovery extension<citation><xref
-	linkend="xep0030"/></citation>, the query reply may include multiple
-	<code>&lt;identity/&gt;</code> elements of the same category and type,
-	but with different <code>xml:lang</code> attribute.
-      </para>
-
-      <para>
-	If the <code>&lt;query/&gt;</code> of the original request has an
-	explicit <code>xml:lang</code> attribute, the reply contents should be
-	filtered by that attribute. If the <code>xml:lang</code> attribute of
-	the <code>&lt;query/&gt;</code> cannot be matched the respondent may
-	return either a suitable fall-back, or all available translations.
-      </para>
-
-      <para>
-	(For full description of the XML elements, see <xref
-	linkend="appendix-schemas"/>).
-      </para>
-
-      <example xml:id="messaging-app-info-example">
-	<title>Application Information XML example</title>
-
-	<programlisting language="xml"><![CDATA[
-<iq to="icecream-maker@custom-foods.com/resource"
-    type="get"
-    id="appinfo1">
-
-  <query xmlns='http://jabber.org/protocol/disco#info'/
-         xml:lang="en-GB"/>
-
-</iq>
-
- ...
-
-<iq to="a.customer@custom-foods.com/resource"
-    type="result"
-    id="appinfo1">
-
-  <identity category='client'
-            type='ytstenut-application'
-            name='Magic Icecream Maker'
-	    xml:lang='en-GB'/>
-
-</iq>]]>
-	</programlisting>
-      </example>
-
     </section>
 
     <section xml:id="messaging-app-caps">
-      <title>Application Capabilities</title>
-
-      <annotation role="comment">
-	<info>
-	  <authorinitials>tf</authorinitials>
-	  <orgname>Intel</orgname>
-	</info>
-	<para>
-	  This is in keeping with XPMN device and service management.
-	</para>
-      </annotation>
+      <title>Application/Service Capabilities</title>
 
       <para>
-	Ytstenut applications must advertise their Ytstenut capabilities via
+	Ytstenut applications/services advertise their Ytstenut capabilities via
 	XMPP Entity Capabilities protocol<citation><xref
 	linkend="xep0115"/></citation>, using
 	<code>urn:ytstenut:capabilities</code> as the value of the
@@ -740,29 +659,139 @@
       </para>
 
       <para>
-	Each individual Ytstenut capability is represented by the
-	<code>&lt;feature/&gt;</code> element; the <code>var</code> attribute is
-	constructed by concatenating an <code>'urn:ytstenut:capabilies:'</code>
-	prefix and the canonical name of the capability (for standard
-	capabilities defined in <xref linkend="messaging-metadata-caps"/>).
+	When the device capabilities are queried, capabilities of each
+	application/service are represented in the <code>&lt;iq/&gt;</code>
+	reply using XMPP data form<citation><xref
+	linkend="xep0004"/></citation>; the form format is best described by an
+	example:
       </para>
 
-      <para>
-	In addition, Ytstenut applications should also advertise any data
-	transfer protocols they support as above, using the <code>urn</code>s
-	defined in <xref linkend="messaging-data-transfer-urns"/> as the value
-	of the <code>var</code> attribute. For example, an application
-	supporting video playback capability and able to stream files via Jingle
-	RTP would be represented as:
-      </para>
+      <annotation role="todo">
+	<info>
+	  <authorinitials>tf</authorinitials>
+	  <orgname>Intel</orgname>
+	</info>
+	<para>
+	  Need to formaly specify a localisation mechanism for the form fields.
+	</para>
+      </annotation>
 
       <programlisting><![CDATA[
-<query xmlns='http://jabber.org/protocol/disco#info'
-         node='urn:ytstenut:capabilities#....'>
-  <feature var='urn:ytstenut:capabilities:yts-caps-video' />
-  <feature var='urn:ytstenut:data:jingle:rtp' />
-<c/>
+<!-- a data form representing Banshee video player: -->
+<x xmlns='jabber:x:data' type='result'>
+
+  <field var='FORM_TYPE' type='hidden'>
+    <value>urn:ytstenut:capabilities#org.gnome.Banshee</value>
+  </field>
+
+  <field var='type'>
+    <value>application</value>
+  </field>
+
+  <field var='name'>
+    <value>en_GB/Banshee Media Player</value>
+    <value>fr/Banshee Lecteur de Musique</value>
+  </field>
+
+  <field var='capabilities'>
+    <value>urn:ytstenut:capabilities:yts-caps-audio</value>
+    <value>urn:ytstenut:data:jingle:rtp</value>
+  </field>
+</x>
 ]]></programlisting>
+
+      <variablelist>
+	<title>Data form fields:</title>
+
+	<varlistentry>
+	  <term><code>FORM_TYPE</code></term>
+	  <listitem>
+	    <para>
+	      Links the form to the application; the value is constructed by
+	      concatenating an <code>'urn:ytstenut:capabilies#'</code> prefix
+	      with the application unique identifier (see <xref
+	      linkend="messaging-app-id"/>),
+	    </para>
+	    <para>
+	      Required.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><code>type</code></term>
+	  <listitem>
+
+      <annotation role="todo">
+	<info>
+	  <authorinitials>tf</authorinitials>
+	  <orgname>Intel</orgname>
+	</info>
+	<para>
+	  Review whether this distinction is really meaningfull, or whether
+	  'control' should not be another kind of capability.
+	</para>
+      </annotation>
+
+	    <para>
+	      The application/service type; either <code>application</code> or
+	      <code>controller</code>.
+	    </para>
+
+	    <para>
+	      Required.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><code>name</code></term>
+	  <listitem>
+	    <para>
+	     A localised application/service name.
+	    </para>
+
+	    <para>
+	      Required.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><code>capabilities</code></term>
+
+	  <listitem>
+	    <para>
+	      List of application/service capabilites; the values are
+	      constructed by concatenating an
+	      <code>'urn:ytstenut:capabilies:'</code> prefix and the canonical
+	      name of the capability (for standard capabilities defined in <xref
+	      linkend="messaging-metadata-caps"/>).
+	    </para>
+	    <para>
+	      The capability list should further include any data transfer
+	      protocols supported, using the <code>urn</code>s defined in <xref
+	      linkend="messaging-data-transfer-urns"/> as additional values.
+	    </para>
+
+	    <para>
+	      Required.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+	<varlistentry>
+	  <term><code>vendor</code></term>
+	  <listitem>
+	    <para>
+	      A localised vendor name.
+	    </para>
+	    <para>
+	      Optional.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
     </section>
 
     <section xml:id="messaging-status">
@@ -790,6 +819,17 @@
 	    <listitem>
 	      <para>
 		Ytstenut protocol version; required,
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term><code>from-service</code></term>
+
+	    <listitem>
+	      <para>
+		The ID of the application this status message describes;
+		required (see <xref linkend="messaging-app-id"/>).
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -856,6 +896,7 @@
 
 	  <programlisting><![CDATA[
 <ytstenut:status version='1.0'
+                from-service='com.meego.BestestFriendApplication'
                 capability='yts-caps-video'
                 activity='yts-activity-play'
                 uri='some random youtube url'
@@ -901,6 +942,28 @@
 	    </varlistentry>
 
 	    <varlistentry>
+	      <term><code>from-service</code></term>
+
+	      <listitem>
+		<para>
+		  The ID of the application that sent this message;
+		  required (see <xref linkend="messaging-app-id"/>).
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
+	      <term><code>to-service</code></term>
+
+	      <listitem>
+		<para>
+		  The ID of the application that this message is for;
+		  required (see <xref linkend="messaging-app-id"/>).
+		</para>
+	      </listitem>
+	    </varlistentry>
+
+	    <varlistentry>
 	      <term>
 		<code>type</code>
 	      </term>
@@ -921,22 +984,6 @@
 	  define the message payload; there are no standard child elements
 	  defined by this specification, but custom child elements are allowed.
 	</para>
-
-	<annotation role="implementation">
-	  <info>
-	    <authorinitials>tf</authorinitials>
-	    <orgname>Intel</orgname>
-	  </info>
-	  <para>
-	    In terms of TP API, I am thinking that the simplest way would be to
-	    provide access to the message XML payload, either in some parsed
-	    form that might be available in Wocky, or, perhaps even the raw XML
-	    (the assumption is that there will be a higher level library sitting
-	    on the top of telepathy-glib/qt that will provide conveniece API for
-	    developers, so this could take care of how to represent this to the
-	    developer.
-	  </para>
-	</annotation>
 
       </section>
 
@@ -1016,6 +1063,8 @@
     <ytstenut:message version='1.0'
                       type='ytstenut/command'
                       time='1970-01-01T00:00:00.000Z'
+                      from-service='com.meego.BestestFriendApplication'
+                      to-service='com.meego.BestestFriendApplication'
                       capability='yts-caps-video'
                       activity='yts-activity-play'
                       uri='some random youtube url'
@@ -1725,7 +1774,7 @@
     </biblioentry>
 
     <biblioentry xml:id="xep0004">
-      <title>XEP-0030</title>
+      <title>XEP-0004</title>
       <subtitle>Data Forms</subtitle>
       <publishername>XMPP Standards Foundation</publishername>
       <bibliosource class="uri">
@@ -1854,6 +1903,13 @@
       <publishername>XMPP Standards Foundation</publishername>
       <bibliosource class="uri">
 	<link xlink:href="http://xmpp.org/extensions/inbox/jingle-xtls.html"/>
+      </bibliosource>
+    </biblioentry>
+
+    <biblioentry xml:id="dbus-spec">
+      <title>D-Bus Specification</title>
+      <bibliosource class="uri">
+	<link xlink:href="http://dbus.freedesktop.org/doc/dbus-specification.html"/>
       </bibliosource>
     </biblioentry>
 
