@@ -93,6 +93,15 @@
 	   Not using Ad-Hoc
 	 </revremark>
       </revision>
+
+      <revision>
+         <revnumber>0.10</revnumber>
+         <date>22 February 2011</date>
+         <revremark>
+	   Fix cap advertisement
+	 </revremark>
+      </revision>
+
     </revhistory>
 
     <copyright>
@@ -748,7 +757,8 @@
       </para>
 
       <programlisting><![CDATA[
-<c node='urn:ytstenut:capabilities'>
+<query xmlns='http://jabber.org/protocol/disco#info'
+         node='urn:ytstenut:capabilities#....'>
   <feature var='urn:ytstenut:capabilities:yts-caps-video' />
   <feature var='urn:ytstenut:data:jingle:rtp' />
 <c/>
